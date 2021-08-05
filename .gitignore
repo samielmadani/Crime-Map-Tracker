@@ -3,3 +3,9 @@
 .classpath
 .settings/org.eclipse.jdt.core.prefs
 .settings/org.eclipse.jdt.apt.core.prefs
+target/surefire-reports/TEST-seng202.group7.AppTest.xml
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
+target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+target/surefire-reports/seng202.group7.AppTest.txt
