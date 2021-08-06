@@ -19,4 +19,14 @@ public class App
 
         return result;
     }
+
+    /**
+     * Returns True if the first number is the largest. Otherwise, it returns False.
+     * @param number1       The first number value.
+     * @param number2       The second number value.
+     * @return The result of if number1 is greater than number2.
+     */
+    public static boolean numbers(int number1, int number2) {
+        return (number1 > number2);
+    }
 }
