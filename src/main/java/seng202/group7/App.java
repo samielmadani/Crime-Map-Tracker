@@ -29,4 +29,8 @@ public class App
     public static boolean numbers(int number1, int number2) {
         return (number1 > number2);
     }
+
+    public static int add(int number1, int number2) {
+        return number1 + number2;
+    }
 }

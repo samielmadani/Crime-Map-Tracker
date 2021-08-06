@@ -22,4 +22,10 @@ public class AppTest {
         Assertions.assertFalse(App.numbers(0, 1));
     }
 
+    @Test
+    public void addTest() {
+        Assertions.assertEquals(5, App.add(3, 2));
+        Assertions.assertEquals(6, App.add(3, 3));
+    }
+
 }
