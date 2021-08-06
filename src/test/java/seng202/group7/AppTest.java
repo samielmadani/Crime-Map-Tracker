@@ -28,4 +28,10 @@ public class AppTest {
         Assertions.assertEquals(6, App.add(3, 3));
     }
 
+    @Test
+    public void subTest() {
+        Assertions.assertEquals(3, App.sub(6, 3));
+        Assertions.assertEquals(2, App.sub(7, 5));
+    }
+
 }
