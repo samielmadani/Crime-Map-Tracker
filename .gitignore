@@ -13,7 +13,7 @@
  
 # Maven
 log/
-#target/
+target/
 
 # Compiled class file
 *.class
@@ -46,12 +46,12 @@ hs_err_pid*
 **/.gradle
 **/node_modules/
 .DS_Store
-#target/
+target/
 .classpath
 .project
 .settings
 **/.checkstyle
-#target/
+target/
 bin/
 **/lib/
 out/
