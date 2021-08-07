@@ -9,4 +9,4 @@ generate_artifacts:
     -mvn -B clean package
   artifacts:
     paths:
-      -target/team7_seng202*.jar
+    -target/team7_seng202*.jar
