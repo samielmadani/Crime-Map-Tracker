@@ -34,5 +34,7 @@ public class App
         return number1 + number2;
     }
 
-    public static int sub(int number1, int number2) { return number1 - number2;}
+    public static int sub(int number1, int number2) { 
+        return number1 - number2;
+    }
 }
