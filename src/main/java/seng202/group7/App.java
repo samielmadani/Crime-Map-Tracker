@@ -9,6 +9,7 @@ public class App
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
+        System.out.println( "Jello World!" );
     }
 
     public static int power(int number1, int number2) {
