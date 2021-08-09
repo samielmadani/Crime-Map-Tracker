@@ -33,4 +33,10 @@ public class AppTest {
         Assertions.assertEquals(2, App.sub(7, 5));
     }
 
+    @Test
+    public void divTest() {
+        Assertions.assertEquals(2, App.div(6, 3));
+        Assertions.assertEquals(7.0/9, App.div(7, 9));
+    }
+
 }

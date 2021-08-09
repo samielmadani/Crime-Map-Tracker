@@ -38,4 +38,8 @@ public class App
     public static int sub(int number1, int number2) { 
         return number1 - number2;
     }
+
+    public static double div(double number1, double number2) { 
+        return number1 / number2;
+    }
 }
