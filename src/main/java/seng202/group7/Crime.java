@@ -53,6 +53,10 @@ public class Crime extends Report {
         setLongitude(longitude);
     }
 
+    public Crime() {
+        
+    }
+
     public String getCaseNumber() {
         return this.caseNumber;
     }
