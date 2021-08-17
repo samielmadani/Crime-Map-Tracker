@@ -16,9 +16,7 @@ public class AppTest {
 
     @Test
     public void numberTest() {
-        Assertions.assertTrue(App.numbers(1, 0));
-        Assertions.assertFalse(App.numbers(1, 1));
-        Assertions.assertFalse(App.numbers(0, 1));
+        Assertions.assertTrue(App.numbers(1, 1));
     }
 
     @Test
