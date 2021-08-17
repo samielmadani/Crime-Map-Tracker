@@ -9,6 +9,7 @@ public class App
     public static void main( String[] args )
     {
         System.out.println( "Hello World!" );
+        System.out.println( "Jello World!" );
     }
 
     public static int power(int number1, int number2) {
@@ -32,5 +33,13 @@ public class App
 
     public static int add(int number1, int number2) {
         return number1 + number2;
+    }
+
+    public static int sub(int number1, int number2) { 
+        return number1 - number2;
+    }
+
+    public static double div(double number1, double number2) { 
+        return number1 / number2;
     }
 }
