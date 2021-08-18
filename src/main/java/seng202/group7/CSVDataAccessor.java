@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class CSVDataAccessor implements DataAccessor {
@@ -33,7 +34,7 @@ public class CSVDataAccessor implements DataAccessor {
         try {
             BufferedReader csvReader = new BufferedReader(new FileReader(pathname));
             String row;
-            String schemea = csvReader.readLine();
+            String schema = csvReader.readLine();
             while ((row = csvReader.readLine()) != null) {
                 String[] columns = row.split(",", -1);
                 try {
@@ -51,9 +52,31 @@ public class CSVDataAccessor implements DataAccessor {
         } catch (IOException io) {
             System.out.println(io);
         }
-        System.out.println(counter + " entries were added with " + errors + " errors.");
-        System.out.println(reports.size());
         return reports;
+    }
+
+    /**
+     * Takes in a row which has more than the expected 8 columns and concatenates the extra columns into
+     * the secondary description space
+     * @param row
+     * @return
+     */
+    private String[] fixColumns(String[] row) {
+        String[] rowCopy = row.clone();
+        int rowLength = row.length;
+
+        String[] secondaryDescriptionElements = Arrays.copyOfRange(row, 5, 5 + (rowLength - 18));
+        String secondaryDescription = String.join(", ", secondaryDescriptionElements);
+
+        row = new String[18];
+        for (int i = 0; i < 5; i++)  {
+            row[i] = rowCopy[i];
+        }
+        row[5] = secondaryDescription;
+        for (int i = 6; i < 18; i++)  {
+            row[i] = rowCopy[i + (rowLength - 18)];
+        }
+        return row;
     }
 
     /**
@@ -63,6 +86,10 @@ public class CSVDataAccessor implements DataAccessor {
      */
     private Crime createCrime(String[] columns) {
         Crime crime = new Crime();
+        if (columns.length > 18) {
+            columns = fixColumns(columns);
+        }
+
         crime.setCaseNumber(columns[0]);
 
         // Currently set for American time MM/DD/YYYY
