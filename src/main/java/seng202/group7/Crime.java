@@ -1,6 +1,6 @@
 package seng202.group7;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class Crime extends Report {
 
@@ -32,7 +32,7 @@ public class Crime extends Report {
      * @param latitude
      * @param longitude
      */
-    public Crime(String caseNumber, Date date, String block, String iucr, String primaryDescription,
+    public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, boolean arrest, boolean domestic, int beat,
     int ward, String fbiCD, int xCoord, int yCoord, Double latitude, Double longitude) {
         setCaseNumber(caseNumber);

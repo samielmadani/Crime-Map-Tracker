@@ -1,16 +1,12 @@
 package seng202.group7;
 
 import java.io.BufferedReader;
-import java.io.Console;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 public class CSVDataAccessor implements DataAccessor {
 
@@ -103,7 +99,7 @@ public class CSVDataAccessor implements DataAccessor {
         }
         int minute = Integer.parseInt(columns[1].substring(14, 16));
 
-        LocalDateTime.of(year, month, dayOfMonth, hour, minute);
+        crime.setDate(LocalDateTime.of(year, month, dayOfMonth, hour, minute));
       
         crime.setBlock(columns[2]);
         crime.setiucr(columns[3]);

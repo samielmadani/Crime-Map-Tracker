@@ -1,9 +1,9 @@
 package seng202.group7;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 abstract class Report {
-    private Date date = null;
+    private LocalDateTime date = null;
     private String primaryDescription = null;
     private String secondaryDescription = null;
     private String locationDescription = null;
@@ -13,11 +13,11 @@ abstract class Report {
     private Double latitude = null;
     private Double longitude = null;
     
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
