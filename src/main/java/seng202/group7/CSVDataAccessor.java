@@ -32,7 +32,7 @@ public class CSVDataAccessor implements DataAccessor {
             String row;
             String schema = csvReader.readLine();
             while ((row = csvReader.readLine()) != null) {
-                String[] columns = row.split(",", -1);
+                String[] columns = row.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 try {
                     reports.add(createCrime(columns));
                     counter ++;
@@ -52,40 +52,12 @@ public class CSVDataAccessor implements DataAccessor {
     }
 
     /**
-     * Takes in a row which has more than the expected 8 columns and concatenates the extra columns into
-     * the secondary description space
-     * @param row
-     * @return
-     */
-    private String[] fixColumns(String[] row) {
-        String[] rowCopy = row.clone();
-        int rowLength = row.length;
-
-        String[] secondaryDescriptionElements = Arrays.copyOfRange(row, 5, 5 + (rowLength - 18));
-        String secondaryDescription = String.join(", ", secondaryDescriptionElements);
-
-        row = new String[18];
-        for (int i = 0; i < 5; i++)  {
-            row[i] = rowCopy[i];
-        }
-        row[5] = secondaryDescription;
-        for (int i = 6; i < 18; i++)  {
-            row[i] = rowCopy[i + (rowLength - 18)];
-        }
-        return row;
-    }
-
-    /**
      * Takes a row from a csv and converts elements to an instance of crime
      * @param columns
      * @return crime
      */
     private Crime createCrime(String[] columns) {
         Crime crime = new Crime();
-        if (columns.length > 18) {
-            columns = fixColumns(columns);
-        }
-
         crime.setCaseNumber(columns[0]);
 
         // Currently set for American time MM/DD/YYYY

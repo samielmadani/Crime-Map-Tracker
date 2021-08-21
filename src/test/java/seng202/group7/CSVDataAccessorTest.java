@@ -15,11 +15,12 @@ public class CSVDataAccessorTest {
         assertEquals(Crime.class, data.get(0).getClass());
     }
 
+    @Test
     public void readFileAmount() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data = dataAccessor.read("src/crimeData.csv");
         assertEquals(5000, data.size(), String.format("Not all data was imported correctly." +
-        " %f out of 5000 were imported.", data.size()));
+        " %d out of 5000 were imported.", data.size()));
         
     }
 }
