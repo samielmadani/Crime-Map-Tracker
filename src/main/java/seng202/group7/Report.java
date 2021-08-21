@@ -7,9 +7,9 @@ abstract class Report {
     private String primaryDescription = null;
     private String secondaryDescription = null;
     private String locationDescription = null;
-    private Boolean domestic = null; // Probably not used by user
-    private int xCoord = -1;
-    private int yCoord = -1;
+    private Boolean domestic = null;
+    private Integer xCoord = null;
+    private Integer yCoord = null;
     private Double latitude = null;
     private Double longitude = null;
     
@@ -53,19 +53,19 @@ abstract class Report {
         this.domestic = domestic;
     }
 
-    public int getXCoord() {
+    public Integer getXCoord() {
         return this.xCoord;
     }
 
-    public void setXCoord(int xCoord) {
+    public void setXCoord(Integer xCoord) {
         this.xCoord = xCoord;
     }
 
-    public int getYCoord() {
+    public Integer getYCoord() {
         return this.yCoord;
     }
 
-    public void setYCoord(int yCoord) {
+    public void setYCoord(Integer yCoord) {
         this.yCoord = yCoord;
     }
 

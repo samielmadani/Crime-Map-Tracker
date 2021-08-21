@@ -6,10 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class CSVDataAccessor implements DataAccessor {
-
 
     /**
      * Opens a file (currently supports csv files) and creates a list of reports (currently supports Crimes only)
