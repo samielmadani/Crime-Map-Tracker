@@ -27,6 +27,8 @@ public class FilterTest {
         ArrayList<Report> data = dataAccessor.read("src/crimeData.csv");
         Filter dataFilter = new Filter();
         ArrayList<Report> filteredData = dataFilter.primaryFilter(data, "THEFT");
-        assertEquals(980, filteredData.size());
+        for (Report report : filteredData) {
+            assertEquals("THEFT", report.getPrimaryDescription());
+        }
     }
 }
