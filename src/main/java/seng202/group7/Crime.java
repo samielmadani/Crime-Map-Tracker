@@ -33,8 +33,8 @@ public class Crime extends Report {
      * @param longitude
      */
     public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
-    String secondaryDescription, String locationDescription, boolean arrest, boolean domestic, int beat,
-    int ward, String fbiCD, int xCoord, int yCoord, Double latitude, Double longitude) {
+    String secondaryDescription, String locationDescription, boolean arrest, Boolean domestic, int beat,
+    int ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         setCaseNumber(caseNumber);
         setDate(date);
         setBlock(block);
