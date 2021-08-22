@@ -1,6 +1,7 @@
 package seng202.group7;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 abstract class Report {
     private LocalDateTime date = null;
@@ -83,5 +84,32 @@ abstract class Report {
 
     public void setLongitude(Double Longitude) {
         this.longitude = Longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return Objects.equals(date, report.date) && Objects.equals(primaryDescription, report.primaryDescription) && Objects.equals(secondaryDescription, report.secondaryDescription) && Objects.equals(locationDescription, report.locationDescription) && Objects.equals(domestic, report.domestic) && Objects.equals(xCoord, report.xCoord) && Objects.equals(yCoord, report.yCoord) && Objects.equals(latitude, report.latitude) && Objects.equals(longitude, report.longitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
+    }
+
+    @Override
+    public String toString() {
+        return "date=" + date +
+                ", primaryDescription='" + primaryDescription + '\'' +
+                ", secondaryDescription='" + secondaryDescription + '\'' +
+                ", locationDescription='" + locationDescription + '\'' +
+                ", domestic=" + domestic +
+                ", xCoord=" + xCoord +
+                ", yCoord=" + yCoord +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude
+                ;
     }
 }

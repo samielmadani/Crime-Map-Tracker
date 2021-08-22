@@ -1,9 +1,10 @@
 package seng202.group7;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Crime extends Report {
-
+//TODO: change to wrappers?
     private String caseNumber = null;
     private String block = null;
     private String iucr = null;
@@ -113,4 +114,31 @@ public class Crime extends Report {
         this.fbiCD = fbiCD;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Crime crime = (Crime) o;
+        return arrest == crime.arrest && beat == crime.beat && ward == crime.ward && Objects.equals(caseNumber, crime.caseNumber) && Objects.equals(block, crime.block) && Objects.equals(iucr, crime.iucr) && Objects.equals(fbiCD, crime.fbiCD);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), caseNumber, block, iucr, arrest, beat, ward, fbiCD);
+    }
+
+    @Override
+    public String toString() {
+        return "Crime{" +
+                "caseNumber='" + caseNumber + '\'' +
+                ", block='" + block + '\'' +
+                ", iucr='" + iucr + '\'' +
+                ", arrest=" + arrest +
+                ", beat=" + beat +
+                ", ward=" + ward +
+                ", fbiCD='" + fbiCD + '\'' +
+                super.toString() + '\'' +
+                '}';
+    }
 }
