@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class CSVDataAccessor implements DataAccessor {
 
@@ -58,19 +60,9 @@ public class CSVDataAccessor implements DataAccessor {
         Crime crime = new Crime();
         crime.setCaseNumber(columns[0]);
 
-        // Currently set for American time MM/DD/YYYY
+        // Currently set for American time MM/dd/yyyy hh:mm:ss a
+        crime.setDate(getLocalDateTime(columns[1]));
 
-        int month = Integer.parseInt(columns[1].substring(0, 2));
-        int dayOfMonth = Integer.parseInt(columns[1].substring(3, 5));
-        int year = Integer.parseInt(columns[1].substring(6, 10));
-        int hour = Integer.parseInt(columns[1].substring(11, 13));
-        if (columns[1].substring(21) == "PM") {
-            hour += 12;
-        }
-        int minute = Integer.parseInt(columns[1].substring(14, 16));
-
-        crime.setDate(LocalDateTime.of(year, month, dayOfMonth, hour, minute));
-      
         crime.setBlock(columns[2]);
         crime.setiucr(columns[3]);
         crime.setPrimaryDescription(columns[4]);
@@ -105,6 +97,11 @@ public class CSVDataAccessor implements DataAccessor {
             crime.setLongitude(Double.parseDouble(columns[15]));
         }
         return crime;
+    }
+
+    public static LocalDateTime getLocalDateTime(String column) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
+        return LocalDateTime.parse(column, formatter);
     }
 
     @Override
