@@ -61,7 +61,9 @@ public class CSVDataAccessor implements DataAccessor {
         crime.setCaseNumber(columns[0]);
 
         // Currently set for American time MM/dd/yyyy hh:mm:ss a
-        crime.setDate(getLocalDateTime(columns[1]));
+        if (!columns[1].isEmpty()) {
+            crime.setDate(getLocalDateTime(columns[1]));
+        }
 
         crime.setBlock(columns[2]);
         crime.setiucr(columns[3]);
