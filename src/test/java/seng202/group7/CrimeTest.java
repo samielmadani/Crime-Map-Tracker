@@ -17,6 +17,6 @@ public class CrimeTest
     @Test
     public void crimeTest() {
         crime.setArrest(true);
-        assertTrue(crime.isArrest());
+        assertTrue(crime.getArrest());
     }
 }
