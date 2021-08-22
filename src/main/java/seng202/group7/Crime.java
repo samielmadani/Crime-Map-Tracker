@@ -81,7 +81,7 @@ public class Crime extends Report {
         this.iucr = iucr;
     }
 
-    public boolean isArrest() {
+    public boolean getArrest() {
         return this.arrest;
     }
 

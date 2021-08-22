@@ -1,6 +1,5 @@
 package seng202.group7;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
@@ -18,7 +17,8 @@ public class Filter {
         return filteredData;
     }
 
-    public ArrayList<Report> locationFilter(ArrayList<Report> currentData, int xcord1, int xcord2, int ycord1, int ycord2) {
+
+    public ArrayList<Report> geoFilter(ArrayList<Report> currentData, int xcord1, int xcord2, int ycord1, int ycord2) {
 
         ArrayList<Report> filteredData = new ArrayList<Report>();
         for (Report data: currentData) {
@@ -30,13 +30,75 @@ public class Filter {
         return filteredData;
     }
 
-    public ArrayList<Report> primaryFilter(ArrayList<Report> currentData, String primary) {
+
+    public ArrayList<Report> stringFilter(ArrayList<Report> currentData, int attribute, String filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<Report>();
+        switch(attribute) {
+            case 2: blockFilter(currentData, filteredData, filterSelection);
+                    break;
+            case 4: primaryFilter(currentData, filteredData, filterSelection);
+                    break;
+            case 6: locationFilter(currentData, filteredData, filterSelection);
+                    break;
+            default:
+                    break;
+        }
+        return filteredData;
+    }
+
+    public void blockFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
-            if (data.getPrimaryDescription().equals(primary)) {
+            Crime c = (Crime)data;
+            if(c.getBlock().equals(filterSelection)) {
                 filteredData.add(data);
             }
         }
+    }
+
+    public void primaryFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+        for (Report data: currentData) {
+            if(data.getPrimaryDescription().equals(filterSelection)) {
+                filteredData.add(data);
+            }
+        }
+    }
+
+    public void locationFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+        for (Report data: currentData) {
+            if(data.getLocationDescription().equals(filterSelection)) {
+                filteredData.add(data);
+            }
+        }
+    }
+
+
+    public ArrayList<Report> boolFilter(ArrayList<Report> currentData, int attribute, boolean filterSelection) {
+        ArrayList<Report> filteredData = new ArrayList<Report>();
+        switch(attribute) {
+            case 7: arrestFilter(currentData, filteredData,filterSelection);
+                    break;
+            case 8: domesticFilter(currentData, filteredData, filterSelection);
+                    break;
+            default:
+                    break;
+        }
         return filteredData;
+    }
+
+    public void arrestFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
+        for(Report data: currentData) {
+            Crime c = (Crime)data;
+            if (c.getArrest() == filterSelection) {
+                filteredData.add(data);
+            }
+        }
+    }
+
+    public void domesticFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
+        for(Report data: currentData) {
+            if (data.getDomestic() == filterSelection) {
+                filteredData.add(data);
+            }
+        }
     }
 }
