@@ -1,6 +1,5 @@
 package seng202.group7;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+import au.com.bytecode.opencsv.CSVReader;
 
 public class CSVDataAccessor implements DataAccessor {
 
@@ -28,11 +28,10 @@ public class CSVDataAccessor implements DataAccessor {
         int counter = 0;
         int errors = 0;
         try {
-            BufferedReader csvReader = new BufferedReader(new FileReader(pathname));
-            String row;
-            String schema = csvReader.readLine();
-            while ((row = csvReader.readLine()) != null) {
-                String[] columns = row.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+            CSVReader reader = new CSVReader(new FileReader(pathname));
+            String [] columns;
+            String [] schema = reader.readNext();
+            while ((columns = reader.readNext()) != null) {
                 try {
                     reports.add(createCrime(columns));
                     counter ++;
@@ -42,7 +41,7 @@ public class CSVDataAccessor implements DataAccessor {
                     errors ++;
                 }
             }
-            csvReader.close();
+            reader.close();
         } catch (FileNotFoundException e) {
             System.out.println(e);
         } catch (IOException io) {
@@ -70,8 +69,14 @@ public class CSVDataAccessor implements DataAccessor {
         crime.setPrimaryDescription(columns[4]);
         crime.setSecondaryDescription(columns[5]);
         crime.setLocationDescription(columns[6]);
-        crime.setArrest(columns[7] == "Y");
-        crime.setDomestic(columns[8] == "Y");
+
+        if (!columns[7].isEmpty()) {
+            crime.setArrest(columns[7].equals("Y"));
+        }
+
+        if (!columns[8].isEmpty()) {
+            crime.setDomestic(columns[8].equals("Y"));
+        }
 
         if (!columns[9].isEmpty()) {
             crime.setBeat(Integer.parseInt(columns[9]));

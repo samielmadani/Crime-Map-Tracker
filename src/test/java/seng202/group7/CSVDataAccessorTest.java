@@ -57,7 +57,7 @@ public class CSVDataAccessorTest {
         ArrayList<Report> data = dataAccessor.read("src/blankRowTestData.csv");
 
         Report actualReport = data.get(0);
-        Report expectedReport = new Crime(null, null, null, null, null, null, null, false, null, -1, -1, null, null, null, null, null);
+        Report expectedReport = new Crime(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
         assertEquals(expectedReport, actualReport);
     }
 }
