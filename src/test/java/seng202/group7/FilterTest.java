@@ -10,15 +10,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FilterTest {
-
-    CSVDataAccessor dataAccessor;
-    ArrayList<Report> unfilteredData;
-    Filter dataFilter;
-
+    private CSVDataAccessor dataAccessor;
+    private ArrayList<Report> unfilteredData;
+    private Filter dataFilter;
+    private String smallFile = "src/test/files/smallCrimeData.csv";
+    private String mediumFile = "src/test/files/crimeData.csv";
+    private String testFile = "src/test/files/testData.csv";
+    private String commaFile = "src/test/files/commaInFieldTestData.csv";
+    private String blankFieldFile = "src/test/files/blankFieldTestData.csv";
+    private String blankRowFile = "src/test/files/blankRowTestData.csv";
+    
     @BeforeEach
     public void init() {
         this.dataAccessor = new CSVDataAccessor();
-        this.unfilteredData = dataAccessor.read("src/smallCrimeData.csv");
+        this.unfilteredData = dataAccessor.read(smallFile);
         this.dataFilter = new Filter();
     }
 
