@@ -27,7 +27,11 @@ abstract class Report {
     }
 
     public void setPrimaryDescription(String primaryDescription) {
-        this.primaryDescription = primaryDescription;
+        if (Objects.equals(primaryDescription, "")) {
+            this.primaryDescription = null;
+        } else {
+            this.primaryDescription = primaryDescription;
+        }
     }
 
     public String getSecondaryDescription() {
@@ -35,7 +39,11 @@ abstract class Report {
     }
     
     public void setSecondaryDescription(String secondaryDescription) {
-        this.secondaryDescription = secondaryDescription;
+        if (Objects.equals(secondaryDescription, "")) {
+            this.secondaryDescription = null;
+        } else {
+            this.secondaryDescription = secondaryDescription;
+        }
     }
 
     public String getLocationDescription() {
@@ -43,7 +51,11 @@ abstract class Report {
     }
 
     public void setLocationDescription(String locationDescription) {
-        this.locationDescription = locationDescription;
+        if (Objects.equals(locationDescription, "")) {
+            this.locationDescription = null;
+        } else {
+            this.locationDescription = locationDescription;
+        }
     }
 
     public Boolean getDomestic() {
@@ -91,7 +103,15 @@ abstract class Report {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Report report = (Report) o;
-        return Objects.equals(date, report.date) && Objects.equals(primaryDescription, report.primaryDescription) && Objects.equals(secondaryDescription, report.secondaryDescription) && Objects.equals(locationDescription, report.locationDescription) && Objects.equals(domestic, report.domestic) && Objects.equals(xCoord, report.xCoord) && Objects.equals(yCoord, report.yCoord) && Objects.equals(latitude, report.latitude) && Objects.equals(longitude, report.longitude);
+        return Objects.equals(date, report.date) 
+            && Objects.equals(primaryDescription, report.primaryDescription) 
+            && Objects.equals(secondaryDescription, report.secondaryDescription) 
+            && Objects.equals(locationDescription, report.locationDescription) 
+            && Objects.equals(domestic, report.domestic) 
+            && Objects.equals(xCoord, report.xCoord) 
+            && Objects.equals(yCoord, report.yCoord) 
+            && Objects.equals(latitude, report.latitude) 
+            && Objects.equals(longitude, report.longitude);
     }
 
     @Override
