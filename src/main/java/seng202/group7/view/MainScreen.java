@@ -10,12 +10,21 @@ import java.io.IOException;
 
 public class MainScreen extends Application {
 
+    private Stage windowStage;
+
     @Override
     public void start(Stage initialStage) throws IOException  {
-        initialStage.setTitle("Main Screen");
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/mainScreen.fxml"));
-        initialStage.setScene(new Scene(root, 300, 275));
-        initialStage.show();
+        setStage(initialStage);
+        windowStage.setTitle("Main Screen");
+        windowStage.setMinHeight(400);
+        windowStage.setMinWidth(600);
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/startScreen.fxml"));
+        windowStage.setScene(new Scene(root));
+        windowStage.show();
+    }
+
+    private void setStage(Stage initialStage) {
+        windowStage = initialStage;
     }
 
     public static void main(String[] args) {
