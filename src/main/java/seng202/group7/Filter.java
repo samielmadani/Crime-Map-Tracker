@@ -10,7 +10,8 @@ public class Filter {
 
         ArrayList<Report> filteredData = new ArrayList<Report>();
         for (Report data: currentData) {
-            if ((data.getDate().isAfter(start)) && (data.getDate().isBefore(end))) {
+            if (((data.getDate().isAfter(start)) && (data.getDate().isBefore(end))) || data.getDate().equals(start) ||
+                    data.getDate().equals(end)) {
                 filteredData.add(data);
             }
         }
@@ -18,12 +19,12 @@ public class Filter {
     }
 
 
-    public ArrayList<Report> geoFilter(ArrayList<Report> currentData, int xcord1, int xcord2, int ycord1, int ycord2) {
-
+    public ArrayList<Report> geoFilter(ArrayList<Report> currentData, Integer xcord1, Integer xcord2, Integer ycord1, Integer ycord2) {
         ArrayList<Report> filteredData = new ArrayList<Report>();
         for (Report data: currentData) {
-            if ((data.getXCoord() >= xcord1 && data.getXCoord() <= xcord2) &&
-                    (data.getYCoord() >= ycord1 && data.getYCoord() <= ycord2)) {
+            if (data.getXCoord() != null && data.getYCoord() != null &&
+                    ((data.getXCoord() >= xcord1) && (data.getXCoord() <= xcord2)) &&
+                    ((data.getYCoord() >= ycord1) && (data.getYCoord() <= ycord2))) {
                 filteredData.add(data);
             }
         }
