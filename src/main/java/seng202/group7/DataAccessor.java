@@ -5,6 +5,6 @@ import java.util.ArrayList;
 interface DataAccessor {
 
     public ArrayList<Report> read(String pathname);
-    public void write(ArrayList<Report> reports);
+    public void write(ArrayList<Report> reports, String pathname);
     
 }

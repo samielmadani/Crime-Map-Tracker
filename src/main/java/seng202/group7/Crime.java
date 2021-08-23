@@ -2,6 +2,9 @@ package seng202.group7;
 
 import java.io.Console;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Crime extends Report {
@@ -132,11 +135,45 @@ public class Crime extends Report {
         }
     }
 
+    public ArrayList<String> getAttributes() {
+        ArrayList<String> attributes = new ArrayList<>();
+        attributes.add(caseNumber);
+        attributes.add(toString(getDate()));
+        attributes.add(block);
+        attributes.add(iucr);
+        attributes.add(getPrimaryDescription());
+        attributes.add(getSecondaryDescription());
+        attributes.add(getLocationDescription());
+        attributes.add(toString(arrest));
+        attributes.add(toString(getDomestic()));
+        attributes.add(toString(beat));
+        attributes.add(toString(ward));
+        attributes.add(fbiCD);
+        attributes.add(toString(getXCoord()));
+        attributes.add(toString(getYCoord()));
+        attributes.add(toString(getLatitude()));
+        attributes.add(toString(getLongitude()));
+        return attributes;
+    }
+
+    private String toString(Object o) {
+        if (o != null) {
+            if (o.getClass() == LocalDateTime.class) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
+                return ((LocalDateTime) o).format(formatter);
+            }
+            return o.toString();
+        } else {
+            return "";
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
+        
         Crime crime = (Crime) o;
         return Objects.equals(arrest, crime.arrest)
             && Objects.equals(beat, crime.beat)
@@ -161,7 +198,7 @@ public class Crime extends Report {
                 ", arrest=" + arrest +
                 ", beat=" + beat +
                 ", ward=" + ward +
-                ", fbiCD='" + fbiCD + '\'' +
+                ", fbi CD='" + fbiCD + '\'' +
                 super.toString() + '\'' +
                 '}';
     }

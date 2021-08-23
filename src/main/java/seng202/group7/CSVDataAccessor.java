@@ -2,12 +2,14 @@ package seng202.group7;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 public class CSVDataAccessor implements DataAccessor {
 
@@ -71,11 +73,11 @@ public class CSVDataAccessor implements DataAccessor {
         crime.setLocationDescription(columns[6]);
 
         if (!columns[7].isEmpty()) {
-            crime.setArrest(columns[7].equals("Y"));
+            crime.setArrest(columns[7].equals("Y") || columns[7].equals("true"));
         }
 
         if (!columns[8].isEmpty()) {
-            crime.setDomestic(columns[8].equals("Y"));
+            crime.setDomestic(columns[8].equals("Y") || columns[8].equals("true"));
         }
 
         if (!columns[9].isEmpty()) {
@@ -112,8 +114,22 @@ public class CSVDataAccessor implements DataAccessor {
     }
 
     @Override
-    public void write(ArrayList<Report> reports) {
+    public void write(ArrayList<Report> reports, String pathname) {
         // TODO Auto-generated method stub
-        
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(pathname), ',');
+            // feed in your array (or convert your data to an array)
+            String[] attributes;
+
+            writer.writeNext("CASE#,DATE  OF OCCURRENCE,BLOCK, IUCR, PRIMARY DESCRIPTION, SECONDARY DESCRIPTION, LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION".split(","));
+
+            for (Report report : reports) {
+                attributes = report.getAttributes().toArray(new String[0]);
+                writer.writeNext(attributes);
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }   
     }
 }
