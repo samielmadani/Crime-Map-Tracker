@@ -1,6 +1,7 @@
 package seng202.group7;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 
 abstract class Report {
@@ -13,6 +14,8 @@ abstract class Report {
     private Integer yCoord = null;
     private Double latitude = null;
     private Double longitude = null;
+
+    public abstract ArrayList<String> getAttributes();
     
     public LocalDateTime getDate() {
         return this.date;
