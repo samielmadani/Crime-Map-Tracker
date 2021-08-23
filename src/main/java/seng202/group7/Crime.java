@@ -1,15 +1,17 @@
 package seng202.group7;
 
-import java.util.Date;
+import java.io.Console;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Crime extends Report {
-
+//TODO: change to wrappers?
     private String caseNumber = null;
     private String block = null;
     private String iucr = null;
-    private boolean arrest = false;
-    private int beat = -1;
-    private int ward = -1;
+    private Boolean arrest = null;
+    private Integer beat = null;
+    private Integer ward = null;
     private String fbiCD = null;
 
     /**
@@ -32,9 +34,9 @@ public class Crime extends Report {
      * @param latitude
      * @param longitude
      */
-    public Crime(String caseNumber, Date date, String block, String iucr, String primaryDescription,
-    String secondaryDescription, String locationDescription, boolean arrest, boolean domestic, int beat,
-    int ward, String fbiCD, int xCoord, int yCoord, Double latitude, Double longitude) {
+    public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
+    String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
+    Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         setCaseNumber(caseNumber);
         setDate(date);
         setBlock(block);
@@ -53,12 +55,20 @@ public class Crime extends Report {
         setLongitude(longitude);
     }
 
+    public Crime() {
+        
+    }
+
     public String getCaseNumber() {
         return this.caseNumber;
     }
 
     public void setCaseNumber(String caseNumber) {
-        this.caseNumber = caseNumber;
+        if (Objects.equals(caseNumber, "")) {
+            this.caseNumber = null;
+        } else {
+            this.caseNumber = caseNumber;
+        }
     }
 
     public String getBlock() {
@@ -66,7 +76,11 @@ public class Crime extends Report {
     }
 
     public void setBlock(String block) {
-        this.block = block;
+        if (Objects.equals(block, "")) {
+            this.block = null;
+        } else {
+            this.block = block;
+        }
     }
 
     public String getiucr() {
@@ -74,31 +88,36 @@ public class Crime extends Report {
     }
 
     public void setiucr(String iucr) {
-        this.iucr = iucr;
+        if (Objects.equals(iucr, "")) {
+            this.iucr = null;
+        } else {
+            this.iucr = iucr;
+        }
     }
 
-    public boolean isArrest() {
+    public Boolean getArrest() {
         return this.arrest;
     }
 
-    public void setArrest(boolean arrest) {
+    public void setArrest(Boolean arrest) {
         this.arrest = arrest;
     }
 
-    public int getBeat() {
+    public Integer getBeat() {
         return this.beat;
     }
 
-    public void setBeat(int beat) {
+    public void setBeat(Integer beat) {
         this.beat = beat;
     }
 
-    public int getWard() {
+    public Integer getWard() {
         return this.ward;
     }
 
-    public void setWard(int ward) {
+    public void setWard(Integer ward) {
         this.ward = ward;
+
     }
 
     public String getFbiCD() {
@@ -106,7 +125,44 @@ public class Crime extends Report {
     }
 
     public void setFbiCD(String fbiCD) {
-        this.fbiCD = fbiCD;
+        if (Objects.equals(fbiCD, "")) {
+            this.fbiCD = null;
+        } else {
+            this.fbiCD = fbiCD;
+        }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Crime crime = (Crime) o;
+        return Objects.equals(arrest, crime.arrest)
+            && Objects.equals(beat, crime.beat)
+            && Objects.equals(ward, crime.ward)
+            && Objects.equals(caseNumber, crime.caseNumber)
+            && Objects.equals(block, crime.block)
+            && Objects.equals(iucr, crime.iucr)
+            && Objects.equals(fbiCD, crime.fbiCD);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), caseNumber, block, iucr, arrest, beat, ward, fbiCD);
+    }
+
+    @Override
+    public String toString() {
+        return "Crime{" +
+                "caseNumber='" + caseNumber + '\'' +
+                ", block='" + block + '\'' +
+                ", iucr='" + iucr + '\'' +
+                ", arrest=" + arrest +
+                ", beat=" + beat +
+                ", ward=" + ward +
+                ", fbiCD='" + fbiCD + '\'' +
+                super.toString() + '\'' +
+                '}';
+    }
 }

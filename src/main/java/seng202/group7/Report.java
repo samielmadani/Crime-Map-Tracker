@@ -1,23 +1,24 @@
 package seng202.group7;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 abstract class Report {
-    private Date date = null;
+    private LocalDateTime date = null;
     private String primaryDescription = null;
     private String secondaryDescription = null;
     private String locationDescription = null;
-    private Boolean domestic = null; // Probably not used by user
-    private int xCoord = -1;
-    private int yCoord = -1;
+    private Boolean domestic = null;
+    private Integer xCoord = null;
+    private Integer yCoord = null;
     private Double latitude = null;
     private Double longitude = null;
     
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return this.date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -26,7 +27,11 @@ abstract class Report {
     }
 
     public void setPrimaryDescription(String primaryDescription) {
-        this.primaryDescription = primaryDescription;
+        if (Objects.equals(primaryDescription, "")) {
+            this.primaryDescription = null;
+        } else {
+            this.primaryDescription = primaryDescription;
+        }
     }
 
     public String getSecondaryDescription() {
@@ -34,7 +39,11 @@ abstract class Report {
     }
     
     public void setSecondaryDescription(String secondaryDescription) {
-        this.secondaryDescription = secondaryDescription;
+        if (Objects.equals(secondaryDescription, "")) {
+            this.secondaryDescription = null;
+        } else {
+            this.secondaryDescription = secondaryDescription;
+        }
     }
 
     public String getLocationDescription() {
@@ -42,7 +51,11 @@ abstract class Report {
     }
 
     public void setLocationDescription(String locationDescription) {
-        this.locationDescription = locationDescription;
+        if (Objects.equals(locationDescription, "")) {
+            this.locationDescription = null;
+        } else {
+            this.locationDescription = locationDescription;
+        }
     }
 
     public Boolean getDomestic() {
@@ -53,19 +66,19 @@ abstract class Report {
         this.domestic = domestic;
     }
 
-    public int getXCoord() {
+    public Integer getXCoord() {
         return this.xCoord;
     }
 
-    public void setXCoord(int xCoord) {
+    public void setXCoord(Integer xCoord) {
         this.xCoord = xCoord;
     }
 
-    public int getYCoord() {
+    public Integer getYCoord() {
         return this.yCoord;
     }
 
-    public void setYCoord(int yCoord) {
+    public void setYCoord(Integer yCoord) {
         this.yCoord = yCoord;
     }
 
@@ -83,5 +96,40 @@ abstract class Report {
 
     public void setLongitude(Double Longitude) {
         this.longitude = Longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return Objects.equals(date, report.date) 
+            && Objects.equals(primaryDescription, report.primaryDescription) 
+            && Objects.equals(secondaryDescription, report.secondaryDescription) 
+            && Objects.equals(locationDescription, report.locationDescription) 
+            && Objects.equals(domestic, report.domestic) 
+            && Objects.equals(xCoord, report.xCoord) 
+            && Objects.equals(yCoord, report.yCoord) 
+            && Objects.equals(latitude, report.latitude) 
+            && Objects.equals(longitude, report.longitude);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
+    }
+
+    @Override
+    public String toString() {
+        return "date=" + date +
+                ", primaryDescription='" + primaryDescription + '\'' +
+                ", secondaryDescription='" + secondaryDescription + '\'' +
+                ", locationDescription='" + locationDescription + '\'' +
+                ", domestic=" + domestic +
+                ", xCoord=" + xCoord +
+                ", yCoord=" + yCoord +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude
+                ;
     }
 }
