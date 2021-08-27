@@ -74,3 +74,5 @@ dist
 **/vscode.proposed.d.ts
 .vscode/settings.json
 SENG202 project workspace.code-workspace
+
+src/test/files/testData.csv
