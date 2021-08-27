@@ -11,12 +11,12 @@ public class CrimeTest
 
     @BeforeEach
     public void init() {
-        crime = new Crime(null, null, null, null, null, null, null, false, false, 0, 0, null, 0, 0, null, null);
+        crime = new Crime();
     }
 
     @Test
-    public void crimeTest() {
-        crime.setArrest(true);
+    public void init_crimeTest() {
+        crime = new Crime(null, null, null, null, null, null, null, true, false, 0, 0, null, 0, 0, null, null);
         assertTrue(crime.getArrest());
     }
 }

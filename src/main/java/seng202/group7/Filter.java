@@ -5,10 +5,19 @@ import java.time.LocalDateTime;
 
 public class Filter {
 
-
-    public ArrayList<Report> timeFilter(ArrayList<Report> currentData, LocalDateTime start, LocalDateTime end) {
-
+    /**
+     * 
+     * @param currentData
+     * @param start
+     * @param end
+     * @return 
+     * @throws IllegalArgumentException
+     */
+    public ArrayList<Report> timeFilter(ArrayList<Report> currentData, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException{
         ArrayList<Report> filteredData = new ArrayList<Report>();
+        if (start.isAfter(end)) {
+            throw new IllegalArgumentException("End is before start");
+        }
         for (Report data: currentData) {
             if (((data.getDate().isAfter(start)) && (data.getDate().isBefore(end))) || data.getDate().equals(start) ||
                     data.getDate().equals(end)) {
@@ -32,22 +41,25 @@ public class Filter {
     }
 
 
-    public ArrayList<Report> stringFilter(ArrayList<Report> currentData, int attribute, String filterSelection) {
+    public ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<Report>();
         switch(attribute) {
-            case 2: blockFilter(currentData, filteredData, filterSelection);
-                    break;
-            case 4: primaryFilter(currentData, filteredData, filterSelection);
-                    break;
-            case 6: locationFilter(currentData, filteredData, filterSelection);
-                    break;
+            case "BLOCK": 
+                blockFilter(currentData, filteredData, filterSelection);
+                break;
+            case "PRIMARY": 
+                primaryFilter(currentData, filteredData, filterSelection);
+                break;
+            case "LOCATION": 
+                locationFilter(currentData, filteredData, filterSelection);
+                break;
             default:
-                    break;
+                break;
         }
         return filteredData;
     }
 
-    public void blockFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+    private void blockFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
             Crime c = (Crime)data;
             if(c.getBlock().equals(filterSelection)) {
@@ -56,7 +68,7 @@ public class Filter {
         }
     }
 
-    public void primaryFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+    private void primaryFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
             if(data.getPrimaryDescription().equals(filterSelection)) {
                 filteredData.add(data);
@@ -64,7 +76,7 @@ public class Filter {
         }
     }
 
-    public void locationFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+    private void locationFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
             if(data.getLocationDescription().equals(filterSelection)) {
                 filteredData.add(data);
@@ -73,15 +85,17 @@ public class Filter {
     }
 
 
-    public ArrayList<Report> boolFilter(ArrayList<Report> currentData, int attribute, boolean filterSelection) {
+    public ArrayList<Report> boolFilter(ArrayList<Report> currentData, String attribute, boolean filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<Report>();
         switch(attribute) {
-            case 7: arrestFilter(currentData, filteredData,filterSelection);
-                    break;
-            case 8: domesticFilter(currentData, filteredData, filterSelection);
-                    break;
+            case "ARREST": 
+                arrestFilter(currentData, filteredData,filterSelection);
+                break;
+            case "DOMESTIC": 
+                domesticFilter(currentData, filteredData, filterSelection);
+                break;
             default:
-                    break;
+                break;
         }
         return filteredData;
     }

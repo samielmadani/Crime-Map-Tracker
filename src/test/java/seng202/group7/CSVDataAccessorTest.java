@@ -5,9 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class CSVDataAccessorTest {
+    private DataAccessor dataAccessor;
     private String smallFile = "src/test/files/smallCrimeData.csv";
     private String mediumFile = "src/test/files/crimeData.csv";
     private String testFile = "src/test/files/testData.csv";
@@ -17,8 +19,13 @@ public class CSVDataAccessorTest {
 
     //TODO: create test naming convention
 
+    @BeforeEach
+    public void init(){
+        dataAccessor = new CSVDataAccessor();
+    }
+
     @Test
-    public void isCrimeInstance() {
+    public void read_crimeData() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data = dataAccessor.read(mediumFile);
 
@@ -28,7 +35,7 @@ public class CSVDataAccessorTest {
     }
 
     @Test
-    public void loadsAllRows() {
+    public void read_5000Rows() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data = dataAccessor.read(mediumFile);
 
@@ -38,7 +45,7 @@ public class CSVDataAccessorTest {
     }
 
     @Test
-    public void handlesCommaInField() {
+    public void read_fileWithCommas() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data = dataAccessor.read(commaFile);
 
@@ -48,7 +55,7 @@ public class CSVDataAccessorTest {
     }
 
     @Test
-    public void handlesBlankField() {
+    public void read_fileWithBlankFields() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data = dataAccessor.read(blankFieldFile);
         System.out.println(data.size());
@@ -59,7 +66,7 @@ public class CSVDataAccessorTest {
     }
 
     @Test
-    public void handlesBlankRow() {
+    public void read_fileWithMissingRow() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data = dataAccessor.read(blankRowFile);
 
@@ -69,16 +76,12 @@ public class CSVDataAccessorTest {
     }
 
     @Test
-    public void write_smallFile() {
+    public void write_mediumFile() {
         CSVDataAccessor dataAccessor = new CSVDataAccessor();
         ArrayList<Report> data1 = dataAccessor.read(mediumFile);
         dataAccessor.write(data1, testFile);
         ArrayList<Report> data2 = dataAccessor.read(testFile);
 
-        for (int i = 0; i < data1.size(); i++) {
-            if (!data1.get(i).equals(data2.get(i))) {
-                System.out.println(i);
-            }
-        }
+        assertTrue(data1.equals(data2), "Data is not the same after being read and written to file.");
     }
 }
