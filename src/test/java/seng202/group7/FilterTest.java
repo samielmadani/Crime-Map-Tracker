@@ -7,22 +7,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class FilterTest {
-    private CSVDataAccessor dataAccessor;
-    private ArrayList<Report> unfilteredData;
-    private Filter dataFilter;
-    private String smallFile = "src/test/files/smallCrimeData.csv";
-    private String mediumFile = "src/test/files/crimeData.csv";
-    private String testFile = "src/test/files/testData.csv";
-    private String commaFile = "src/test/files/commaInFieldTestData.csv";
-    private String blankFieldFile = "src/test/files/blankFieldTestData.csv";
-    private String blankRowFile = "src/test/files/blankRowTestData.csv";
+    private static CSVDataAccessor dataAccessor;
+    private static  ArrayList<Report> unfilteredData;
+    private static Filter dataFilter;
+    private static String smallFile = "src/test/files/smallCrimeData.csv";
+    private static String mediumFile = "src/test/files/crimeData.csv";
+    private static String testFile = "src/test/files/testData.csv";
+    private static String commaFile = "src/test/files/commaInFieldTestData.csv";
+    private static String blankFieldFile = "src/test/files/blankFieldTestData.csv";
+    private static String blankRowFile = "src/test/files/blankRowTestData.csv";
     
-    @BeforeEach
-    public void init() {
+    @BeforeAll
+    public static void setup() {
         dataAccessor = new CSVDataAccessor();
         unfilteredData = dataAccessor.read(smallFile);
         dataFilter = new Filter();
@@ -97,7 +97,7 @@ public class FilterTest {
 
     @Test
     public void stringFilter_secondarySidewalk() {
-        ArrayList<Report> filteredData = dataFilter.stringFilter(unfilteredData, "SECONDARY", "SIDEWALK");
+        ArrayList<Report> filteredData = dataFilter.stringFilter(unfilteredData, "LOCATION", "SIDEWALK");
         assertEquals(2, filteredData.size());
     }
 
