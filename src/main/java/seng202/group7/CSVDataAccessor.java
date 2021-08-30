@@ -13,37 +13,25 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 public class CSVDataAccessor implements DataAccessor {
 
-    /**
-     * Opens a file (currently supports csv files) and creates a list of reports (currently supports Crimes only)
-     * TODO add support for csv files
-     * TODO add support for incidents
-     * TODO fix bug with csv files containing entries with commas
-     * @param pathname
-     * 
-     * @return reports
-     */
     @Override
     public ArrayList<Report> read(String pathname) {
-        // TODO refactor once it is know how the file is passed in
-        // TODO refactor creation once crime class is developed
         ArrayList<Report> reports = new ArrayList<Report>();
-        int counter = 0;
         int errors = 0;
         try {
-            CSVReader reader = new CSVReader(new FileReader(pathname));
+            FileReader csvFile = new FileReader(pathname);
+            CSVReader reader = new CSVReader(csvFile);
             String [] columns;
-            String [] schema = reader.readNext();
+            String [] schema = reader.readNext(); // Will likely be used to determine crime vs incident
             while ((columns = reader.readNext()) != null) {
                 try {
                     reports.add(createCrime(columns));
-                    counter ++;
                 } catch (Exception e) {
-                    System.out.println(counter + errors);
                     System.out.println(e);
                     errors ++;
                 }
             }
             reader.close();
+            csvFile.close();
         } catch (FileNotFoundException e) {
             System.out.println(e);
         } catch (IOException io) {
@@ -108,20 +96,26 @@ public class CSVDataAccessor implements DataAccessor {
         return crime;
     }
 
-    public static LocalDateTime getLocalDateTime(String column) {
+    /**
+     * Changes the string of date in a US format to the format used by the LocalDateTime class
+     * @param date The date in the format "MM/dd/yyyy hh:mm:ss a"
+     * @return A local date time
+     */
+    private static LocalDateTime getLocalDateTime(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
-        return LocalDateTime.parse(column, formatter);
+        return LocalDateTime.parse(date, formatter);
     }
 
     @Override
     public void write(ArrayList<Report> reports, String pathname) {
-        // TODO Auto-generated method stub
         try {
             CSVWriter writer = new CSVWriter(new FileWriter(pathname), ',');
             // feed in your array (or convert your data to an array)
             String[] attributes;
 
-            writer.writeNext("CASE#,DATE  OF OCCURRENCE,BLOCK, IUCR, PRIMARY DESCRIPTION, SECONDARY DESCRIPTION, LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION".split(","));
+            //writer.writeNext("CASE#,DATE  OF OCCURRENCE,BLOCK, IUCR, PRIMARY DESCRIPTION, SECONDARY DESCRIPTION, LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION".split(","));
+            String[] schema = reports.get(0).getSchema().toArray(new String[0]);
+            writer.writeNext(schema);
 
             for (Report report : reports) {
                 attributes = report.getAttributes().toArray(new String[0]);
