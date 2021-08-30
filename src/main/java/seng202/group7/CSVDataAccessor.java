@@ -55,7 +55,7 @@ public class CSVDataAccessor implements DataAccessor {
         }
 
         crime.setBlock(columns[2]);
-        crime.setiucr(columns[3]);
+        crime.setIucr(columns[3]);
         crime.setPrimaryDescription(columns[4]);
         crime.setSecondaryDescription(columns[5]);
         crime.setLocationDescription(columns[6]);

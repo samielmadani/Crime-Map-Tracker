@@ -38,29 +38,21 @@ public class Crime extends Report {
     public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
     Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
-        setCaseNumber(caseNumber);
-        setDate(date);
-        setBlock(block);
-        setiucr(iucr);
-        setPrimaryDescription(primaryDescription);
-        setSecondaryDescription(secondaryDescription);
-        setLocationDescription(locationDescription);
-        setArrest(arrest);
-        setDomestic(domestic);
-        setBeat(beat);
-        setWard(ward);
-        setFbiCD(fbiCD);
-        setXCoord(xCoord);
-        setYCoord(yCoord);
-        setLatitude(latitude);
-        setLongitude(longitude);
+        super(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
+        this.caseNumber = caseNumber;
+        this.block = block;
+        this.iucr = iucr;
+        this.arrest = arrest;
+        this.beat = beat;
+        this.ward = ward;
+        this.fbiCD = fbiCD;
     }
 
     /**
      * Creates an crime class with all atributes initilised to null.
      */
     public Crime() {
-        
+        super();
     }
 
     /**
@@ -107,7 +99,7 @@ public class Crime extends Report {
      * 
      * @return The crime's Illinois Uniform Crime Reporting number
      */
-    public String getiucr() {
+    public String getIucr() {
         return this.iucr;
     }
 
@@ -115,7 +107,7 @@ public class Crime extends Report {
      * Sets the crime's Illinois Uniform Crime Reporting number, handles an empty string as null
      * @param iucr
      */
-    public void setiucr(String iucr) {
+    public void setIucr(String iucr) {
         if (Objects.equals(iucr, "")) {
             this.iucr = null;
         } else {

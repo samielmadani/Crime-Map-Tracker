@@ -16,6 +16,34 @@ abstract class Report {
     private Double longitude = null;
 
     /**
+     * Sets the data for all attributes in the report
+     * @param date
+     * @param primaryDescription
+     * @param secondaryDescription
+     * @param locationDescription
+     * @param domestic
+     * @param xCoord
+     * @param yCoord
+     * @param latitude
+     * @param longitude
+     */
+    public Report(LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
+            Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
+        this.date = date;
+        this.primaryDescription = primaryDescription;
+        this.secondaryDescription = secondaryDescription;
+        this.locationDescription = locationDescription;
+        this.domestic = domestic;
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Report() {
+
+    }
+    /**
      * 
      * @return An ArrayList containing what types of attributes are in the report
      */
