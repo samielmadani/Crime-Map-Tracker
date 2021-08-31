@@ -4,7 +4,18 @@ import java.util.ArrayList;
 
 interface DataAccessor {
 
+    /**
+     * Read all reports in the file found at the end of pathname.
+     * @param pathname Path to the file containing the reports to be created
+     * @return An ArrayList of reports from the file
+     */
     public ArrayList<Report> read(String pathname);
-    public void write(ArrayList<Report> reports);
+
+    /**
+     * Writes an ArrayList of reports to a file created at the location of the pathname.
+     * @param reports
+     * @param pathname
+     */
+    public void write(ArrayList<Report> reports, String pathname);
     
 }
