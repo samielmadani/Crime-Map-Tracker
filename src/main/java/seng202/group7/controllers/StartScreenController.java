@@ -6,9 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
+
+import java.io.File;
+
 import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
@@ -46,4 +51,17 @@ public class StartScreenController {
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
-}
+
+    
+    public void getFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("src"));
+        fileChooser.setTitle("Open data file");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv files", "*.csv"));
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null){
+            System.out.println(selectedFile.getAbsolutePath());
+        }
+        //return selectedFile;
+    }
+} 
