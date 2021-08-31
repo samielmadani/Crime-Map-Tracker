@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 public class Crime extends Report {
-    private String caseNumber = null;
+    private String caseNumber;
     private String block = null;
     private String iucr = null;
     private Boolean arrest = null;
@@ -49,13 +51,6 @@ public class Crime extends Report {
     }
 
     /**
-     * Creates an crime class with all attributes initialized to null.
-     */
-    public Crime() {
-        super();
-    }
-
-    /**
      * 
      * @return The crime's case number
      */
@@ -65,11 +60,12 @@ public class Crime extends Report {
 
     /**
      * Sets the crimes case number, handles an empty string as null
-     * @param caseNumber
+     * @param caseNumber A required string attribute which must be unique
+     * @throws InvalidAttributeValueException
      */
-    public void setCaseNumber(String caseNumber) {
-        if (Objects.equals(caseNumber, "")) {
-            this.caseNumber = null;
+    public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
+        if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
+            throw new InvalidAttributeValueException();
         } else {
             this.caseNumber = caseNumber;
         }

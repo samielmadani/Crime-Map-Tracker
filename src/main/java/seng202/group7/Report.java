@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 abstract class Report {
-    private LocalDateTime date = null;
-    private String primaryDescription = null;
-    private String secondaryDescription = null;
-    private String locationDescription = null;
+    private LocalDateTime date;
+    private String primaryDescription;
+    private String secondaryDescription;
+    private String locationDescription;
     private Boolean domestic = null;
     private Integer xCoord = null;
     private Integer yCoord = null;
@@ -40,9 +42,6 @@ abstract class Report {
         this.longitude = longitude;
     }
 
-    public Report() {
-
-    }
     /**
      * 
      * @return An ArrayList containing what types of attributes are in the report
@@ -64,9 +63,13 @@ abstract class Report {
 
     /**
      * Sets the date the report was submitted
-     * @param date
+     * @param date A required LocalDateTime attribute which must be unique
+     * @throws InvalidAttributeValueException If the attribute is null
      */
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDateTime date) throws InvalidAttributeValueException {
+        if (date == null) {
+            throw new InvalidAttributeValueException("Date cannot be null");
+        }
         this.date = date;
     }
 
@@ -80,11 +83,12 @@ abstract class Report {
 
     /**
      * Sets the primary description of the report
-     * @param primaryDescription
+     * @param primaryDescription A required String attribute which must be unique
+     * @throws InvalidAttributeValueException If the attribute is null
      */
-    public void setPrimaryDescription(String primaryDescription) {
-        if (Objects.equals(primaryDescription, "")) {
-            this.primaryDescription = null;
+    public void setPrimaryDescription(String primaryDescription) throws InvalidAttributeValueException {
+        if (Objects.equals(primaryDescription, "") || (primaryDescription == null)) {
+            throw new InvalidAttributeValueException("Primary description cannot be null");
         } else {
             this.primaryDescription = primaryDescription;
         }
@@ -100,11 +104,12 @@ abstract class Report {
     
     /**
      * Sets the secondary description of the report
-     * @param secondaryDescription
+     * @param secondaryDescription A required String attribute which must be unique
+     * @throws InvalidAttributeValueException If the attribute is null
      */
-    public void setSecondaryDescription(String secondaryDescription) {
-        if (Objects.equals(secondaryDescription, "")) {
-            this.secondaryDescription = null;
+    public void setSecondaryDescription(String secondaryDescription) throws InvalidAttributeValueException {
+        if (Objects.equals(secondaryDescription, "") || (secondaryDescription == null)) {
+            throw new InvalidAttributeValueException("Secondary description cannot be null");
         } else {
             this.secondaryDescription = secondaryDescription;
         }
