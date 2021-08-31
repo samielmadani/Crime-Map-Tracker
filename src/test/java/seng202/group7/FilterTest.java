@@ -23,7 +23,7 @@ public class FilterTest {
     
     /**
      * Sets up the tests by reading data and creating a filter to reduce the time taken
-     * TODO Create tests that can be used with different files being used initialy, i.e mediumFile
+     * TODO Create tests that can be used with different files being used initially, i.e mediumFile
      */
     @BeforeAll
     public static void setup() {

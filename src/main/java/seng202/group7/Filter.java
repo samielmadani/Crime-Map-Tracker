@@ -29,7 +29,7 @@ public class Filter {
     }
 
     /**
-     * Searchs the data and returns a new ArrayList of data within the area
+     * Searches the data and returns a new ArrayList of data within the area
      * @param currentData The ArrayList of reports to search
      * @param xcord1 
      * @param xcord2
@@ -55,7 +55,7 @@ public class Filter {
      * @param currentData The data to filter
      * @param attribute The attribute to filter by
      * @param filterSelection What is to be filtered
-     * @return An arraylist with the filtered results
+     * @return An ArrayList with the filtered results
      */
     public ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<Report>();
@@ -123,7 +123,7 @@ public class Filter {
      * @param currentData The data to filter
      * @param attribute The attribute to filter by
      * @param filterSelection What is to be filtered
-     * @return An arraylist with the filtered results
+     * @return An ArrayList with the filtered results
      */
     public ArrayList<Report> boolFilter(ArrayList<Report> currentData, String attribute, boolean filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<Report>();
