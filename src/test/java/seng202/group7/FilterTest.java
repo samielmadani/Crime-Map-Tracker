@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.io.File;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ public class FilterTest {
     @BeforeEach
     public void init() {
         this.dataAccessor = new CSVDataAccessor();
-        this.unfilteredData = dataAccessor.read("src/smallCrimeData.csv");
+        this.unfilteredData = dataAccessor.read(new File("src/smallCrimeData.csv"));
         this.dataFilter = new Filter();
     }
 

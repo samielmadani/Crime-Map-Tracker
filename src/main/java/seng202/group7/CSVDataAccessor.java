@@ -1,5 +1,6 @@
 package seng202.group7;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class CSVDataAccessor implements DataAccessor {
      * @return reports
      */
     @Override
-    public ArrayList<Report> read(String pathname) {
+    public ArrayList<Report> read(File pathname) {
         // TODO refactor once it is know how the file is passed in
         // TODO refactor creation once crime class is developed
         ArrayList<Report> reports = new ArrayList<Report>();
