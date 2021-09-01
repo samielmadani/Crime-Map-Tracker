@@ -14,7 +14,7 @@ public class CSVDataAccessorTest {
 
     @Test
     public void isCrimeInstance() {
-        CSVDataAccessor dataAccessor = new CSVDataAccessor();
+        CSVDataAccessor dataAccessor = CSVDataAccessor.getInstance();
         ArrayList<Report> data = dataAccessor.read(new File("src/crimeData.csv"));
 
         for(Report report : data){
@@ -24,7 +24,7 @@ public class CSVDataAccessorTest {
 
     @Test
     public void loadsAllRows() {
-        CSVDataAccessor dataAccessor = new CSVDataAccessor();
+        CSVDataAccessor dataAccessor = CSVDataAccessor.getInstance();
         ArrayList<Report> data = dataAccessor.read(new File("src/crimeData.csv"));
 
         assertEquals(5000, data.size(), String.format("Not all data was imported correctly." +
@@ -32,9 +32,18 @@ public class CSVDataAccessorTest {
         
     }
 
+
+    @Test
+    public void testDataFromFile() {
+        CSVDataAccessor dataAccessor = CSVDataAccessor.getInstance();
+        ArrayList<Report> data = dataAccessor.read(new File("src/crimeData.csv"));
+        String gotCaseNumber = ((Crime) data.get(0)).getBlock();
+        assertEquals("073XX S SOUTH SHORE DR", gotCaseNumber, "Data does not have the right value for case Number");
+    }
+
     @Test
     public void handlesCommaInField() {
-        CSVDataAccessor dataAccessor = new CSVDataAccessor();
+        CSVDataAccessor dataAccessor = CSVDataAccessor.getInstance();
         ArrayList<Report> data = dataAccessor.read(new File("src/commaInFieldTestData.csv"));
 
         Report actualReport = data.get(0);
@@ -44,7 +53,7 @@ public class CSVDataAccessorTest {
 
     @Test
     public void handlesBlankField() {
-        CSVDataAccessor dataAccessor = new CSVDataAccessor();
+        CSVDataAccessor dataAccessor = CSVDataAccessor.getInstance();
         ArrayList<Report> data = dataAccessor.read(new File("src/blankFieldTestData.csv"));
 
         Report actualReport = data.get(0);
@@ -54,7 +63,7 @@ public class CSVDataAccessorTest {
 
     @Test
     public void handlesBlankRow() {
-        CSVDataAccessor dataAccessor = new CSVDataAccessor();
+        CSVDataAccessor dataAccessor = CSVDataAccessor.getInstance();
         ArrayList<Report> data = dataAccessor.read(new File("src/blankRowTestData.csv"));
 
         Report actualReport = data.get(0);

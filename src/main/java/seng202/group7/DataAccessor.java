@@ -3,9 +3,9 @@ package seng202.group7;
 import java.util.ArrayList;
 import java.io.File;
 
-interface DataAccessor {
+public interface DataAccessor {
 
-    public ArrayList<Report> read(File pathname);
-    public void write(ArrayList<Report> reports);
+    ArrayList<Report> read(File pathname);
+    void write(ArrayList<Report> reports);
     
 }

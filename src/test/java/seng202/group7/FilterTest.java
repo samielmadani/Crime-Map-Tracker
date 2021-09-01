@@ -12,17 +12,17 @@ import org.junit.jupiter.api.Test;
 
 public class FilterTest {
 
-    CSVDataAccessor dataAccessor;
+    DataAccessor dataAccessor;
     ArrayList<Report> unfilteredData;
     Filter dataFilter;
 
     @BeforeEach
     public void init() {
-        this.dataAccessor = new CSVDataAccessor();
+        this.dataAccessor = CSVDataAccessor.getInstance();
         this.unfilteredData = dataAccessor.read(new File("src/smallCrimeData.csv"));
         this.dataFilter = new Filter();
     }
-
+    //TODO xCords and yCords not xcords ycords
     @Test
     public void geoFilterTest1() {
         Integer xcord1 = 0;

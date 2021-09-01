@@ -1,123 +1,112 @@
 package seng202.group7;
 
+import javafx.beans.property.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-abstract class Report {
+public abstract class Report {
     private LocalDateTime date = null;
-    private String primaryDescription = null;
-    private String secondaryDescription = null;
-    private String locationDescription = null;
-    private Boolean domestic = null;
-    private Integer xCoord = null;
-    private Integer yCoord = null;
-    private Double latitude = null;
-    private Double longitude = null;
+    private SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
+    private SimpleStringProperty secondaryDescription = new SimpleStringProperty(null);
+    private SimpleStringProperty locationDescription = new SimpleStringProperty(null);
+    private SimpleObjectProperty<Boolean> domestic = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Integer> xCoord = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Integer> yCoord = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Double> latitude = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Double> longitude = new SimpleObjectProperty<>(null);
     
-    public LocalDateTime getDate() {
-        return this.date;
-    }
+    public LocalDateTime getDate() { return this.date; }
 
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
     public String getPrimaryDescription() {
-        return this.primaryDescription;
+        return this.primaryDescription.get();
     }
 
     public void setPrimaryDescription(String primaryDescription) {
         if (Objects.equals(primaryDescription, "")) {
-            this.primaryDescription = null;
+            this.primaryDescription.setValue(null);
         } else {
-            this.primaryDescription = primaryDescription;
+            this.primaryDescription.setValue(primaryDescription);
         }
     }
 
     public String getSecondaryDescription() {
-        return this.secondaryDescription;
+        return this.secondaryDescription.get();
     }
     
     public void setSecondaryDescription(String secondaryDescription) {
         if (Objects.equals(secondaryDescription, "")) {
-            this.secondaryDescription = null;
+            this.secondaryDescription.setValue(null);
         } else {
-            this.secondaryDescription = secondaryDescription;
+            this.secondaryDescription.setValue(secondaryDescription);
         }
     }
 
     public String getLocationDescription() {
-        return this.locationDescription;
+        return this.locationDescription.get();
     }
 
     public void setLocationDescription(String locationDescription) {
         if (Objects.equals(locationDescription, "")) {
-            this.locationDescription = null;
+            this.locationDescription.setValue(null);
         } else {
-            this.locationDescription = locationDescription;
+            this.locationDescription.setValue(locationDescription);
         }
     }
 
     public Boolean getDomestic() {
-        return this.domestic;
+        return this.domestic.get();
     }
 
     public void setDomestic(Boolean domestic) {
-        this.domestic = domestic;
+        this.domestic.setValue(domestic);
     }
 
     public Integer getXCoord() {
-        return this.xCoord;
+        return this.xCoord.get();
+
     }
 
-    public void setXCoord(Integer xCoord) {
-        this.xCoord = xCoord;
-    }
+    public void setXCoord(Integer xCoord) { this.xCoord.setValue(xCoord);}
 
     public Integer getYCoord() {
-        return this.yCoord;
+        return this.yCoord.get();
     }
 
-    public void setYCoord(Integer yCoord) {
-        this.yCoord = yCoord;
-    }
+    public void setYCoord(Integer yCoord) { this.yCoord.setValue(yCoord); }
 
     public Double getLatitude() {
-        return this.latitude;
+        return this.latitude.get();
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
+    public void setLatitude(Double latitude) { this.latitude.setValue(latitude); }
 
     public Double getLongitude() {
-        return this.longitude;
+        return this.longitude.get();
     }
 
-    public void setLongitude(Double Longitude) {
-        this.longitude = Longitude;
-    }
+    public void setLongitude(Double longitude) { this.longitude.setValue(longitude); }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Report report = (Report) o;
-        return Objects.equals(date, report.date) 
-            && Objects.equals(primaryDescription, report.primaryDescription) 
-            && Objects.equals(secondaryDescription, report.secondaryDescription) 
-            && Objects.equals(locationDescription, report.locationDescription) 
-            && Objects.equals(domestic, report.domestic) 
-            && Objects.equals(xCoord, report.xCoord) 
-            && Objects.equals(yCoord, report.yCoord) 
-            && Objects.equals(latitude, report.latitude) 
-            && Objects.equals(longitude, report.longitude);
+        return Objects.equals(date, report.getDate())
+            && Objects.equals(primaryDescription.get(), report.getPrimaryDescription())
+            && Objects.equals(secondaryDescription.get(), report.getSecondaryDescription())
+            && Objects.equals(locationDescription.get(), report.getLocationDescription())
+            && Objects.equals(domestic.get(), report.getDomestic())
+            && Objects.equals(xCoord.get(), report.getXCoord())
+            && Objects.equals(yCoord.get(), report.getYCoord())
+            && Objects.equals(latitude.get(), report.getLatitude())
+            && Objects.equals(longitude.get(), report.getLongitude());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
-    }
 
     @Override
     public String toString() {

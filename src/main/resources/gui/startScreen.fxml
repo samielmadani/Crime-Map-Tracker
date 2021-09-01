@@ -13,7 +13,7 @@
       </Button>
    </left>
    <center>
-      <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#toNextScene" prefHeight="25.0" prefWidth="103.0" text="Start" BorderPane.alignment="CENTER">
+      <Button fx:id="startButton" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#fadeOutScene" prefHeight="25.0" prefWidth="103.0" text="Start" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
          </BorderPane.margin></Button>

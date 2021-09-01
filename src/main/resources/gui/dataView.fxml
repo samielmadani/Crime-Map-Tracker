@@ -37,13 +37,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TableView prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-                  <TableColumn prefWidth="117.0" text="Column X" />
-                  <TableColumn prefWidth="126.0" text="Column X" />
-                  <TableColumn prefWidth="137.0" text="Column X" />
+                <TableColumn fx:id="caseCol" prefWidth="93.0" text="Case Number" />
+                <TableColumn fx:id="dateCol" prefWidth="68.0" text="Date" />
+                  <TableColumn fx:id="arrestCol" prefWidth="57.0" text="Arrest" />
+                  <TableColumn fx:id="wardCol" prefWidth="107.0" text="Ward" />
+                  <TableColumn fx:id="descCol" prefWidth="205.0" text="Primary Description" />
               </columns>
             </TableView>
          </children>

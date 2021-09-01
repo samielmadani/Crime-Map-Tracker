@@ -9,8 +9,28 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import au.com.bytecode.opencsv.CSVReader;
+import seng202.group7.controllers.ControllerData;
 
-public class CSVDataAccessor implements DataAccessor {
+public final class CSVDataAccessor implements DataAccessor {
+    /**
+     * This creates a singleton instants of the class.
+     */
+    private final static CSVDataAccessor INSTANCE = new CSVDataAccessor();
+
+    /**
+     * The constructor which is made private so that it can not be initialized from other classes.
+     */
+    private CSVDataAccessor() {}
+
+    /**
+     * Used to get the singleton instants of the class when assessing. This is done over a "static" class due to it
+     * implementing an interface.
+     *
+     * @return INSTANCE     The only instants of this class.
+     */
+    public static CSVDataAccessor getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Opens a file (currently supports csv files) and creates a list of reports (currently supports Crimes only)
@@ -25,7 +45,7 @@ public class CSVDataAccessor implements DataAccessor {
     public ArrayList<Report> read(File pathname) {
         // TODO refactor once it is know how the file is passed in
         // TODO refactor creation once crime class is developed
-        ArrayList<Report> reports = new ArrayList<Report>();
+        ArrayList<Report> reports = new ArrayList<>();
         int counter = 0;
         int errors = 0;
         try {
@@ -38,15 +58,13 @@ public class CSVDataAccessor implements DataAccessor {
                     counter ++;
                 } catch (Exception e) {
                     System.out.println(counter + errors);
-                    System.out.println(e);
+                    System.out.println(e.getMessage());
                     errors ++;
                 }
             }
             reader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        } catch (IOException io) {
-            System.out.println(io);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
         return reports;
     }
@@ -66,7 +84,7 @@ public class CSVDataAccessor implements DataAccessor {
         }
 
         crime.setBlock(columns[2]);
-        crime.setiucr(columns[3]);
+        crime.setIucr(columns[3]);
         crime.setPrimaryDescription(columns[4]);
         crime.setSecondaryDescription(columns[5]);
         crime.setLocationDescription(columns[6]);

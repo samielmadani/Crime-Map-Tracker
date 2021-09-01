@@ -1,21 +1,25 @@
 package seng202.group7;
 
-import java.io.Console;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Crime extends Report {
-//TODO: change to wrappers?
-    private String caseNumber = null;
-    private String block = null;
-    private String iucr = null;
-    private Boolean arrest = null;
-    private Integer beat = null;
-    private Integer ward = null;
-    private String fbiCD = null;
+    private SimpleStringProperty caseNumber = new SimpleStringProperty(null);
+    private SimpleStringProperty block = new SimpleStringProperty(null);
+    private SimpleStringProperty iucr = new SimpleStringProperty(null);
+    private SimpleStringProperty fbiCD = new SimpleStringProperty(null);
+    private SimpleObjectProperty<Boolean> arrest = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Integer> beat = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Integer> ward = new SimpleObjectProperty<>(null);
+
 
     /**
-     * Initilises a crime object. \n
+     * Initialises a crime object. \n
      * Note: Can currently only create complete classes
      * @param caseNumber
      * @param date
@@ -40,7 +44,7 @@ public class Crime extends Report {
         setCaseNumber(caseNumber);
         setDate(date);
         setBlock(block);
-        setiucr(iucr);
+        setIucr(iucr);
         setPrimaryDescription(primaryDescription);
         setSecondaryDescription(secondaryDescription);
         setLocationDescription(locationDescription);
@@ -54,102 +58,95 @@ public class Crime extends Report {
         setLatitude(latitude);
         setLongitude(longitude);
     }
-
-    public Crime() {
-        
-    }
+    public Crime() {}
 
     public String getCaseNumber() {
-        return this.caseNumber;
+        return this.caseNumber.get();
     }
 
     public void setCaseNumber(String caseNumber) {
         if (Objects.equals(caseNumber, "")) {
-            this.caseNumber = null;
+            this.caseNumber.setValue(null);
         } else {
-            this.caseNumber = caseNumber;
+            this.caseNumber.setValue(caseNumber);
         }
     }
 
     public String getBlock() {
-        return this.block;
+        return this.block.get();
     }
 
     public void setBlock(String block) {
         if (Objects.equals(block, "")) {
-            this.block = null;
+            this.block.setValue(null);
         } else {
-            this.block = block;
+            this.block.setValue(block);
         }
     }
 
-    public String getiucr() {
-        return this.iucr;
+    public String getIucr() {
+        return this.iucr.get();
     }
 
-    public void setiucr(String iucr) {
+    public void setIucr(String iucr) {
         if (Objects.equals(iucr, "")) {
-            this.iucr = null;
+            this.iucr.setValue(null);
         } else {
-            this.iucr = iucr;
+            this.iucr.setValue(iucr);
         }
     }
 
     public Boolean getArrest() {
-        return this.arrest;
+        return this.arrest.get();
     }
 
     public void setArrest(Boolean arrest) {
-        this.arrest = arrest;
+        this.arrest.setValue(arrest);
     }
 
     public Integer getBeat() {
-        return this.beat;
+        return this.beat.get();
     }
 
     public void setBeat(Integer beat) {
-        this.beat = beat;
+        this.beat.setValue(beat);
     }
 
     public Integer getWard() {
-        return this.ward;
+        return this.ward.get();
     }
 
     public void setWard(Integer ward) {
-        this.ward = ward;
+        this.ward.setValue(ward);
 
     }
 
     public String getFbiCD() {
-        return this.fbiCD;
+        return this.fbiCD.get();
     }
 
     public void setFbiCD(String fbiCD) {
         if (Objects.equals(fbiCD, "")) {
-            this.fbiCD = null;
+            this.fbiCD.setValue(null);
         } else {
-            this.fbiCD = fbiCD;
+            this.fbiCD.setValue(fbiCD);
         }
     }
 
+    //TODO Remove when this method becomes unnecessary, move to tests.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Crime crime = (Crime) o;
-        return Objects.equals(arrest, crime.arrest)
-            && Objects.equals(beat, crime.beat)
-            && Objects.equals(ward, crime.ward)
-            && Objects.equals(caseNumber, crime.caseNumber)
-            && Objects.equals(block, crime.block)
-            && Objects.equals(iucr, crime.iucr)
-            && Objects.equals(fbiCD, crime.fbiCD);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), caseNumber, block, iucr, arrest, beat, ward, fbiCD);
+        return Objects.equals(arrest.get(), crime.getArrest())
+            && Objects.equals(beat.get(), crime.getBeat())
+            && Objects.equals(ward.get(), crime.getWard())
+            && Objects.equals(caseNumber.get(), crime.getCaseNumber())
+            && Objects.equals(block.get(), crime.getBlock())
+            && Objects.equals(iucr.get(), crime.getIucr())
+            && Objects.equals(fbiCD.get(), crime.getFbiCD());
     }
 
     @Override
