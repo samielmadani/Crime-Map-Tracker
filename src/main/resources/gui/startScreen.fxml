@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
+   <left>
+      <Button mnemonicParsing="false" onAction="#getFile" prefHeight="25.0" prefWidth="89.0" text="Import Data" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </BorderPane.margin>
+      </Button>
+   </left>
+   <center>
+      <Button fx:id="startButton" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#fadeOutScene" prefHeight="25.0" prefWidth="103.0" text="Start" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </BorderPane.margin></Button>
+   </center>
+   <right>
+      <Button mnemonicParsing="false" onAction="#exitStage" prefHeight="25.0" prefWidth="82.0" text="Quit" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+         </BorderPane.margin>
+      </Button>
+   </right>
+</BorderPane>

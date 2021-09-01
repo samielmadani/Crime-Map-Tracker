@@ -1,5 +1,6 @@
 package seng202.group7;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -10,12 +11,32 @@ import java.util.ArrayList;
 import java.util.Locale;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import seng202.group7.controllers.ControllerData;
 
-public class CSVDataAccessor implements DataAccessor {
+public final class CSVDataAccessor implements DataAccessor {
+    /**
+     * This creates a singleton instants of the class.
+     */
+    private final static CSVDataAccessor INSTANCE = new CSVDataAccessor();
+
+    /**
+     * The constructor which is made private so that it can not be initialized from other classes.
+     */
+    private CSVDataAccessor() {}
+
+    /**
+     * Used to get the singleton instants of the class when assessing. This is done over a "static" class due to it
+     * implementing an interface.
+     *
+     * @return INSTANCE     The only instants of this class.
+     */
+    public static CSVDataAccessor getInstance() {
+        return INSTANCE;
+    }
 
     @Override
-    public ArrayList<Report> read(String pathname) {
-        ArrayList<Report> reports = new ArrayList<Report>();
+    public ArrayList<Report> read(File pathname) {
+        ArrayList<Report> reports = new ArrayList<>();
         int errors = 0;
         try {
             FileReader csvFile = new FileReader(pathname);
@@ -35,7 +56,7 @@ public class CSVDataAccessor implements DataAccessor {
         } catch (FileNotFoundException e) {
             System.out.println(e);
         } catch (IOException io) {
-            System.out.println(io);
+            System.out.println(io.getMessage());
         }
         return reports;
     }

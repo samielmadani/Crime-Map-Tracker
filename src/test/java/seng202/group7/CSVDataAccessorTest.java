@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.io.File;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -13,19 +14,20 @@ import org.junit.jupiter.api.Test;
 
 public class CSVDataAccessorTest {
     private static DataAccessor dataAccessor;
-    private String smallFile = "src/test/files/smallCrimeData.csv";
-    private String mediumFile = "src/test/files/crimeData.csv";
-    private String testFile = "src/test/files/testData.csv";
-    private String commaFile = "src/test/files/commaInFieldTestData.csv";
-    private String blankFieldFile = "src/test/files/blankFieldTestData.csv";
-    private String blankRowFile = "src/test/files/blankRowTestData.csv";
-
+    private File smallFile = new File("src/test/files/smallCrimeData.csv");
+    private File mediumFile = new File("src/test/files/crimeData.csv");
+    private File commaFile = new File("src/test/files/commaInFieldTestData.csv");
+    private File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
+    private File blankRowFile = new File("src/test/files/blankRowTestData.csv");
+    private File testFile = new File("src/test/files/testData.csv");
+    
+    private String testFileString = "src/test/files/testData.csv";
     /**
      * Creates a CSVDataAccessor for any test to use
      */
     @BeforeAll
     public static void init(){
-        dataAccessor = new CSVDataAccessor();
+        dataAccessor = CSVDataAccessor.getInstance();
     }
 
     /**
@@ -64,6 +66,13 @@ public class CSVDataAccessorTest {
         assertEquals(expectedReport, actualReport);
     }
 
+    @Test
+    public void testDataFromFile() {
+        ArrayList<Report> data = dataAccessor.read(smallFile);
+        String gotCaseNumber = ((Crime) data.get(0)).getBlock();
+        assertEquals("073XX S SOUTH SHORE DR", gotCaseNumber, "Data does not have the right value for case Number");
+    }
+
     /**
      * Checks that the file reader responds to a file with a blank entry correctly
      */
@@ -96,7 +105,7 @@ public class CSVDataAccessorTest {
     @Test
     public void write_mediumFile() {
         ArrayList<Report> data1 = dataAccessor.read(mediumFile);
-        dataAccessor.write(data1, testFile);
+        dataAccessor.write(data1, testFileString);
         ArrayList<Report> data2 = dataAccessor.read(testFile);
 
         assertTrue(data1.equals(data2), "Data is not the same after being read and written to file.");

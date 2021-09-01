@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 public class Filter {
     // TODO This function repeats itself too much, all of the methods do the exact same thing
 
+    public Filter() {}
+    
     /**
      * Searches the data and returns a new list with only the conforming data
      * @param currentData The ArrayList of reports to search
@@ -15,7 +17,7 @@ public class Filter {
      * @throws IllegalArgumentException If the start time is after the end time
      */
     public ArrayList<Report> timeFilter(ArrayList<Report> currentData, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException{
-        ArrayList<Report> filteredData = new ArrayList<Report>();
+        ArrayList<Report> filteredData = new ArrayList<>();
         if (start.isAfter(end)) {
             throw new IllegalArgumentException("End is before start");
         }
@@ -38,7 +40,7 @@ public class Filter {
      * @return
      */
     public ArrayList<Report> geoFilter(ArrayList<Report> currentData, Integer xcord1, Integer xcord2, Integer ycord1, Integer ycord2) {
-        ArrayList<Report> filteredData = new ArrayList<Report>();
+        ArrayList<Report> filteredData = new ArrayList<>();
         for (Report data: currentData) {
             if (data.getXCoord() != null && data.getYCoord() != null &&
                     ((data.getXCoord() >= xcord1) && (data.getXCoord() <= xcord2)) &&
@@ -58,7 +60,7 @@ public class Filter {
      * @return An arraylist with the filtered results
      */
     public ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
-        ArrayList<Report> filteredData = new ArrayList<Report>();
+        ArrayList<Report> filteredData = new ArrayList<>();
         switch(attribute) {
             case "BLOCK": 
                 blockFilter(currentData, filteredData, filterSelection);
@@ -126,10 +128,10 @@ public class Filter {
      * @return An arraylist with the filtered results
      */
     public ArrayList<Report> boolFilter(ArrayList<Report> currentData, String attribute, boolean filterSelection) {
-        ArrayList<Report> filteredData = new ArrayList<Report>();
+        ArrayList<Report> filteredData = new ArrayList<>();
         switch(attribute) {
             case "ARREST": 
-                arrestFilter(currentData, filteredData,filterSelection);
+                arrestFilter(currentData, filteredData, filterSelection);
                 break;
             case "DOMESTIC": 
                 domesticFilter(currentData, filteredData, filterSelection);
