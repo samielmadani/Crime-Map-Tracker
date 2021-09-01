@@ -104,6 +104,7 @@ public class CSVDataAccessorTest {
         dataAccessor.write(data1, testFileString);
         ArrayList<Report> data2 = dataAccessor.read(testFile);
 
+        System.out.println("test");
         assertTrue(data1.equals(data2), "Data is not the same after being read and written to file.");
     }
 }

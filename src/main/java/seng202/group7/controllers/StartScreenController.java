@@ -97,7 +97,7 @@ public class StartScreenController {
      */
     public void getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("src"));
+        fileChooser.setInitialDirectory(new File("src/test/files"));
         fileChooser.setTitle("Open data file");
         // Limits the types of files to only CSV.
         fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv files", "*.csv"));

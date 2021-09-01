@@ -61,7 +61,7 @@ public class Crime extends Report {
      * @return The crime's case number
      */
     public String getCaseNumber() {
-        return this.caseNumber.get();
+        return caseNumber.get();
     }
 
     /**
@@ -82,7 +82,7 @@ public class Crime extends Report {
      * @return The block the crime occurred in
      */
     public String getBlock() {
-        return this.block.get();
+        return block.get();
     }
 
     /**
@@ -102,7 +102,7 @@ public class Crime extends Report {
      * @return The crime's Illinois Uniform Crime Reporting number
      */
     public String getIucr() {
-        return this.iucr.get();
+        return iucr.get();
     }
 
     /**
@@ -122,7 +122,7 @@ public class Crime extends Report {
      * @return Whether the crime resulted in an arrest
      */
     public Boolean getArrest() {
-        return this.arrest.get();
+        return arrest.get();
     }
 
     /**
@@ -188,18 +188,18 @@ public class Crime extends Report {
 
     public ArrayList<String> getAttributes() {
         ArrayList<String> attributes = new ArrayList<>();
-        attributes.add(caseNumber.get());
+        attributes.add(caseNumber.getValue());
         attributes.add(toString(getDate()));
-        attributes.add(block.get());
-        attributes.add(iucr.get());
+        attributes.add(block.getValue());
+        attributes.add(iucr.getValue());
         attributes.add(getPrimaryDescription());
         attributes.add(getSecondaryDescription());
         attributes.add(getLocationDescription());
-        attributes.add(toString(arrest));
+        attributes.add(toString(arrest.getValue()));
         attributes.add(toString(getDomestic()));
-        attributes.add(toString(beat));
-        attributes.add(toString(ward));
-        attributes.add(fbiCD.get());
+        attributes.add(toString(beat.getValue()));
+        attributes.add(toString(ward.getValue()));
+        attributes.add(fbiCD.getValue());
         attributes.add(toString(getXCoord()));
         attributes.add(toString(getYCoord()));
         attributes.add(toString(getLatitude()));

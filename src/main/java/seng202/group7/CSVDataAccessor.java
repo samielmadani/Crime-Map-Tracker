@@ -112,7 +112,11 @@ public final class CSVDataAccessor implements DataAccessor {
         
         Integer beat = null;
         if (!columns[9].isEmpty()) {
-            beat = Integer.parseInt(columns[9]);
+            try{
+                beat = Integer.parseInt(columns[9]);
+            } catch (Exception e) {
+                beat = null;
+            }
         }
         
         Integer ward = null;
