@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import javax.naming.directory.InvalidAttributeValueException;
+
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import seng202.group7.controllers.ControllerData;
@@ -46,7 +49,7 @@ public final class CSVDataAccessor implements DataAccessor {
             while ((columns = reader.readNext()) != null) {
                 try {
                     reports.add(createCrime(columns));
-                } catch (Exception e) {
+                } catch (InvalidAttributeValueException e) {
                     System.out.println(e);
                     errors ++;
                 }
@@ -63,57 +66,84 @@ public final class CSVDataAccessor implements DataAccessor {
 
     /**
      * Takes a row from a csv and converts elements to an instance of crime
-     * @param columns
+     * @param columns The column which 
      * @return crime
+     * @throws InvalidAttributeValueException
      */
-    private Crime createCrime(String[] columns) {
-        Crime crime = new Crime();
-        crime.setCaseNumber(columns[0]);
-
+    private Crime createCrime(String[] columns) throws InvalidAttributeValueException {
+        String caseNumber = columns[0];
+        if (caseNumber.isEmpty()) {
+            throw new InvalidAttributeValueException("Case number is null");
+        }
+        
+        LocalDateTime date = null;
         // Currently set for American time MM/dd/yyyy hh:mm:ss a
         if (!columns[1].isEmpty()) {
-            crime.setDate(getLocalDateTime(columns[1]));
+            date = getLocalDateTime(columns[1]);
+        } else {
+            throw new InvalidAttributeValueException("Date is null");
+        }
+        
+        String block = columns[2];
+
+        String iucr = columns[3];
+
+        String primaryDescription = columns[4];
+        if (primaryDescription.isEmpty()) {
+            throw new InvalidAttributeValueException("Primary description is null");
         }
 
-        crime.setBlock(columns[2]);
-        crime.setIucr(columns[3]);
-        crime.setPrimaryDescription(columns[4]);
-        crime.setSecondaryDescription(columns[5]);
-        crime.setLocationDescription(columns[6]);
+        String secondaryDescription  = columns[5];
+        if (primaryDescription.isEmpty()) {
+            throw new InvalidAttributeValueException("Secondary description is null");
+        }
 
+        String locationDescription =columns[6];
+        
+        Boolean arrest = null;
         if (!columns[7].isEmpty()) {
-            crime.setArrest(columns[7].equals("Y") || columns[7].equals("true"));
+            arrest = columns[7].equals("Y") || columns[7].equals("true");
         }
-
+        
+        Boolean domestic = null;
         if (!columns[8].isEmpty()) {
-            crime.setDomestic(columns[8].equals("Y") || columns[8].equals("true"));
+            domestic  = columns[8].equals("Y") || columns[8].equals("true");
         }
-
+        
+        Integer beat = null;
         if (!columns[9].isEmpty()) {
-            crime.setBeat(Integer.parseInt(columns[9]));
+            beat = Integer.parseInt(columns[9]);
         }
-
+        
+        Integer ward = null;
         if (!columns[10].isEmpty()) {
-            crime.setWard(Integer.parseInt(columns[10]));
+            ward = Integer.parseInt(columns[10]);
         }
-
-        crime.setFbiCD(columns[11]);
-
+        
+        String fbiCD = columns[11];
+        
+        Integer xCoord = null;
         if (!columns[12].isEmpty()) {
-            crime.setXCoord(Integer.parseInt(columns[12]));
+            xCoord = Integer.parseInt(columns[12]);
         }
-
+        
+        Integer yCoord = null;
         if (!columns[13].isEmpty()) {
-            crime.setYCoord(Integer.parseInt(columns[13]));
+            yCoord = Integer.parseInt(columns[13]);
         }
-
+        
+        Double latitude = null;
         if (!columns[14].isEmpty()) {
-            crime.setLatitude(Double.parseDouble(columns[14]));
+            latitude = Double.parseDouble(columns[14]);
+        }
+        
+        Double longitude = null;
+        if (!columns[15].isEmpty()) {
+            longitude = Double.parseDouble(columns[15]);
         }
 
-        if (!columns[15].isEmpty()) {
-            crime.setLongitude(Double.parseDouble(columns[15]));
-        }
+        Crime crime = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription,
+              locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
         return crime;
     }
 

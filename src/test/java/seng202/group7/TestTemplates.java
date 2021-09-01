@@ -11,7 +11,6 @@ package seng202.group7;
 //      * Test to check description changes correctly
 //      * 
 //      */
-//     // TODO apply changes to storage
 //     @Test
 //     public void () {
 //         Report report = new Report();
@@ -37,7 +36,7 @@ package seng202.group7;
 //     }
 
 //     /**
-//      * Checks that a new report has been added successfuly 
+//      * Checks that a new report has been added successfully 
 //      */
 //     @Test
 //     public void name() {

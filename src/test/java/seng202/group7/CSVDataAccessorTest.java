@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class CSVDataAccessorTest {
@@ -88,15 +87,12 @@ public class CSVDataAccessorTest {
 
     /**
      * Checks that the file reader responds to a file with a row of null values correctly
-     * TODO Confirm this is correct behavior, it should probably just skip it if this is the case
      */
     @Test
     public void read_fileWithMissingRow() {
         ArrayList<Report> data = dataAccessor.read(blankRowFile);
 
-        Report actualReport = data.get(0);
-        Report expectedReport = new Crime(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-        assertEquals(expectedReport, actualReport);
+        assertTrue(data.size() == 1);
     }
 
     /**

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 public class Crime extends Report {
     private SimpleStringProperty caseNumber;
     private SimpleStringProperty block = new SimpleStringProperty(null);
@@ -22,24 +24,24 @@ public class Crime extends Report {
 
 
     /**
-     * Initialises a crime object. \n
+     * Initializes a crime object. \n
      * Note: Can currently only create complete classes
-     * @param caseNumber
-     * @param date
-     * @param block
-     * @param iucr
-     * @param primaryDescription
-     * @param secondaryDescription
-     * @param locationDescription
-     * @param arrest
-     * @param domestic
-     * @param beat
-     * @param ward
-     * @param fbiCD
-     * @param xCoord
-     * @param yCoord
-     * @param latitude
-     * @param longitude
+     * @param caseNumber A required field which must be unique and cannot be null
+     * @param date A required field which contains the year, month, day and time of the crime
+     * @param block An optional field which contains what block the crime occurred in
+     * @param iucr An optional field which contains the Illinois Uniform Crime Reporting number
+     * @param primaryDescription A required field which contains the primary description of the crime
+     * @param secondaryDescription A required field which contains the more descriptive secondary description of the crime
+     * @param locationDescription An optional field which contains the description of the location where the crime occurred
+     * @param arrest An optional field which contains whether the crime resulted in an arrest
+     * @param domestic An optional field which contains if the crime was domestic
+     * @param beat An optional field which contains TODO what is this
+     * @param ward An optional field which contains TODO what is this
+     * @param fbiCD An optional field which contains TODO what is this
+     * @param xCoord An optional field which is has the x-coordinate of where the crime occurred
+     * @param yCoord An optional field which is has the y-coordinate of where the crime occurred
+     * @param latitude An optional field which is has the latitude of where the crime occurred
+     * @param longitude An optional field which is has the longitude of where the crime occurred
      */
     public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
@@ -55,13 +57,6 @@ public class Crime extends Report {
     }
 
     /**
-     * Creates an crime class with all atributes initilised to null.
-     */
-    public Crime() {
-        super();
-    }
-
-    /**
      * 
      * @return The crime's case number
      */
@@ -71,11 +66,12 @@ public class Crime extends Report {
 
     /**
      * Sets the crimes case number, handles an empty string as null
-     * @param caseNumber
+     * @param caseNumber A required string attribute which must be unique
+     * @throws InvalidAttributeValueException
      */
-    public void setCaseNumber(String caseNumber) {
-        if (Objects.equals(caseNumber, "")) {
-            this.caseNumber.setValue(null);
+    public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
+        if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
+            throw new InvalidAttributeValueException();
         } else {
             this.caseNumber.setValue(caseNumber);
         }
@@ -83,14 +79,14 @@ public class Crime extends Report {
 
     /**
      * 
-     * @return The block the crime occured in
+     * @return The block the crime occurred in
      */
     public String getBlock() {
         return this.block.get();
     }
 
     /**
-     * Sets the block the crime occured in, handles an empty string as null
+     * Sets the block the crime occurred in, handles an empty string as null
      * @param block
      */
     public void setBlock(String block) {
