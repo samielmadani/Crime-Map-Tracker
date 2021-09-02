@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-abstract class Report {
+public abstract class Report {
     private LocalDateTime date = null;
     private String primaryDescription = null;
     private String secondaryDescription = null;

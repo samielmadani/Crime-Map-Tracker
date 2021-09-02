@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import seng202.group7.analyses.Filter;
 
 public class FilterTest {
     private static CSVDataAccessor dataAccessor;
