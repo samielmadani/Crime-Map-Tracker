@@ -6,28 +6,32 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.io.File;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class FilterTest {
-    private static CSVDataAccessor dataAccessor;
+    //private static CSVDataAccessor dataAccessor;
+    private static DataAccessor dataAccessor;
     private static ArrayList<Report> unfilteredData;
     private static Filter dataFilter;
-    private static String smallFile = "src/test/files/smallCrimeData.csv";
-    private static String mediumFile = "src/test/files/crimeData.csv";
-    private static String testFile = "src/test/files/testData.csv";
-    private static String commaFile = "src/test/files/commaInFieldTestData.csv";
-    private static String blankFieldFile = "src/test/files/blankFieldTestData.csv";
-    private static String blankRowFile = "src/test/files/blankRowTestData.csv";
+    private static File smallFile = new File("src/test/files/smallCrimeData.csv");
+    private static File mediumFile = new File("src/test/files/crimeData.csv");
+    private static File commaFile = new File("src/test/files/commaInFieldTestData.csv");
+    private static File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
+    private static File blankRowFile = new File("src/test/files/blankRowTestData.csv");
+    private static File testFile = new File("src/test/files/testData.csv");
+    
+    private String testFileString = "src/test/files/testData.csv";
     
     /**
      * Sets up the tests by reading data and creating a filter to reduce the time taken
-     * TODO Create tests that can be used with different files being used initialy, i.e mediumFile
+     * TODO Create tests that can be used with different files being used initially, i.e mediumFile
      */
     @BeforeAll
     public static void setup() {
-        dataAccessor = new CSVDataAccessor();
+        dataAccessor = CSVDataAccessor.getInstance();
         unfilteredData = dataAccessor.read(smallFile);
         dataFilter = new Filter();
     }
@@ -35,6 +39,7 @@ public class FilterTest {
     /**
      * Checks that there are no matches for the coordinates (0,0) (1,1)
      */
+    //TODO xCords and yCords not xcords ycords
     @Test
     public void geoFilter_noMatches() {
         Integer xcord1 = 0;

@@ -1,58 +1,59 @@
 package seng202.group7;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.naming.directory.InvalidAttributeValueException;
+
 public class Crime extends Report {
-    private String caseNumber = null;
-    private String block = null;
-    private String iucr = null;
-    private Boolean arrest = null;
-    private Integer beat = null;
-    private Integer ward = null;
-    private String fbiCD = null;
+    private SimpleStringProperty caseNumber;
+    private SimpleStringProperty block = new SimpleStringProperty(null);
+    private SimpleStringProperty iucr = new SimpleStringProperty(null);
+    private SimpleStringProperty fbiCD = new SimpleStringProperty(null);
+    private SimpleObjectProperty<Boolean> arrest = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Integer> beat = new SimpleObjectProperty<>(null);
+    private SimpleObjectProperty<Integer> ward = new SimpleObjectProperty<>(null);
+
 
     /**
-     * Initilises a crime object. \n
+     * Initializes a crime object. \n
      * Note: Can currently only create complete classes
-     * @param caseNumber
-     * @param date
-     * @param block
-     * @param iucr
-     * @param primaryDescription
-     * @param secondaryDescription
-     * @param locationDescription
-     * @param arrest
-     * @param domestic
-     * @param beat
-     * @param ward
-     * @param fbiCD
-     * @param xCoord
-     * @param yCoord
-     * @param latitude
-     * @param longitude
+     * @param caseNumber A required field which must be unique and cannot be null
+     * @param date A required field which contains the year, month, day and time of the crime
+     * @param block An optional field which contains what block the crime occurred in
+     * @param iucr An optional field which contains the Illinois Uniform Crime Reporting number
+     * @param primaryDescription A required field which contains the primary description of the crime
+     * @param secondaryDescription A required field which contains the more descriptive secondary description of the crime
+     * @param locationDescription An optional field which contains the description of the location where the crime occurred
+     * @param arrest An optional field which contains whether the crime resulted in an arrest
+     * @param domestic An optional field which contains if the crime was domestic
+     * @param beat An optional field which contains TODO what is this
+     * @param ward An optional field which contains TODO what is this
+     * @param fbiCD An optional field which contains TODO what is this
+     * @param xCoord An optional field which is has the x-coordinate of where the crime occurred
+     * @param yCoord An optional field which is has the y-coordinate of where the crime occurred
+     * @param latitude An optional field which is has the latitude of where the crime occurred
+     * @param longitude An optional field which is has the longitude of where the crime occurred
      */
     public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
     Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         super(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
-        this.caseNumber = caseNumber;
-        this.block = block;
-        this.iucr = iucr;
-        this.arrest = arrest;
-        this.beat = beat;
-        this.ward = ward;
-        this.fbiCD = fbiCD;
-    }
-
-    /**
-     * Creates an crime class with all atributes initilised to null.
-     */
-    public Crime() {
-        super();
+        this.caseNumber = new SimpleStringProperty(caseNumber);
+        this.block.setValue(block);
+        this.iucr.setValue(iucr);
+        this.arrest.setValue(arrest);
+        this.beat.setValue(beat);
+        this.ward.setValue(ward);
+        this.fbiCD.setValue(fbiCD);
     }
 
     /**
@@ -60,38 +61,39 @@ public class Crime extends Report {
      * @return The crime's case number
      */
     public String getCaseNumber() {
-        return this.caseNumber;
+        return caseNumber.get();
     }
 
     /**
      * Sets the crimes case number, handles an empty string as null
-     * @param caseNumber
+     * @param caseNumber A required string attribute which must be unique
+     * @throws InvalidAttributeValueException
      */
-    public void setCaseNumber(String caseNumber) {
-        if (Objects.equals(caseNumber, "")) {
-            this.caseNumber = null;
+    public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
+        if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
+            throw new InvalidAttributeValueException();
         } else {
-            this.caseNumber = caseNumber;
+            this.caseNumber.setValue(caseNumber);
         }
     }
 
     /**
      * 
-     * @return The block the crime occured in
+     * @return The block the crime occurred in
      */
     public String getBlock() {
-        return this.block;
+        return block.get();
     }
 
     /**
-     * Sets the block the crime occured in, handles an empty string as null
+     * Sets the block the crime occurred in, handles an empty string as null
      * @param block
      */
     public void setBlock(String block) {
         if (Objects.equals(block, "")) {
-            this.block = null;
+            this.block.setValue(null);
         } else {
-            this.block = block;
+            this.block.setValue(block);
         }
     }
 
@@ -100,7 +102,7 @@ public class Crime extends Report {
      * @return The crime's Illinois Uniform Crime Reporting number
      */
     public String getIucr() {
-        return this.iucr;
+        return iucr.get();
     }
 
     /**
@@ -109,9 +111,9 @@ public class Crime extends Report {
      */
     public void setIucr(String iucr) {
         if (Objects.equals(iucr, "")) {
-            this.iucr = null;
+            this.iucr.setValue(null);
         } else {
-            this.iucr = iucr;
+            this.iucr.setValue(iucr);
         }
     }
 
@@ -120,7 +122,7 @@ public class Crime extends Report {
      * @return Whether the crime resulted in an arrest
      */
     public Boolean getArrest() {
-        return this.arrest;
+        return arrest.get();
     }
 
     /**
@@ -128,7 +130,7 @@ public class Crime extends Report {
      * @param arrest
      */
     public void setArrest(Boolean arrest) {
-        this.arrest = arrest;
+        this.arrest.setValue(arrest);
     }
 
     /**
@@ -136,7 +138,7 @@ public class Crime extends Report {
      * @return What beat the crime was in
      */
     public Integer getBeat() {
-        return this.beat;
+        return this.beat.get();
     }
 
     /**
@@ -144,7 +146,7 @@ public class Crime extends Report {
      * @param beat
      */
     public void setBeat(Integer beat) {
-        this.beat = beat;
+        this.beat.setValue(beat);
     }
 
     /**
@@ -152,7 +154,7 @@ public class Crime extends Report {
      * @return What ward the crime was in
      */
     public Integer getWard() {
-        return this.ward;
+        return this.ward.get();
     }
 
     /**
@@ -160,7 +162,7 @@ public class Crime extends Report {
      * @param ward
      */
     public void setWard(Integer ward) {
-        this.ward = ward;
+        this.ward.setValue(ward);
 
     }
 
@@ -169,7 +171,7 @@ public class Crime extends Report {
      * @return The crimes FBI CD number
      */
     public String getFbiCD() {
-        return this.fbiCD;
+        return this.fbiCD.get();
     }
 
     /**
@@ -178,26 +180,26 @@ public class Crime extends Report {
      */
     public void setFbiCD(String fbiCD) {
         if (Objects.equals(fbiCD, "")) {
-            this.fbiCD = null;
+            this.fbiCD.setValue(null);
         } else {
-            this.fbiCD = fbiCD;
+            this.fbiCD.setValue(fbiCD);
         }
     }
 
     public ArrayList<String> getAttributes() {
         ArrayList<String> attributes = new ArrayList<>();
-        attributes.add(caseNumber);
+        attributes.add(caseNumber.getValue());
         attributes.add(toString(getDate()));
-        attributes.add(block);
-        attributes.add(iucr);
+        attributes.add(block.getValue());
+        attributes.add(iucr.getValue());
         attributes.add(getPrimaryDescription());
         attributes.add(getSecondaryDescription());
         attributes.add(getLocationDescription());
-        attributes.add(toString(arrest));
+        attributes.add(toString(arrest.getValue()));
         attributes.add(toString(getDomestic()));
-        attributes.add(toString(beat));
-        attributes.add(toString(ward));
-        attributes.add(fbiCD);
+        attributes.add(toString(beat.getValue()));
+        attributes.add(toString(ward.getValue()));
+        attributes.add(fbiCD.getValue());
         attributes.add(toString(getXCoord()));
         attributes.add(toString(getYCoord()));
         attributes.add(toString(getLatitude()));
@@ -246,6 +248,7 @@ public class Crime extends Report {
         }
     }
 
+    //TODO Remove when this method becomes unnecessary, move to tests.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -253,18 +256,13 @@ public class Crime extends Report {
         if (!super.equals(o)) return false;
         
         Crime crime = (Crime) o;
-        return Objects.equals(arrest, crime.arrest)
-            && Objects.equals(beat, crime.beat)
-            && Objects.equals(ward, crime.ward)
-            && Objects.equals(caseNumber, crime.caseNumber)
-            && Objects.equals(block, crime.block)
-            && Objects.equals(iucr, crime.iucr)
-            && Objects.equals(fbiCD, crime.fbiCD);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), caseNumber, block, iucr, arrest, beat, ward, fbiCD);
+        return Objects.equals(arrest.get(), crime.getArrest())
+            && Objects.equals(beat.get(), crime.getBeat())
+            && Objects.equals(ward.get(), crime.getWard())
+            && Objects.equals(caseNumber.get(), crime.getCaseNumber())
+            && Objects.equals(block.get(), crime.getBlock())
+            && Objects.equals(iucr.get(), crime.getIucr())
+            && Objects.equals(fbiCD.get(), crime.getFbiCD());
     }
 
     @Override
