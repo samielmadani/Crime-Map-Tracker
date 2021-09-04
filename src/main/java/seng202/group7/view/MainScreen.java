@@ -1,10 +1,16 @@
 package seng202.group7.view;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
@@ -38,10 +44,32 @@ public class MainScreen extends Application {
         windowStage.setTitle("Main Screen");
         windowStage.setMinHeight(400);
         windowStage.setMinWidth(600);
-        // Loads first FXML scene. Checks to ensure that th file is not NULL.
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
-        windowStage.setScene(new Scene(root));
+        // Loads first FXML scene. Checks to ensure that the file is not NULL.
+        BorderPane pane = (BorderPane) FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
+
+        BorderPane borderPane = new BorderPane(pane);
+        ToolBar navMenu = createMenu();
+
+        borderPane.setTop(navMenu);    
+        Scene scene = new Scene(borderPane);
+        borderPane.setPrefSize(600, 400);
+
+        windowStage.setScene(scene);
         windowStage.show();
+    }
+
+    private ToolBar createMenu() {
+        ToolBar menuBar = new ToolBar();
+        Button home = new Button("Home");
+        Button view = new Button("View data");
+        Button analysis = new Button("Analyse data");
+        view.setOnAction(e -> {
+            System.out.println("test");
+        });
+        menuBar.getItems().add(home);
+        menuBar.getItems().add(view);
+        menuBar.getItems().add(analysis);
+        return menuBar;
     }
 
     /**

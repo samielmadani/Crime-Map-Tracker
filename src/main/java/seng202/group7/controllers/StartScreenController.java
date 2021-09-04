@@ -50,7 +50,7 @@ public class StartScreenController {
         fade.setDuration(Duration.millis(300));
         fade.setNode(rootPane);
         fade.setFromValue(1);
-        fade.setToValue(0);
+        fade.setToValue(1);
         // Creates a trigger that will, at the end of the transition, activate the method toNextScene.
         fade.setOnFinished(actionEvent -> {
             try {
@@ -72,11 +72,10 @@ public class StartScreenController {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     private void toNextScene(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/dataView.fxml")));
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/dataView.fxml")));
+        BorderPane scene = ((BorderPane) (((Node) event.getSource()).getScene()).getRoot());
+        var test = scene.getCenter();
+        scene.setCenter(root);
     }
 
     /**
