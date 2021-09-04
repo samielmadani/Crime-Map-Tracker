@@ -1,74 +1,45 @@
 package seng202.group7.analyses;
 
 import seng202.group7.Report;
-import java.time.LocalDateTime;
+
+
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ArrayList;
 
 public class Comparer {
 
-    public static ArrayList timeDifference(Report reportOne, Report reportTwo) {
-
-        LocalDateTime firstDate = null;
-        LocalDateTime lastDate = null;
-        Date start = null;
-        Date end = null;
-        ArrayList<Integer> timeDifferences = new ArrayList<>();
-
-        try {
-            if (reportOne.getDate().isEqual(reportTwo.getDate())) {
-                for(int i = 0; i < 5; i++) { timeDifferences.add(0); }
-                return timeDifferences;
-            } else if (reportOne.getDate().isBefore(reportTwo.getDate())) {
-                firstDate = reportOne.getDate();
-                lastDate = reportTwo.getDate();
-            } else {
-                firstDate = reportTwo.getDate();
-                lastDate = reportOne.getDate();
-            }
-        } catch (NullPointerException e) {
-            System.out.print(e);
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        try {
-             start = sdf.parse(String.valueOf(firstDate.getDayOfMonth()) + "-" + String.valueOf(firstDate.getMonthValue())
-                    + "-" + String.valueOf(firstDate.getYear()) + " " + String.valueOf(firstDate.getHour()) + ":" +
-                    String.valueOf(firstDate.getMinute()) + ":" + String.valueOf(firstDate.getSecond()));
-             end = sdf.parse(String.valueOf(lastDate.getDayOfMonth()) + "-" + String.valueOf(lastDate.getMonthValue())
-                     + "-" + String.valueOf(lastDate.getYear()) + " " + String.valueOf(lastDate.getHour()) + ":" +
-                     String.valueOf(lastDate.getMinute()) + ":" + String.valueOf(lastDate.getSecond()));
-
-             long timeDifference = end.getTime() - start.getTime();
-             timeDifferences.add((int) (TimeUnit.MILLISECONDS.toSeconds(timeDifference) % 60));
-             timeDifferences.add((int) (TimeUnit.MILLISECONDS.toMinutes(timeDifference) % 60));
-             timeDifferences.add((int) (TimeUnit.MILLISECONDS.toHours(timeDifference) % 24));
-             timeDifferences.add((int) (TimeUnit.MILLISECONDS.toDays(timeDifference) % 365));
-             timeDifferences.add((int) (TimeUnit.MILLISECONDS.toDays(timeDifference) / 365));
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Difference in seconds: " + String.valueOf(timeDifferences.get(0)));
-        System.out.println("Difference in minutes: " + String.valueOf(timeDifferences.get(1)));
-        System.out.println("Difference in Hours: " + String.valueOf(timeDifferences.get(2)));
-        System.out.println("Difference in days: " + String.valueOf(timeDifferences.get(3)));
-        System.out.println("Difference in years: " + String.valueOf(timeDifferences.get(4)));
+    public static ArrayList<Long> timeDifference(Report reportOne, Report reportTwo) {
+        ArrayList<Long> timeDifferences = new ArrayList<>();
+        Duration difference = Duration.between(reportOne.getDate(), reportTwo.getDate()); //Returns total time in seconds
+        timeDifferences.add(TimeUnit.SECONDS.toMinutes(difference.getSeconds()) % 60);
+        timeDifferences.add(TimeUnit.SECONDS.toHours(difference.getSeconds()) % 24);
+        timeDifferences.add(TimeUnit.SECONDS.toDays(difference.getSeconds()) % 365);
+        timeDifferences.add(TimeUnit.SECONDS.toDays(difference.getSeconds()) / 365);
         return timeDifferences;
     }
 
     public static double locationDifference(Report reportOne, Report reportTwo) {
-        double xDifference = reportOne.getXCoord() - reportTwo.getXCoord();
-        double yDifference = reportOne.getYCoord() - reportTwo.getYCoord();
-        if (xDifference == 0) {
-            return yDifference;
-        } else if (yDifference == 0) {
-            return xDifference;
-        } else {
-            return Math.sqrt((xDifference*xDifference) + (yDifference*yDifference));
+        double lat1 = 0;
+        double lat2 = 0;
+        double lon1 = 0;
+        double lon2 = 0;
+        try {
+            lat1 = reportOne.getLatitude();
+            lat2 = reportTwo.getLatitude();
+            lon1 = reportOne.getLongitude();
+            lon2 = reportTwo.getLongitude();
+        } catch (NullPointerException e) {
+            System.out.println(e);
         }
+        double theta = lon1 - lon2;
+        double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+        dist = Math.acos(dist);
+        dist = Math.toDegrees(dist);
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344; //Converting to kilometres
+        return (dist);
     }
+
 }
