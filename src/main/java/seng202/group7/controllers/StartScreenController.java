@@ -95,24 +95,8 @@ public class StartScreenController {
      * @param event     The event action that was triggered.
      */
     public void getFile(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("src/test/files"));
-        fileChooser.setTitle("Open data file");
-        // Limits the types of files to only CSV.
-        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv files", "*.csv"));
-
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        // Launches the file chooser.
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
-        if (selectedFile != null) {
-            // Uses the CSVDataAccessor class to read the file and get the list of data as an array list of reports.
-            ArrayList<Report> reports = CSVDataAccessor.getInstance().read(selectedFile);
-            // Uses the singleton class ControllerData which can allow the reports to be store
-            // and then retrieved by other controllers.
-            ControllerData.getInstance().setReports(reports);
-            // Allows the user to use the start button which changes to the dataView scene.
-            startButton.setDisable(false);
-        }
+        ControllerData.getFile(event);
+        // Allows the user to use the start button which changes to the dataView scene.
+        startButton.setDisable(false);
     }
 }

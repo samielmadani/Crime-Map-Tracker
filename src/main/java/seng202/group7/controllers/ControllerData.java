@@ -1,7 +1,19 @@
 package seng202.group7.controllers;
 
+import seng202.group7.CSVDataAccessor;
+import seng202.group7.Crime;
 import seng202.group7.Report;
+
+import java.io.File;
 import java.util.ArrayList;
+
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * This class acts as a connection between the controllers passing data through here so that only the controller's
@@ -43,6 +55,39 @@ public final class ControllerData {
      */
     public ArrayList<Report> getReports() {
         return reports;
+    }
+
+    public static void getFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("src/test/files"));
+        fileChooser.setTitle("Open data file");
+        // Limits the types of files to only CSV.
+        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv files", "*.csv"));
+
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        // Launches the file chooser.
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
+        if (selectedFile != null) {
+            // Uses the CSVDataAccessor class to read the file and get the list of data as an array list of reports.
+            ArrayList<Report> reports = CSVDataAccessor.getInstance().read(selectedFile);
+            // Uses the singleton class ControllerData which can allow the reports to be store
+            // and then retrieved by other controllers.
+            ControllerData.getInstance().setReports(reports);
+
+            DataViewController.updateTableContents(reports);
+            
+            // try {
+            //     BorderPane test = (((BorderPane) ((Node) event.getSource()).getScene().getRoot()));
+            //     test.getCenter();
+            //     TableView test2 = (TableView<Crime>) ((BorderPane) test.getCenter()).getChildren().get(0);
+            //     System.out.println(test);
+            //     test2.refresh();
+            // } catch (Exception e) {
+            //     //TODO: handle exception
+            //     System.out.println(e);
+            // }            
+        }
     }
 
     /**

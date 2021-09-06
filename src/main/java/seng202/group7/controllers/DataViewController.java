@@ -82,4 +82,15 @@ public class DataViewController implements Initializable {
         // Displays the table.
         tableView.setItems(data);
     }
+
+    public static void updateTableContents(ArrayList<Report> reports) {
+        reports.addAll(ControllerData.getInstance().getReports());
+        ObservableList<Crime> data = FXCollections.observableArrayList();
+        // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
+        for (Report report : reports) {
+            data.add((Crime) report);
+        }
+        // Displays the table.
+        //tableView.setItems(data);
+    }
 }

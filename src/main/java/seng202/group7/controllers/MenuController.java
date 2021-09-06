@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.Node;
+import javafx.scene.control.Toggle;
 
 
 public class MenuController {
@@ -39,7 +40,15 @@ public class MenuController {
     public static void showAnalysisView(ActionEvent e) {
     }
 
+    public static void showMenu(ActionEvent e) {
+        scene = ((BorderPane) (((Node) e.getSource()).getScene()).getRoot());
+        boolean toggle = !scene.getLeft().isVisible();
+        scene.getLeft().setVisible(toggle);
+        scene.getLeft().setManaged(toggle);
+    }
+
     private static void changeRoot(ActionEvent event) {
 
     }
+
 }
