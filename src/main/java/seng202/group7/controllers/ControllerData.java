@@ -19,7 +19,7 @@ public final class ControllerData {
     /**
      * Stores the current reports (data) being used by the table and maps.
      */
-    private ArrayList<Report> reports;
+    private ArrayList<Report> reports = new ArrayList<>();
 
     /**
      * The constructor which is made private so that it can not be initialized from other classes.

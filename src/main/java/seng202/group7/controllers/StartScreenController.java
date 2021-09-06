@@ -74,7 +74,7 @@ public class StartScreenController {
     private void toNextScene(ActionEvent event) throws IOException {
         BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/dataView.fxml")));
         BorderPane scene = ((BorderPane) (((Node) event.getSource()).getScene()).getRoot());
-        var test = scene.getCenter();
+        var test = getClass();
         scene.setCenter(root);
     }
 

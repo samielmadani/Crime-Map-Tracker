@@ -1,17 +1,16 @@
 package seng202.group7.view;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import seng202.group7.controllers.MenuController;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -63,8 +62,26 @@ public class MainScreen extends Application {
         Button home = new Button("Home");
         Button view = new Button("View data");
         Button analysis = new Button("Analyse data");
-        view.setOnAction(e -> {
-            System.out.println("test");
+        home.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                
+                MenuController.showHomeView(e);
+            }
+        });
+        view.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+
+                MenuController.showDataView(e);
+            }
+        });
+        analysis.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                
+                MenuController.showAnalysisView(e);
+            }
         });
         menuBar.getItems().add(home);
         menuBar.getItems().add(view);
