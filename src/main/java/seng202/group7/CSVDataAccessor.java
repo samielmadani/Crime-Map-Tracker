@@ -37,20 +37,6 @@ public final class CSVDataAccessor implements DataAccessor {
         return INSTANCE;
     }
 
-    /**
-     * The constructor which is made private so that it can not be initialized from other classes.
-     */
-    private CSVDataAccessor() {}
-
-    /**
-     * Used to get the singleton instants of the class when assessing. This is done over a "static" class due to it
-     * implementing an interface.
-     *
-     * @return INSTANCE     The only instants of this class.
-     */
-    public static CSVDataAccessor getInstance() {
-        return INSTANCE;
-    }
 
     @Override
     public ArrayList<Report> read(File pathname) {
@@ -103,11 +89,7 @@ public final class CSVDataAccessor implements DataAccessor {
         
         String block = columns[2];
 
-        crime.setBlock(columns[2]);
-        crime.setIucr(columns[3]);
-        crime.setPrimaryDescription(columns[4]);
-        crime.setSecondaryDescription(columns[5]);
-        crime.setLocationDescription(columns[6]);
+        String iucr = columns[3];
 
         String primaryDescription = columns[4];
         if (primaryDescription.isEmpty()) {

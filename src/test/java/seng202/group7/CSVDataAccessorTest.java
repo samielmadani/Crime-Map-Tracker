@@ -3,11 +3,9 @@ package seng202.group7;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-<<<<<<< src/test/java/seng202/group7/CSVDataAccessorTest.java
-=======
+
 import java.time.LocalDateTime;
 import java.time.Month;
->>>>>>> src/test/java/seng202/group7/CSVDataAccessorTest.java
 import java.io.File;
 import java.util.ArrayList;
 

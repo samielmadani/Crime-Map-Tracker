@@ -64,13 +64,6 @@ public class Crime extends Report {
         return this.caseNumber.get();
     }
 
-    public void setCaseNumber(String caseNumber) {
-        if (Objects.equals(caseNumber, "")) {
-            this.caseNumber.setValue(null);
-        } else {
-            this.caseNumber.setValue(caseNumber);
-        }
-    }
 
     /**
      * Sets the crimes case number, handles an empty string as null
@@ -193,6 +186,7 @@ public class Crime extends Report {
             this.fbiCD.setValue(null);
         } else {
             this.fbiCD.setValue(fbiCD);
+        }
     }
 
     public ArrayList<String> getAttributes() {
