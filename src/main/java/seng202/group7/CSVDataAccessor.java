@@ -37,9 +37,13 @@ public final class CSVDataAccessor implements DataAccessor {
         return INSTANCE;
     }
 
+
     @Override
     public ArrayList<Report> read(File pathname) {
+        // TODO refactor once it is know how the file is passed in
+        // TODO refactor creation once crime class is developed
         ArrayList<Report> reports = new ArrayList<>();
+        int counter = 0;
         int errors = 0;
         try {
             FileReader csvFile = new FileReader(pathname);
@@ -49,17 +53,16 @@ public final class CSVDataAccessor implements DataAccessor {
             while ((columns = reader.readNext()) != null) {
                 try {
                     reports.add(createCrime(columns));
-                } catch (InvalidAttributeValueException e) {
-                    System.out.println(e);
+                    counter ++;
+                } catch (Exception e) {
+                    System.out.println(counter + errors);
+                    System.out.println(e.getMessage());
                     errors ++;
                 }
             }
             reader.close();
-            csvFile.close();
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
-        } catch (IOException io) {
-            System.out.println(io.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
         return reports;
     }

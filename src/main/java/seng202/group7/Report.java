@@ -8,15 +8,17 @@ import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
 
 public abstract class Report {
-    private LocalDateTime date;
-    private SimpleStringProperty primaryDescription;
-    private SimpleStringProperty secondaryDescription;
+    private LocalDateTime date = null;
+    private SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
+    private SimpleStringProperty secondaryDescription = new SimpleStringProperty(null);
     private SimpleStringProperty locationDescription = new SimpleStringProperty(null);
     private SimpleObjectProperty<Boolean> domestic = new SimpleObjectProperty<>(null);
     private SimpleObjectProperty<Integer> xCoord = new SimpleObjectProperty<>(null);
     private SimpleObjectProperty<Integer> yCoord = new SimpleObjectProperty<>(null);
     private SimpleObjectProperty<Double> latitude = new SimpleObjectProperty<>(null);
     private SimpleObjectProperty<Double> longitude = new SimpleObjectProperty<>(null);
+
+
 
     /**
      * Sets the data for all attributes in the report
@@ -82,6 +84,7 @@ public abstract class Report {
         return this.primaryDescription.get();
     }
 
+
     /**
      * Sets the primary description of the report
      * @param primaryDescription A required String attribute which must be unique
@@ -103,6 +106,7 @@ public abstract class Report {
         return this.secondaryDescription.get();
     }
     
+
     /**
      * Sets the secondary description of the report
      * @param secondaryDescription A required String attribute which must be unique
@@ -176,6 +180,7 @@ public abstract class Report {
         return this.yCoord.get();
     }
 
+
     /**
      * Set the y-coordinate of where the report took place
      * @param yCoord
@@ -192,6 +197,7 @@ public abstract class Report {
         return this.latitude.get();
     }
 
+
     /**
      * Set the geographical latitude of where the report took place
      * @param latitude
@@ -207,6 +213,7 @@ public abstract class Report {
     public Double getLongitude() {
         return this.longitude.get();
     }
+
 
     /**
      * Set the geographical longitude of where the report took place

@@ -3,6 +3,7 @@ package seng202.group7;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.io.File;
@@ -33,6 +34,7 @@ public class CSVDataAccessorTest {
      * Reads the test file and checks that it creates an instance of a crime object
      */
     @Test
+
     public void read_crimeData() {
         ArrayList<Report> data = dataAccessor.read(smallFile);
 
@@ -45,13 +47,14 @@ public class CSVDataAccessorTest {
      * Checks that all 5000 rows of a file are processed correctly
      */
     @Test
+
     public void read_5000Rows() {
         ArrayList<Report> data = dataAccessor.read(mediumFile);
-
         assertEquals(5000, data.size(), String.format("Not all data was imported correctly." +
         " %d out of 5000 were imported.", data.size()));
         
     }
+
 
     /**
      * Checks that the file reader will process data values that contain a comma correctly
@@ -59,7 +62,6 @@ public class CSVDataAccessorTest {
     @Test
     public void read_fileWithCommas() {
         ArrayList<Report> data = dataAccessor.read(commaFile);
-
         Report actualReport = data.get(0);
         Report expectedReport = new Crime("JD389017", LocalDateTime.of(2020, Month.OCTOBER, 5, 3, 31), "006XX W HARRISON ST", "0454", "BATTERY", "AGGRAVATED P.O. - HANDS, FISTS, FEET, NO / MINOR INJURY", "OTHER COMMERCIAL TRANSPORTATION", true, false, 124, 25, "08B", 1172257, 1897564, 41.874363279, -87.643013039);
         assertEquals(expectedReport, actualReport);
@@ -91,7 +93,6 @@ public class CSVDataAccessorTest {
     @Test
     public void read_fileWithMissingRow() {
         ArrayList<Report> data = dataAccessor.read(blankRowFile);
-
         assertTrue(data.size() == 1);
     }
 
