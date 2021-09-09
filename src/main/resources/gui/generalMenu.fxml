@@ -3,9 +3,19 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="175.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.GeneralMenuController">
    <children>
+      <HBox alignment="CENTER_RIGHT">
+         <children>
+            <Label text="Menu" underline="true">
+               <font>
+                  <Font name="System Italic" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
       <Button layoutX="20.0" layoutY="125.0" mnemonicParsing="false" prefWidth="175.0" text="Search" />
       <Button fx:id="filterButton" mnemonicParsing="false" onAction="#toFilter" prefWidth="175.0" text="Filter" />
       <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefWidth="175.0" text="Import" />
