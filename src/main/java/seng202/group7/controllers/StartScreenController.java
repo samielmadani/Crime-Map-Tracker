@@ -7,19 +7,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.FileChooser.ExtensionFilter;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
-
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-import seng202.group7.CSVDataAccessor;
-import seng202.group7.Report;
 
 /**
  * The controller, used by / linked to, the Start Screen FXML file.
@@ -50,7 +43,7 @@ public class StartScreenController {
         fade.setDuration(Duration.millis(300));
         fade.setNode(rootPane);
         fade.setFromValue(1);
-        fade.setToValue(1);
+        fade.setToValue(0);
         // Creates a trigger that will, at the end of the transition, activate the method toNextScene.
         fade.setOnFinished(actionEvent -> {
             try {
@@ -72,10 +65,12 @@ public class StartScreenController {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     private void toNextScene(ActionEvent event) throws IOException {
-        BorderPane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/dataView.fxml")));
-        BorderPane scene = ((BorderPane) (((Node) event.getSource()).getScene()).getRoot());
-        var test = getClass();
-        scene.setCenter(root);
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menu.fxml")));
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
     }
 
     /**

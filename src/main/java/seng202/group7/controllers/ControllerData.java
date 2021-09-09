@@ -1,16 +1,12 @@
 package seng202.group7.controllers;
 
 import seng202.group7.CSVDataAccessor;
-import seng202.group7.Crime;
 import seng202.group7.Report;
 
 import java.io.File;
 import java.util.ArrayList;
-
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -32,6 +28,7 @@ public final class ControllerData {
      * Stores the current reports (data) being used by the table and maps.
      */
     private ArrayList<Report> reports = new ArrayList<>();
+
 
     /**
      * The constructor which is made private so that it can not be initialized from other classes.
@@ -57,6 +54,13 @@ public final class ControllerData {
         return reports;
     }
 
+
+    /**
+     * Makes a screen to get a file from a user using the FilerChooser class.
+     * Then it sends this files data to the data access layer and returns the data that need to be stored.
+     *
+     * @param event     The event action that was triggered.
+     */
     public static void getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("src/test/files"));
@@ -74,19 +78,7 @@ public final class ControllerData {
             // Uses the singleton class ControllerData which can allow the reports to be store
             // and then retrieved by other controllers.
             ControllerData.getInstance().setReports(reports);
-
             DataViewController.updateTableContents(reports);
-            
-            // try {
-            //     BorderPane test = (((BorderPane) ((Node) event.getSource()).getScene().getRoot()));
-            //     test.getCenter();
-            //     TableView test2 = (TableView<Crime>) ((BorderPane) test.getCenter()).getChildren().get(0);
-            //     System.out.println(test);
-            //     test2.refresh();
-            // } catch (Exception e) {
-            //     //TODO: handle exception
-            //     System.out.println(e);
-            // }            
         }
     }
 

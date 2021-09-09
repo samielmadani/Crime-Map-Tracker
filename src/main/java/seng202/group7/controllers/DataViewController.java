@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-//TODO make check for empty data and that you cant launch the data view screen without having selected data.
 
 /**
  * The controller, used by / linked to, the Data View FXML file.
@@ -42,18 +41,16 @@ public class DataViewController implements Initializable {
      * This method is run during the loading of the data view fxml file.
      * It generates what values will be stored in the columns.
      *
-     * @param Location      A URL object.
+     * @param location      A URL object.
      * @param resources     A ResourceBundle object.
      */
     @Override
-    public void initialize(URL Location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources) {
         caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
         wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
         arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
-        //TODO Use this code section (commented out) and a new fxml file that either creates a new stage or a scene.
-        // Can also create a hidden table which is only shown when clicked twice.
-        /*
+
         tableView.setRowFactory( tv -> {
             TableRow<Crime> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -64,7 +61,6 @@ public class DataViewController implements Initializable {
             });
             return row ;
         });
-        */
         setTableContent();
     }
 
@@ -72,8 +68,7 @@ public class DataViewController implements Initializable {
      * Creates an observable list which is used to store the data that will be displayed in the table.
      */
     private void setTableContent() {
-        ArrayList<Report> reports = new ArrayList<>();
-        reports.addAll(ControllerData.getInstance().getReports());
+        ArrayList<Report> reports = new ArrayList<>(ControllerData.getInstance().getReports());
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
         for (Report report : reports) {
@@ -83,6 +78,11 @@ public class DataViewController implements Initializable {
         tableView.setItems(data);
     }
 
+    /**
+     * Updates the table with a new list of reports to be observed.
+     *
+     * @param reports       The new list of reports that will be shown in the table.
+     */
     public static void updateTableContents(ArrayList<Report> reports) {
         reports.addAll(ControllerData.getInstance().getReports());
         ObservableList<Crime> data = FXCollections.observableArrayList();
@@ -90,7 +90,5 @@ public class DataViewController implements Initializable {
         for (Report report : reports) {
             data.add((Crime) report);
         }
-        // Displays the table.
-        //tableView.setItems(data);
     }
 }
