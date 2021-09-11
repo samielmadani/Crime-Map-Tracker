@@ -242,15 +242,15 @@ public abstract class Report {
 
     @Override
     public String toString() {
-        return "date=" + date +
-                ", primaryDescription='" + primaryDescription + '\'' +
-                ", secondaryDescription='" + secondaryDescription + '\'' +
-                ", locationDescription='" + locationDescription + '\'' +
-                ", domestic=" + domestic +
-                ", xCoord=" + xCoord +
-                ", yCoord=" + yCoord +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude
+        return ", date=" + date +
+                ", primaryDescription='" + getPrimaryDescription() + '\'' +
+                ", secondaryDescription='" + getSecondaryDescription() + '\'' +
+                ", locationDescription='" + getLocationDescription() + '\'' +
+                ", domestic=" + getDomestic() +
+                ", xCoord=" + getXCoord() +
+                ", yCoord=" + getYCoord() +
+                ", latitude=" + getLatitude() +
+                ", longitude=" + getLongitude()
                 ;
     }
 }
