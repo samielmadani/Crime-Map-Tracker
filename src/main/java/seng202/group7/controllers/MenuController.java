@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 import javafx.util.Duration;
 
 
@@ -42,8 +43,6 @@ public class MenuController implements Initializable {
         try {
             // Loads the first side menu screen.
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-            // Loads the raw data viewer screen.
-            GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
             // Sets the menu to the main panel and hides it, so it starts closed.
             mainPane.setLeft(menuItems);
             VBox pane = (VBox) mainPane.getLeft();
@@ -51,8 +50,8 @@ public class MenuController implements Initializable {
             pane.setTranslateX(-(pane.getPrefWidth()));
             mainPane.getLeft().setVisible(false);
             mainPane.getLeft().setManaged(false);
-            // Adds the data view to the center of the screen.
-            mainPane.setCenter(dataView);
+            toData(new ActionEvent());
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,5 +82,19 @@ public class MenuController implements Initializable {
             closeMenu.setToX(-(pane.getWidth()));
             closeMenu.play();
         }
+    }
+
+    public void toSearch(ActionEvent e) {
+        WebView externalSearch = new WebView();
+        externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
+        mainPane.setCenter(externalSearch);
+    }
+
+    public void toData(ActionEvent e) throws IOException {
+        // Loads the raw data viewer screen.
+        GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
+        
+        // Adds the data view to the center of the screen.
+        mainPane.setCenter(dataView);
     }
 }

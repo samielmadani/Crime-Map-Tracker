@@ -5,39 +5,44 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <VBox xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.filterController">
    <children>
-      <ScrollPane prefHeight="400.0" prefWidth="190.0">
+      <ScrollPane prefHeight="508.0" prefWidth="190.0" VBox.vgrow="ALWAYS">
          <content>
-            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#beatCheck" prefWidth="175.0" spacing="10.0">
+            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#beatCheck" prefHeight="491.0" prefWidth="175.0" spacing="10.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
                <children>
-                  <HBox>
+                  <HBox alignment="CENTER_RIGHT">
                      <children>
-                        <Label prefWidth="175.0" text="Filter By:">
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#toMenu" prefHeight="25.0" prefWidth="37.0" text="&lt;">
+                           <HBox.margin>
+                              <Insets right="40.0" />
+                           </HBox.margin>
                            <font>
-                              <Font size="16.0" />
+                              <Font name="System Bold" size="12.0" />
+                           </font></Button>
+                        <Label alignment="CENTER_RIGHT" prefHeight="25.0" text="Filter Menu" underline="true">
+                           <font>
+                              <Font name="System Italic" size="16.0" />
                            </font>
                         </Label>
-                        <Button mnemonicParsing="false" text="X" />
                      </children>
                   </HBox>
                   <Label alignment="CENTER" prefWidth="175.0" text="Date" />
-                  <DatePicker />
+                  <DatePicker fx:id="dateRange" />
                   <Label alignment="CENTER" layoutX="20.0" layoutY="20.0" prefWidth="175.0" text="Primary Description" />
                   <ChoiceBox fx:id="crimeType" prefWidth="150.0" />
                   <Label alignment="CENTER" layoutX="20.0" layoutY="117.0" prefWidth="175.0" text="Location Description" />
-                  <ChoiceBox prefWidth="150.0" />
+                  <ChoiceBox fx:id="locationType" prefWidth="150.0" />
                   <Label alignment="CENTER" layoutX="20.0" layoutY="144.0" prefWidth="175.0" text="Ward" />
                   <TextField fx:id="wardInput" onKeyTyped="#wardCheck" />
                   <Label alignment="CENTER" layoutX="20.0" layoutY="198.0" prefWidth="175.0" text="Beat" />
                   <TextField fx:id="beatInput" onKeyTyped="#beatCheck" />
-                  <CheckBox alignment="CENTER" mnemonicParsing="false" prefWidth="175.0" text="Arrest Made" />
-                  <CheckBox alignment="CENTER" layoutX="20.0" layoutY="252.0" mnemonicParsing="false" text="Involves Domestic Violence" textAlignment="CENTER" wrapText="true" />
-                  <Button mnemonicParsing="false" text="View Results">
+                  <CheckBox fx:id="arrestBool" alignment="CENTER" mnemonicParsing="false" onAction="#toggleArrest" prefWidth="175.0" text="Arrest Made" />
+                  <CheckBox fx:id="domesticBool" alignment="CENTER" layoutX="20.0" layoutY="252.0" mnemonicParsing="false" onAction="#toggleDomestic" text="Involves Domestic Violence" textAlignment="CENTER" wrapText="true" />
+                  <Button fx:id="viewResult" mnemonicParsing="false" onAction="#viewFilteredResults" prefWidth="120.0" text="View Results">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>
