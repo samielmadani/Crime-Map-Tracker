@@ -3,6 +3,7 @@ package seng202.group7.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
@@ -36,6 +37,8 @@ public class EditsController implements Initializable {
     private DatePicker dateText;
     @FXML
     private CheckBox arrestCheck, domesticCheck;
+    @FXML
+    private Button editButton, saveButton, cancelButton;
 
 
     /**
@@ -93,6 +96,17 @@ public class EditsController implements Initializable {
         ControllerData master = ControllerData.getInstance();
         GridPane table = master.getTableState();
         pane.setCenter(table);
+    }
+
+    public void editEntry(ActionEvent event) {
+        editButton.setVisible(false);
+        editButton.setManaged(false);
+
+        saveButton.setVisible(true);
+        saveButton.setManaged(true);
+        cancelButton.setVisible(true);
+        cancelButton.setManaged(true);
+
     }
 
 }

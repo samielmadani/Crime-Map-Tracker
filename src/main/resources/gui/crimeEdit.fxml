@@ -167,8 +167,14 @@
                <children>
                   <Button fx:id="backButton" mnemonicParsing="false" onAction="#fullDataView" text="Back" GridPane.columnIndex="0">
                   </Button>
-                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit" GridPane.columnIndex="1">
-                  </Button>
+                  <HBox GridPane.columnIndex="1">
+                     <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit">
+                     </Button>
+                     <Button fx:id="saveButton" mnemonicParsing="false" onAction="#editEntry" text="Cancel" visible="false" managed="false">
+                     </Button>
+                     <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#editEntry" text="Save" visible="false" managed="false">
+                     </Button>
+                  </HBox>
                </children>
             </GridPane>
          </bottom>
