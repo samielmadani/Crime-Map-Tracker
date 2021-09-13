@@ -6,7 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -14,10 +16,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import org.jetbrains.annotations.NotNull;
 import seng202.group7.CSVDataAccessor;
 import seng202.group7.DataAccessor;
 import seng202.group7.Report;
@@ -28,6 +32,7 @@ import seng202.group7.SQLiteAccessor;
  *
  * @author John Elliott
  * @author Jack McCorkindale
+ * @author Shaylin Simadari
  */
 public class StartScreenController {
     /**
@@ -35,11 +40,11 @@ public class StartScreenController {
      */
     @FXML
     private BorderPane rootPane;
-    /**
-     * Is the button used to transition to the next scene.
-     */
-    @FXML
-    private Button startButton;
+//    /**
+//     * Is the button used to transition to the next scene.
+//     */
+//    @FXML
+//    private Button startButton;
 
     /**
      * Set up the fade out transition which will then load the next scene.
@@ -67,6 +72,7 @@ public class StartScreenController {
         fade.play();
     }
 
+
     /**
      * Loads the next scene, dataView.fxml, onto the stage.
      *
@@ -80,6 +86,7 @@ public class StartScreenController {
         stage.setScene(scene);
         stage.show();
     }
+
 
     /**
      * Closes the stage and therefore exits the application.
@@ -102,33 +109,86 @@ public class StartScreenController {
         fileChooser.setInitialDirectory(new File("src/test/files"));
         fileChooser.setTitle("Open data file");
         // Limits the types of files to only CSV.
-        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv, .sqlite files", "*.csv", "*.sqlite"));
+        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv, .db files", "*.csv", "*.db"));
 
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         // Launches the file chooser.
         File selectedFile = fileChooser.showOpenDialog(stage);
         // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
         if (selectedFile != null) {
-            // Uses the appropriate DataAccessor class to read the file and get the list of data as an array list of reports.
-            ArrayList<Report> reports = getAccessorForFile(selectedFile).read(selectedFile);
+            ArrayList<Report> reports = null;
+            switch(getFileExtension(selectedFile)){
+                case ".csv":
+                    CSVDataAccessor.getInstance().read(selectedFile);
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Convert file");
+                    alert.setHeaderText("Would you like to convert this file to a database?");
+                    alert.setContentText("Cancelling will proceed with .csv file");
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    reports = CSVDataAccessor.getInstance().read(selectedFile);
+                    if (result.get() == ButtonType.OK){
+                        reports = chooseDBDirectory(stage, reports);
+                    }
+                    break;
+                case ".sqlite":
+                    reports = SQLiteAccessor.getInstance().read(selectedFile);
+                    break;
+                default:
+                    break;
+            }
             // Uses the singleton class ControllerData which can allow the reports to be store
             // and then retrieved by other controllers.
             ControllerData.getInstance().setReports(reports);
             // Allows the user to use the start button which changes to the dataView scene.
-            startButton.setDisable(false);
+            fadeOutScene(event);
         }
     }
 
-    private DataAccessor getAccessorForFile(File file) {
-        String path = file.getPath();
-        String extension = path.substring(path.lastIndexOf("."));
-        switch(extension){
-            case ".csv":
-                return CSVDataAccessor.getInstance();
-            case ".sqlite":
-                return SQLiteAccessor.getInstance();
-            default:
-                return null;
-        }
+    public void connectToDB(ActionEvent event) {
+
     }
+
+    public void convertFile(ActionEvent event) {
+
+    }
+
+    @NotNull
+    private String getFileExtension(File selectedFile) {
+        String path = selectedFile.getPath();
+        return path.substring(path.lastIndexOf("."));
+    }
+
+    /**
+     * Launches a fileChooser to choose directory to create a DB in
+     * @param stage stage to show the filechooser on
+     * @param reports report to write to the DB
+     * @return reports in the DB
+     */
+    private ArrayList<Report> chooseDBDirectory(Stage stage, ArrayList<Report> reports) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("src/test/files"));
+        fileChooser.setTitle("Create .sqlite file");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter(".db files", "*.db"));
+        File selectedFile = fileChooser.showSaveDialog(stage);
+        if(selectedFile != null) {
+            reports = convertCSVtoDB(reports, selectedFile);
+        }
+        return reports;
+    }
+
+    /**
+     * creates a new database and populates it
+     * @param reports reports to write to database
+     * @param selectedFile location to create the database in
+     * @return reports in the database
+     */
+    private ArrayList<Report> convertCSVtoDB(ArrayList<Report> reports, File selectedFile) {
+        SQLiteAccessor.getInstance().connect(selectedFile);
+        SQLiteAccessor.getInstance().create(selectedFile);
+        SQLiteAccessor.getInstance().write(reports, selectedFile);
+        reports = SQLiteAccessor.getInstance().read(selectedFile);
+        return reports;
+    }
+
 }
