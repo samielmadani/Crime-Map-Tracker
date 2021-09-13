@@ -17,7 +17,7 @@ public class Filter {
      * @return Reports that are within the times provided
      * @throws IllegalArgumentException If the start time is after the end time
      */
-    public ArrayList<Report> timeFilter(ArrayList<Report> currentData, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException{
+    public static ArrayList<Report> timeFilter(ArrayList<Report> currentData, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException{
         ArrayList<Report> filteredData = new ArrayList<>();
         if (start.isAfter(end)) {
             throw new IllegalArgumentException("End is before start");
@@ -40,7 +40,7 @@ public class Filter {
      * @param ycord2
      * @return
      */
-    public ArrayList<Report> geoFilter(ArrayList<Report> currentData, Integer xcord1, Integer xcord2, Integer ycord1, Integer ycord2) {
+    public static ArrayList<Report> geoFilter(ArrayList<Report> currentData, Integer xcord1, Integer xcord2, Integer ycord1, Integer ycord2) {
         ArrayList<Report> filteredData = new ArrayList<>();
         for (Report data: currentData) {
             if (data.getXCoord() != null && data.getYCoord() != null &&
@@ -60,7 +60,7 @@ public class Filter {
      * @param filterSelection What is to be filtered
      * @return An arraylist with the filtered results
      */
-    public ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
+    public static ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<>();
         switch(attribute) {
             case "BLOCK": 
@@ -84,7 +84,7 @@ public class Filter {
      * @param filteredData The filtered data
      * @param filterSelection What is to be filtered
      */
-    private void blockFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+    private static void blockFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
             Crime c = (Crime)data;
             if(c.getBlock().equals(filterSelection)) {
@@ -99,7 +99,7 @@ public class Filter {
      * @param filteredData The filtered data
      * @param filterSelection What is to be filtered
      */
-    private void primaryFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+    private static void primaryFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
             if(data.getPrimaryDescription().equals(filterSelection)) {
                 filteredData.add(data);
@@ -113,7 +113,7 @@ public class Filter {
      * @param filteredData The filtered data
      * @param filterSelection What is to be filtered
      */
-    private void locationFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
+    private static void locationFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
             if(data.getLocationDescription().equals(filterSelection)) {
                 filteredData.add(data);
@@ -128,7 +128,7 @@ public class Filter {
      * @param filterSelection What is to be filtered
      * @return An arraylist with the filtered results
      */
-    public ArrayList<Report> boolFilter(ArrayList<Report> currentData, String attribute, boolean filterSelection) {
+    public static ArrayList<Report> boolFilter(ArrayList<Report> currentData, String attribute, boolean filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<>();
         switch(attribute) {
             case "ARREST": 
@@ -149,7 +149,7 @@ public class Filter {
      * @param filteredData The filtered data
      * @param filterSelection What is to be filtered
      */
-    public void arrestFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
+    public static void arrestFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
         for(Report data: currentData) {
             Crime c = (Crime)data;
             if (c.getArrest() == filterSelection) {
@@ -164,9 +164,41 @@ public class Filter {
      * @param filteredData The filtered data
      * @param filterSelection What is to be filtered
      */
-    public void domesticFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
+    public static void domesticFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
         for(Report data: currentData) {
             if (data.getDomestic() == filterSelection) {
+                filteredData.add(data);
+            }
+        }
+    }
+
+    /**
+     * Determines which attribute is to be searched and goes to relevant method
+     * @param currentData The data to filter
+     * @param attribute The attribute to filter by
+     * @param filterSelection What is to be filtered
+     * @return An arraylist with the filtered results
+     */
+    public static ArrayList<Report>  intFilter(ArrayList<Report> currentData, String attribute, int filterSelection) {
+        ArrayList<Report> filteredData = new ArrayList<>();
+        switch(attribute) {
+            case "WARD":
+                wardFilter(currentData, filteredData, filterSelection);
+                break;
+        }
+        return filteredData;
+    }
+
+    /**
+     * Filters the ward attribute and returns an ArrayList of reports that match the selection
+     * @param currentData The data to filter
+     * @param filteredData The filtered data
+     * @param filterSelection What is to be filtered
+     */
+    private static void wardFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, int filterSelection) {
+        for (Report data: currentData) {
+            Crime c = (Crime) data;
+            if(c.getWard() == filterSelection) {
                 filteredData.add(data);
             }
         }
