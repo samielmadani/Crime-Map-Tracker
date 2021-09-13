@@ -2,15 +2,23 @@ package seng202.group7.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import seng202.group7.Crime;
 import seng202.group7.Report;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -22,17 +30,23 @@ import java.util.ResourceBundle;
  */
 public class DataViewController implements Initializable {
     /**
-     * Is the Table.
+     * This is the GridPane that holds the table and is the root node.
+     */
+    @FXML
+    private GridPane tablePane;
+
+    /**
+     * This is the Table.
      */
     @FXML
     private TableView<Crime> tableView;
     /**
-     * Is the columns of the table with the type string.
+     * This is the columns of the table with the type string.
      */
     @FXML
     private TableColumn<Crime, String> caseCol, wardCol, descCol;
     /**
-     * Is the columns of the table with the type boolean.
+     * This is the columns of the table with the type boolean.
      */
     @FXML
     private TableColumn<Crime, Boolean> arrestCol;
@@ -51,18 +65,47 @@ public class DataViewController implements Initializable {
         descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
         arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
 
+        // On a double click and the row isn't empty it will trigger the swap view method.
         tableView.setRowFactory( tv -> {
             TableRow<Crime> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     Crime rowData = row.getItem();
-                    System.out.println(rowData.getCaseNumber());
+                    swapViews(event, rowData);
                 }
             });
             return row ;
         });
         setTableContent();
     }
+
+
+    /**
+     * This method stores that current state of the table and the selected row in the ControllerData and then loads,
+     * the detailed data view screen and swaps it for the current raw data view screen.
+     *
+     * @param event         The double click mouse event trigger.
+     * @param rowData       The Crime object from the selected row.
+     */
+    private void swapViews(MouseEvent event, Crime rowData) {
+        // This section must come first as the rowData is need when initializing the crimeEdit FXML.
+        ControllerData master = ControllerData.getInstance();
+        master.setCurrentRow(rowData);
+        master.setTableState(tablePane);
+
+        // As the side panels root is the main border panel we use .getRoot().
+        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        GridPane detailView = null;
+        try {
+            detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/crimeEdit.fxml")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Changes center screen to the crime edit.
+        pane.setCenter(detailView);
+
+    }
+
 
     /**
      * Creates an observable list which is used to store the data that will be displayed in the table.

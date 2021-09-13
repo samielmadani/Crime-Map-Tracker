@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
  * @author Sami Elmadani
  * @author John Elliott
  */
+//TODO remove large lists and add them to a default file we import in maybe.
 public class filterController implements Initializable {
 
     @FXML

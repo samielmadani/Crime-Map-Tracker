@@ -1,8 +1,10 @@
 package seng202.group7.controllers;
 
-import seng202.group7.CSVDataAccessor;
-import seng202.group7.Report;
 
+import javafx.scene.layout.GridPane;
+import seng202.group7.CSVDataAccessor;
+import seng202.group7.Crime;
+import seng202.group7.Report;
 import java.io.File;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
@@ -24,10 +26,17 @@ public final class ControllerData {
      */
     private final static ControllerData INSTANCE = new ControllerData();
 
+    private Crime currentRow;
+
     /**
      * Stores the current reports (data) being used by the table and maps.
      */
     private ArrayList<Report> reports = new ArrayList<>();
+
+    /**
+     * Stores the current table state so when the back button is pushed the position is the same.
+     */
+    private GridPane tableState;
 
 
     /**
@@ -46,6 +55,42 @@ public final class ControllerData {
     }
 
     /**
+     * Setter for storing a crime object assigned to a selected row.
+     *
+     * @param rowData       The selected crime object.
+     */
+    public void setCurrentRow(Crime rowData) {
+        currentRow = rowData;
+    }
+
+    /**
+     * Getter for retrieving a crime object assigned to a selected row.
+     *
+     * @return currentRow       The stored selected crime object.
+     */
+    public Crime getCurrentRow() {
+        return currentRow;
+    }
+
+    /**
+     * Setter for storing the current state of the table.
+     *
+     * @param tableView       The table state.
+     */
+    public void setTableState(GridPane tableView) {
+        tableState = tableView;
+    }
+
+    /**
+     * Getter for retrieving the current state of the table.
+     *
+     * @return tableState       The current state of the table.
+     */
+    public GridPane getTableState() {
+        return tableState;
+    }
+
+    /**
      * A getter for the list of reports currently stored.
      *
      * @return reports      The list of reports currently being used.
@@ -55,6 +100,7 @@ public final class ControllerData {
     }
 
 
+    //TODO Im not sure this belongs in this class it might belong in the DataViewController class.
     /**
      * Makes a screen to get a file from a user using the FilerChooser class.
      * Then it sends this files data to the data access layer and returns the data that need to be stored.
@@ -90,4 +136,6 @@ public final class ControllerData {
     public void setReports(ArrayList<Report> reports) {
         this.reports = reports;
     }
+
+
 }

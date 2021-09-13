@@ -36,8 +36,7 @@ public class MainScreen extends Application {
         // Sets the initialStage as the class variable.
         setStage(initialStage);
         windowStage.setTitle("LookOut");
-        windowStage.setMinHeight(400);
-        windowStage.setMinWidth(600);
+        windowStage.setResizable(false);
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
         Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
         Scene scene = new Scene(view);
