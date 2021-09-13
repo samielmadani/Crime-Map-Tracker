@@ -19,7 +19,7 @@
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="111.0" minHeight="8.0" prefHeight="47.0" vgrow="SOMETIMES" />
@@ -160,15 +160,17 @@
             </GridPane>
          </center>
          <bottom>
-            <HBox alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <GridPane alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="600.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
                <children>
-                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#fullDataView" text="Back">
-                     <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </HBox.margin>
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#fullDataView" text="Back" GridPane.columnIndex="0">
+                  </Button>
+                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit" GridPane.columnIndex="1">
                   </Button>
                </children>
-            </HBox>
+            </GridPane>
          </bottom>
       </BorderPane>
    </children>
