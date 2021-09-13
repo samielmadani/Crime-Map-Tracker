@@ -68,13 +68,13 @@ public class MenuController implements Initializable {
         TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
         openMenu.setToX(0);
         // Creates an animation for closing the menu.
-        TranslateTransition closeMenu=new TranslateTransition(new Duration(350), pane);
+        TranslateTransition closeMenu = new TranslateTransition(new Duration(350), pane);
         closeMenu.setOnFinished(action->{
             mainPane.getLeft().setVisible(false);
             mainPane.getLeft().setManaged(false);
         });
         // Determines by the off set position of the VBox if the open or close animation needs to be played.
-        if (pane.getTranslateX()!= 0) {
+        if (pane.getTranslateX() != 0) {
             mainPane.getLeft().setVisible(true);
             mainPane.getLeft().setManaged(true);
             openMenu.play();
@@ -83,14 +83,16 @@ public class MenuController implements Initializable {
             closeMenu.play();
         }
     }
-
+//TODO needs comments (Jack).
     public void toSearch(ActionEvent e) {
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
         mainPane.setCenter(externalSearch);
     }
 
+
     public void toData(ActionEvent e) throws IOException {
+
         // Loads the raw data viewer screen.
         GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
         

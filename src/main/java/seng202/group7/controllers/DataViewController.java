@@ -1,4 +1,5 @@
 package seng202.group7.controllers;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +18,7 @@ import seng202.group7.Report;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -44,7 +46,7 @@ public class DataViewController implements Initializable {
      * This is the columns of the table with the type string.
      */
     @FXML
-    private TableColumn<Crime, String> caseCol, wardCol, descCol;
+    private TableColumn<Crime, String> caseCol, wardCol, descCol, dateCol;
     /**
      * This is the columns of the table with the type boolean.
      */
@@ -64,6 +66,13 @@ public class DataViewController implements Initializable {
         wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
         arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
+        // Sets up a call to firstly create a DateTime pattern and then coverts our local date time stored in class.
+        dateCol.setCellValueFactory(setup -> {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                    property.setValue(dateFormat.format(setup.getValue().getDate()));
+                    return property;
+                });
 
         // On a double click and the row isn't empty it will trigger the swap view method.
         tableView.setRowFactory( tv -> {

@@ -1,7 +1,5 @@
 package seng202.group7;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -12,7 +10,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import javax.naming.directory.InvalidAttributeValueException;
-
+//TODO Not all param's are given descriptions which are needed.
 public class Crime extends Report {
     private SimpleStringProperty caseNumber;
     private SimpleStringProperty block = new SimpleStringProperty(null);
