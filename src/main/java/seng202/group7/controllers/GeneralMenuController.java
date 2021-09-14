@@ -1,6 +1,7 @@
 package seng202.group7.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
@@ -16,6 +17,9 @@ import java.util.Objects;
  * @author John Elliott
  */
 public class GeneralMenuController {
+
+    @FXML
+    private Node frame;
 
     /**
      * Gets the current side panel and replace it with the filter menu panel.
@@ -48,5 +52,16 @@ public class GeneralMenuController {
 
         // Adds the data view to the center of the screen.
         rootPane.setCenter(dataView);
+    }
+
+    public void toNewEntry(ActionEvent event) throws IOException {
+        BorderPane rootPane = (BorderPane) frame.getParent();
+
+        ControllerData.getInstance().setCurrentRow(null);
+        ControllerData.getInstance().setTableState((GridPane) rootPane.getCenter());
+        Node newFrame;
+        newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+
+        rootPane.setCenter(newFrame);
     }
 }

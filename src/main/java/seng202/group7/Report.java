@@ -45,6 +45,19 @@ public abstract class Report {
         this.longitude.setValue(longitude);
     }
 
+    public void update(LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
+            Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) throws InvalidAttributeValueException {
+        setDate(date);
+        setPrimaryDescription(primaryDescription);
+        setSecondaryDescription(secondaryDescription);
+        setLocationDescription(locationDescription);
+        setDomestic(domestic);
+        setXCoord(xCoord);
+        setYCoord(yCoord);
+        setLatitude(latitude);
+        setLongitude(longitude);
+    }
+
     /**
      * 
      * @return An ArrayList containing what types of attributes are in the report

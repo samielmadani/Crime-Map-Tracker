@@ -65,36 +65,36 @@
                   </HBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <CheckBox fx:id="arrestCheck" disable="true" mnemonicParsing="false" text="Arrested" />
+                        <CheckBox fx:id="arrestCheck" mnemonicParsing="false" text="Arrested" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <children>
-                        <CheckBox fx:id="domesticCheck" disable="true" mnemonicParsing="false" text="Domestic Case" />
+                        <CheckBox fx:id="domesticCheck" mnemonicParsing="false" text="Domestic Case" />
                      </children>
                   </VBox>
                   <VBox alignment="TOP_CENTER" prefHeight="266.0" prefWidth="201.0" GridPane.rowIndex="1">
                      <children>
                         <Label text="Case Number" />
-                        <TextField fx:id="cNoText" disable="true" prefHeight="25.0" prefWidth="200.0">
+                        <TextField fx:id="cNoText" prefHeight="25.0" prefWidth="200.0">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Date of Occurrence" />
-                        <DatePicker fx:id="dateText" disable="true" prefHeight="25.0" prefWidth="196.0">
+                        <DatePicker fx:id="dateText" prefHeight="25.0" prefWidth="196.0">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </DatePicker>
                         <Label text="Illinois Unifrom Code" />
-                        <TextField fx:id="iucrText" disable="true">
+                        <TextField fx:id="iucrText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="FBI Crime Code" />
-                        <TextField fx:id="fbiText" disable="true">
+                        <TextField fx:id="fbiText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
@@ -104,31 +104,31 @@
                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
                         <Label text="Block" />
-                        <TextField fx:id="blockText" disable="true">
+                        <TextField fx:id="blockText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Beat" />
-                        <TextField fx:id="beatText" disable="true">
+                        <TextField fx:id="beatText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Ward" />
-                        <TextField fx:id="wardText" disable="true">
+                        <TextField fx:id="wardText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Coordinates" />
-                        <TextField fx:id="coordsText" disable="true">
+                        <TextField fx:id="coordsText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Location" />
-                        <TextField fx:id="locText" disable="true">
+                        <TextField fx:id="locText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
@@ -138,18 +138,18 @@
                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <children>
                         <Label text="Primary" />
-                        <TextField fx:id="priText" disable="true">
+                        <TextField fx:id="priText">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Secondary" />
-                        <TextArea fx:id="secText" disable="true" prefHeight="96.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="secText" prefHeight="96.0" prefWidth="200.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin></TextArea>
                         <Label text="Location Area" />
-                        <TextArea fx:id="locAreaText" disable="true" prefHeight="107.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="locAreaText" prefHeight="107.0" prefWidth="200.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>

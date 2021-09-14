@@ -178,5 +178,9 @@ public final class ControllerData {
         this.reports = reports;
     }
 
+    public void addReports(ArrayList<Report> newReports) {
+        reports.addAll(newReports);
+    }
+
 
 }

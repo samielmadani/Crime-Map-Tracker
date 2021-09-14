@@ -10,14 +10,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.util.converter.DateTimeStringConverter;
 import seng202.group7.Crime;
+import seng202.group7.Report;
 import javafx.event.ActionEvent;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.IsoChronology;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -61,10 +59,15 @@ public class EntryController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerData master = ControllerData.getInstance();
-        data = master.getCurrentRow();
         editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, coordsText, locText,
-            priText, secText, locAreaText, dateText, arrestCheck, domesticCheck));
-        setData();
+        priText, secText, locAreaText, dateText, arrestCheck, domesticCheck));
+
+        data = master.getCurrentRow();
+        if (data != null) {
+            setData();
+        } else {
+            editEntry(new ActionEvent());
+        }
     }
 
     /**
@@ -92,6 +95,12 @@ public class EntryController implements Initializable {
         priText.setText(data.getPrimaryDescription());
         secText.setText(data.getSecondaryDescription());
         locAreaText.setText(data.getLocationDescription());
+
+        for (Node node : editableValues) {
+            node.setDisable(true);
+        }
+        cNoText.setDisable(true);
+
     }
 
     /**
@@ -136,38 +145,53 @@ public class EntryController implements Initializable {
         saveButton.setManaged(false);
         cancelButton.setVisible(false);
         cancelButton.setManaged(false);
-        for (Node node : editableValues) {
-            node.setDisable(true);
-        }
         setData();
     }
 
     public void saveEdit(ActionEvent event) throws InvalidAttributeValueException {
-
         // CheckBoxes:
-        data.setArrest(arrestCheck.isSelected());
-        data.setDomestic(domesticCheck.isSelected());
+        boolean arrest = arrestCheck.isSelected();
+        boolean domestic = domesticCheck.isSelected();
         
         // General Information:
         // TODO Date
-
-        data.setIucr(iucrText.getText());
-        data.setFbiCD(fbiText.getText());
+        LocalDateTime date = LocalDateTime.now();
+        String caseNumber = cNoText.getText();
+        String iucr = iucrText.getText();
+        String fbiCD = fbiText.getText();
 
         // Location Information:
-        data.setBlock(blockText.getText());
-        data.setBeat(Integer.parseInt(beatText.getText()));
-        data.setWard(Integer.parseInt(wardText.getText()));
+        String block = blockText.getText();
+        Integer beat = null;
+        if (!beatText.getText().isEmpty()) {
+            beat = Integer.parseInt(beatText.getText());
+        }
+        
+        Integer ward = null;
+        if (!wardText.getText().isEmpty()) {
+            ward = Integer.parseInt(wardText.getText());
+        }
         // TODO change coords & lat/long into 2 text boxes
         // String coords = "("+data.getXCoord()+", "+data.getYCoord()+")";
+        int xCoord = 0;
+        int yCoord = 0;
+        double latitude = 0;
+        double longitude = 0;
         // coordsText.setText(coords);
         // String pos = "("+data.getLatitude()+", "+data.getLongitude()+")";
         // locText.setText(pos);
-        // Case Description:
-        data.setPrimaryDescription(priText.getText());
-        data.setSecondaryDescription(secText.getText());
-        data.setLocationDescription(locAreaText.getText());        
 
+        // Case Description:
+        String primaryDescription = priText.getText();
+        String secondaryDescription = secText.getText();
+        String locationDescription = locAreaText.getText();
+
+        if (data == null) {
+            data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
+            ControllerData.getInstance().addReports(new ArrayList<Report>(Arrays.asList(data)));
+        } else {
+            data.update(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
+        }
         finishEdit(event);
     }
 

@@ -101,7 +101,7 @@ public final class CSVDataAccessor implements DataAccessor {
             throw new InvalidAttributeValueException("Secondary description is null");
         }
 
-        String locationDescription =columns[6];
+        String locationDescription = columns[6];
         
         Boolean arrest = null;
         if (!columns[7].isEmpty()) {
