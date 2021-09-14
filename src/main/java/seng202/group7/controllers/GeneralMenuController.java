@@ -41,7 +41,7 @@ public class GeneralMenuController {
      */
     public void newImport(ActionEvent event) throws IOException {
 
-        ControllerData.getFile(event);
+        ControllerData.getInstance().getFile(event);
         BorderPane rootPane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         // Loads the raw data viewer screen.
         GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));

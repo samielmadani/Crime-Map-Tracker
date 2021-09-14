@@ -13,7 +13,7 @@ import seng202.group7.view.MainScreen;
 public class App {
     /**
      * Starts the Main Screen application.
-     * @param args The arguments given when running the compiled source code.
+     * @param args      The arguments given when running the compiled source code.
      */
     public static void main(String[] args) {
         MainScreen.main(args);

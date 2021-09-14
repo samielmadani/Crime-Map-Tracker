@@ -12,7 +12,7 @@ import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
 //TODO Not all param's are given descriptions which are needed.
 public class Crime extends Report {
-    private SimpleStringProperty caseNumber;
+    private SimpleStringProperty caseNumber = new SimpleStringProperty(null);
     private SimpleStringProperty block = new SimpleStringProperty(null);
     private SimpleStringProperty iucr = new SimpleStringProperty(null);
     private SimpleStringProperty fbiCD = new SimpleStringProperty(null);
@@ -22,7 +22,7 @@ public class Crime extends Report {
 
 
     /**
-     * Initializes a crime object. \n
+     * Initializes a crime object.
      * Note: Can currently only create complete classes
      * @param caseNumber A required field which must be unique and cannot be null
      * @param date A required field which contains the year, month, day and time of the crime
@@ -59,8 +59,9 @@ public class Crime extends Report {
      * @return The crime's case number
      */
     public String getCaseNumber() {
-        return caseNumber.get();
+        return this.caseNumber.get();
     }
+
 
     /**
      * Sets the crimes case number, handles an empty string as null
@@ -80,7 +81,7 @@ public class Crime extends Report {
      * @return The block the crime occurred in
      */
     public String getBlock() {
-        return block.get();
+        return this.block.get();
     }
 
     /**
@@ -95,13 +96,15 @@ public class Crime extends Report {
         }
     }
 
+
     /**
      * 
      * @return The crime's Illinois Uniform Crime Reporting number
      */
     public String getIucr() {
-        return iucr.get();
+        return this.iucr.get();
     }
+
 
     /**
      * Sets the crime's Illinois Uniform Crime Reporting number, handles an empty string as null
@@ -120,7 +123,7 @@ public class Crime extends Report {
      * @return Whether the crime resulted in an arrest
      */
     public Boolean getArrest() {
-        return arrest.get();
+        return this.arrest.get();
     }
 
     /**
@@ -266,13 +269,13 @@ public class Crime extends Report {
     @Override
     public String toString() {
         return "Crime{" +
-                "caseNumber='" + caseNumber + '\'' +
-                ", block='" + block + '\'' +
-                ", iucr='" + iucr + '\'' +
-                ", arrest=" + arrest +
-                ", beat=" + beat +
-                ", ward=" + ward +
-                ", fbi CD='" + fbiCD + '\'' +
+                "caseNumber='" + getCaseNumber() + '\'' +
+                ", block='" + getBlock() + '\'' +
+                ", iucr='" + getIucr() + '\'' +
+                ", arrest=" + getArrest() +
+                ", beat=" + getBeat() +
+                ", ward=" + getWard() +
+                ", fbi CD='" + getFbiCD() + '\'' +
                 super.toString() + '\'' +
                 '}';
     }

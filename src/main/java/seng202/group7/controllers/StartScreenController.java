@@ -6,19 +6,33 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
+import seng202.group7.CSVDataAccessor;
+import seng202.group7.DataAccessor;
+import seng202.group7.Report;
+import seng202.group7.SQLiteAccessor;
 
 /**
  * The controller, used by / linked to, the Start Screen FXML file.
  *
  * @author John Elliott
  * @author Jack McCorkindale
+ * @author Shaylin Simadari
  */
 public class StartScreenController {
     /**
@@ -26,11 +40,11 @@ public class StartScreenController {
      */
     @FXML
     private BorderPane rootPane;
-    /**
-     * Is the button used to transition to the next scene.
-     */
-    @FXML
-    private Button startButton;
+//    /**
+//     * Is the button used to transition to the next scene.
+//     */
+//    @FXML
+//    private Button startButton;
 
     /**
      * Set up the fade out transition which will then load the next scene.
@@ -39,6 +53,7 @@ public class StartScreenController {
      */
     public void fadeOutScene(ActionEvent event) {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
+        Stage stage = getStage(event);
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(300));
         fade.setNode(rootPane);
@@ -48,7 +63,7 @@ public class StartScreenController {
         fade.setOnFinished(actionEvent -> {
             try {
                 // Transitions to the next scene.
-                toNextScene(event);
+                toNextScene(stage);
             } catch (IOException e) {
                 // catches an error that can be thrown if there is an error when loading the next FXML file.
                 e.printStackTrace();
@@ -58,20 +73,21 @@ public class StartScreenController {
         fade.play();
     }
 
+
     /**
      * Loads the next scene, dataView.fxml, onto the stage.
      *
-     * @param event             The event action that was triggered.
+     * @param stage             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
-    private void toNextScene(ActionEvent event) throws IOException {
+    private void toNextScene(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menu.fxml")));
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
 
     }
+
 
     /**
      * Closes the stage and therefore exits the application.
@@ -79,19 +95,59 @@ public class StartScreenController {
      * @param event     The event action that was triggered.
      */
     public void exitStage(ActionEvent event) {
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Stage stage = getStage(event);
         stage.close();
     }
 
     /**
-     * Launches a file chooser that will get CSV file types and then record the data.
+     * Launches a file chooser and returns selected file or null is cancelled
      * So it can be used by the controllers.
      *
-     * @param event     The event action that was triggered.
+     * @param stage     The event action that was triggered.
+     * @return the selected file or null
      */
     public void getFile(ActionEvent event) {
-        ControllerData.getFile(event);
+        ControllerData.getInstance().getFile(event);
         // Allows the user to use the start button which changes to the dataView scene.
-        startButton.setDisable(false);
+        fadeOutScene(event);
     }
+
+    // public File getFile(Stage stage) {
+    //     FileChooser fileChooser = new FileChooser();
+    //     fileChooser.setInitialDirectory(new File("src/test/files"));
+    //     fileChooser.setTitle("Select file");
+    //     // Limits the types of files to only CSV.
+    //     fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv, .db files", "*.csv", "*.db"));
+
+    //     // Launches the file chooser.
+    //     File selectedFile = fileChooser.showOpenDialog(stage);
+
+    //     return selectedFile;
+    // }
+
+    // public void convertFile(ActionEvent event) {
+    //     Stage stage = getStage(event);
+    //     File selectedFile = getFile(stage);
+    //     if(selectedFile == null) {
+    //         return;
+    //     }
+    //     ArrayList<Report> reports = CSVDataAccessor.getInstance().read(selectedFile);
+    //     reports = chooseDBDirectory(stage, reports);
+    //     // Uses the singleton class ControllerData which can allow the reports to be store
+    //     // and then retrieved by other controllers.
+    //     ControllerData.getInstance().setReports(reports);
+    //     // Allows the user to use the start button which changes to the dataView scene.
+    //     fadeOutScene(stage);
+
+    // }
+
+    /**
+     * gets the stage from the event
+     * @param event
+     * @return
+     */
+    private Stage getStage(ActionEvent event) {
+        return (Stage) ((Node) event.getSource()).getScene().getWindow();
+    }
+
 }

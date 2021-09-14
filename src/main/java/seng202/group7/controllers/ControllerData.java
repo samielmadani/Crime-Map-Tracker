@@ -5,6 +5,8 @@ import javafx.scene.layout.GridPane;
 import seng202.group7.CSVDataAccessor;
 import seng202.group7.Crime;
 import seng202.group7.Report;
+import seng202.group7.SQLiteAccessor;
+
 import java.io.File;
 import java.util.ArrayList;
 import javafx.event.ActionEvent;
@@ -107,20 +109,27 @@ public final class ControllerData {
      *
      * @param event     The event action that was triggered.
      */
-    public static void getFile(ActionEvent event) {
+    public void getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("src/test/files"));
-        fileChooser.setTitle("Open data file");
-        // Limits the types of files to only CSV.
-        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv files", "*.csv"));
+        fileChooser.setTitle("Select file");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv, .db files", "*.csv", "*.db"));
 
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         // Launches the file chooser.
         File selectedFile = fileChooser.showOpenDialog(stage);
         // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
         if (selectedFile != null) {
-            // Uses the CSVDataAccessor class to read the file and get the list of data as an array list of reports.
-            ArrayList<Report> reports = CSVDataAccessor.getInstance().read(selectedFile);
+            ArrayList<Report> reports;
+            String fileName = selectedFile.getName();
+            if (fileName.substring(fileName.length()-3).equals("csv")) {
+                // Uses the CSVDataAccessor class to read the file and get the list of data as an array list of reports.
+                reports = CSVDataAccessor.getInstance().read(selectedFile);
+                chooseDBDirectory(stage, reports);
+            } else {
+                reports = SQLiteAccessor.getInstance().read(selectedFile);
+            }
+            
             // Uses the singleton class ControllerData which can allow the reports to be store
             // and then retrieved by other controllers.
             ControllerData.getInstance().setReports(reports);
@@ -128,6 +137,38 @@ public final class ControllerData {
         }
     }
 
+        /**
+     * Launches a fileChooser to choose directory to create a DB in
+     * @param stage stage to show the filechooser on
+     * @param reports report to write to the DB
+     * @return reports in the DB
+     */
+    private ArrayList<Report> chooseDBDirectory(Stage stage, ArrayList<Report> reports) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("src/test/files"));
+        fileChooser.setTitle("Create .sqlite file");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter(".db files", "*.db"));
+        File selectedFile = fileChooser.showSaveDialog(stage);
+        if(selectedFile != null) {
+            reports = convertCSVtoDB(reports, selectedFile);
+        }
+        return reports;
+    }
+
+        /**
+     * creates a new database and populates it
+     * @param reports reports to write to database
+     * @param selectedFile location to create the database in
+     * @return reports in the database
+     */
+    private ArrayList<Report> convertCSVtoDB(ArrayList<Report> reports, File selectedFile) {
+        SQLiteAccessor.getInstance().connect(selectedFile);
+        SQLiteAccessor.getInstance().create(selectedFile);
+        SQLiteAccessor.getInstance().write(reports, selectedFile);
+        reports = SQLiteAccessor.getInstance().read(selectedFile);
+        return reports;
+    }
+    
     /**
      * A setter for the list of reports.
      *
