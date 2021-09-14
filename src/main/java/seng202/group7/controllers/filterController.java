@@ -217,6 +217,7 @@ public class filterController implements Initializable {
      * @param event     The event action that was triggered.
      */
     public void wardCheck(KeyEvent event) {
+        int currentCaret = wardInput.getCaretPosition();
         Integer input = numberOnly(wardInput);
         if (input != -1) {
             if (input < 0) {
@@ -225,7 +226,7 @@ public class filterController implements Initializable {
                 wardInput.setText("50");
             }
         }
-        wardInput.positionCaret(wardInput.getText().length());
+        wardInput.positionCaret(currentCaret - 1);
     }
 
     /**
@@ -234,6 +235,7 @@ public class filterController implements Initializable {
      * @param event     The event action that was triggered.
      */
     public void beatCheck(KeyEvent event) {
+        int currentCaret = beatInput.getCaretPosition();
         Integer input = numberOnly(beatInput);
         if (input != -1) {
             if (input < 0) {
@@ -242,7 +244,7 @@ public class filterController implements Initializable {
                 beatInput.setText("2000");
             }
         }
-        beatInput.positionCaret(beatInput.getText().length());
+        beatInput.positionCaret(currentCaret - 1);
     }
 
     /**
