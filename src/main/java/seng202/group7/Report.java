@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
-
+//TODO Not all param's are given descriptions which are needed.
 public abstract class Report {
     private LocalDateTime date;
     private SimpleStringProperty primaryDescription;

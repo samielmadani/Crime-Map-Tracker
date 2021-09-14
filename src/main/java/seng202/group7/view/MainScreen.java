@@ -1,11 +1,11 @@
 package seng202.group7.view;
 
 import javafx.application.Application;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -35,14 +35,15 @@ public class MainScreen extends Application {
     public void start(Stage initialStage) throws IOException {
         // Sets the initialStage as the class variable.
         setStage(initialStage);
-        windowStage.setTitle("Main Screen");
-        windowStage.setMinHeight(400);
-        windowStage.setMinWidth(600);
-        // Loads first FXML scene. Checks to ensure that th file is not NULL.
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
-        windowStage.setScene(new Scene(root));
+        windowStage.setTitle("LookOut");
+        windowStage.setResizable(false);
+        // Loads first FXML scene. Checks to ensure that the file is not NULL.
+        Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
+        Scene scene = new Scene(view);
+        windowStage.setScene(scene);
         windowStage.show();
     }
+
 
     /**
      * Setter for the window stage.

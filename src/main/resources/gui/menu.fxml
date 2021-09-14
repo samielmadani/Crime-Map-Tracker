@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.MenuController">
+   <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button fx:id="menuButton" mnemonicParsing="false" onAction="#menuAnimation" text="Menu" />
+          <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toData" text="Raw Data" />
+          <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" text="Graph View" />
+          <Button layoutX="131.0" layoutY="13.0" mnemonicParsing="false" text="Help" />
+          <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toSearch" text="Google" />
+        </items>
+      </ToolBar>
+   </top>
+</BorderPane>

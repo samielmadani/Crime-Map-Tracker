@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EditsController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" GridPane.halignment="CENTER">
+         <center>
+            <GridPane prefHeight="348.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="111.0" minHeight="8.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="310.0" minHeight="10.0" prefHeight="269.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="254.0" minHeight="0.0" prefHeight="41.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="General Information:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <children>
+                        <Label text="Location Information:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
+                     <children>
+                        <Label text="Case Description:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <CheckBox fx:id="arrestCheck" disable="true" mnemonicParsing="false" text="Arrested" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <children>
+                        <CheckBox fx:id="domesticCheck" disable="true" mnemonicParsing="false" text="Domestic Case" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="266.0" prefWidth="201.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Case Number" />
+                        <TextField fx:id="cNoText" disable="true" prefHeight="25.0" prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Date of Occurrence" />
+                        <DatePicker fx:id="dateText" disable="true" prefHeight="25.0" prefWidth="196.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </DatePicker>
+                        <Label text="Illinois Unifrom Code" />
+                        <TextField fx:id="iucText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="FBI Crime Code" />
+                        <TextField fx:id="fbiText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Block" />
+                        <TextField fx:id="blockText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Beat" />
+                        <TextField fx:id="beatText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Ward" />
+                        <TextField fx:id="wardText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Coordinates" />
+                        <TextField fx:id="coordsText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Location" />
+                        <TextField fx:id="locText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Primary" />
+                        <TextField fx:id="priText" disable="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Secondary" />
+                        <TextArea fx:id="secText" disable="true" prefHeight="96.0" prefWidth="200.0" wrapText="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin></TextArea>
+                        <Label text="Location Area" />
+                        <TextArea fx:id="locAreaText" disable="true" prefHeight="107.0" prefWidth="200.0" wrapText="true">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                  </VBox>
+               </children>
+            </GridPane>
+         </center>
+         <bottom>
+            <GridPane alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="600.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+               <children>
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#fullDataView" text="Back" GridPane.columnIndex="0">
+                  </Button>
+                  <HBox GridPane.columnIndex="1">
+                     <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit">
+                     </Button>
+                     <Button fx:id="saveButton" mnemonicParsing="false" onAction="#editEntry" text="Cancel" visible="false" managed="false">
+                     </Button>
+                     <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#editEntry" text="Save" visible="false" managed="false">
+                     </Button>
+                  </HBox>
+               </children>
+            </GridPane>
+         </bottom>
+      </BorderPane>
+   </children>
+</GridPane>
