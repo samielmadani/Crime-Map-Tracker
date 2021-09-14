@@ -10,11 +10,19 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.converter.DateTimeStringConverter;
 import seng202.group7.Crime;
 import javafx.event.ActionEvent;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.IsoChronology;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+
+import javax.naming.directory.InvalidAttributeValueException;
 
 
 /**
@@ -23,13 +31,13 @@ import java.util.ResourceBundle;
  *
  * @author John Elliott
  */
-public class EditsController implements Initializable {
+public class EntryController implements Initializable {
     /**
      * The current selected rows crime object.
      */
     Crime data;
     @FXML
-    private TextField cNoText, iucText, fbiText, blockText, beatText,
+    private TextField cNoText, iucrText, fbiText, blockText, beatText,
             wardText, coordsText, locText, priText;
     @FXML
     private TextArea secText, locAreaText;
@@ -38,7 +46,9 @@ public class EditsController implements Initializable {
     @FXML
     private CheckBox arrestCheck, domesticCheck;
     @FXML
-    private Button editButton, saveButton, cancelButton;
+    private Button editButton, deleteButton, saveButton, cancelButton;
+
+    ArrayList<Node> editableValues;
 
 
     /**
@@ -52,6 +62,8 @@ public class EditsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         ControllerData master = ControllerData.getInstance();
         data = master.getCurrentRow();
+        editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, coordsText, locText,
+            priText, secText, locAreaText, dateText, arrestCheck, domesticCheck));
         setData();
     }
 
@@ -60,17 +72,13 @@ public class EditsController implements Initializable {
      */
     private void setData() {
         // CheckBoxes:
-        if (data.getArrest()) {
-            arrestCheck.setSelected(true);
-        }
-        if (data.getDomestic()) {
-            domesticCheck.setSelected(true);
-        }
+        arrestCheck.setSelected(data.getArrest());
+        domesticCheck.setSelected(data.getDomestic());
         // General Information:
         cNoText.setText(data.getCaseNumber());
         LocalDate date = data.getDate().toLocalDate();
         dateText.setValue(date);
-        iucText.setText(data.getIucr());
+        iucrText.setText(data.getIucr());
         fbiText.setText(data.getFbiCD());
         // Location Information:
         blockText.setText(data.getBlock());
@@ -105,12 +113,62 @@ public class EditsController implements Initializable {
     public void editEntry(ActionEvent event) {
         editButton.setVisible(false);
         editButton.setManaged(false);
+        deleteButton.setVisible(false);
+        deleteButton.setManaged(false);
 
         saveButton.setVisible(true);
         saveButton.setManaged(true);
         cancelButton.setVisible(true);
         cancelButton.setManaged(true);
 
+        for (Node node : editableValues) {
+            node.setDisable(false);
+        }
+    }
+
+    public void finishEdit(ActionEvent event) {
+        editButton.setVisible(true);
+        editButton.setManaged(true);
+        deleteButton.setVisible(true);
+        deleteButton.setManaged(true);
+
+        saveButton.setVisible(false);
+        saveButton.setManaged(false);
+        cancelButton.setVisible(false);
+        cancelButton.setManaged(false);
+        for (Node node : editableValues) {
+            node.setDisable(true);
+        }
+        setData();
+    }
+
+    public void saveEdit(ActionEvent event) throws InvalidAttributeValueException {
+
+        // CheckBoxes:
+        data.setArrest(arrestCheck.isSelected());
+        data.setDomestic(domesticCheck.isSelected());
+        
+        // General Information:
+        // TODO Date
+
+        data.setIucr(iucrText.getText());
+        data.setFbiCD(fbiText.getText());
+
+        // Location Information:
+        data.setBlock(blockText.getText());
+        data.setBeat(Integer.parseInt(beatText.getText()));
+        data.setWard(Integer.parseInt(wardText.getText()));
+        // TODO change coords & lat/long into 2 text boxes
+        // String coords = "("+data.getXCoord()+", "+data.getYCoord()+")";
+        // coordsText.setText(coords);
+        // String pos = "("+data.getLatitude()+", "+data.getLongitude()+")";
+        // locText.setText(pos);
+        // Case Description:
+        data.setPrimaryDescription(priText.getText());
+        data.setSecondaryDescription(secText.getText());
+        data.setLocationDescription(locAreaText.getText());        
+
+        finishEdit(event);
     }
 
 }

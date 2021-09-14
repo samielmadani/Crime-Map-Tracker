@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EditsController">
+<GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
@@ -88,7 +88,7 @@
                            </VBox.margin>
                         </DatePicker>
                         <Label text="Illinois Unifrom Code" />
-                        <TextField fx:id="iucText" disable="true">
+                        <TextField fx:id="iucrText" disable="true">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
@@ -167,13 +167,11 @@
                <children>
                   <Button fx:id="backButton" mnemonicParsing="false" onAction="#fullDataView" text="Back" GridPane.columnIndex="0">
                   </Button>
-                  <HBox GridPane.columnIndex="1">
-                     <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit">
-                     </Button>
-                     <Button fx:id="saveButton" mnemonicParsing="false" onAction="#editEntry" text="Cancel" visible="false" managed="false">
-                     </Button>
-                     <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#editEntry" text="Save" visible="false" managed="false">
-                     </Button>
+                  <HBox GridPane.columnIndex="1" spacing="5">
+                     <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#editEntry" text="Delete"></Button>
+                     <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit"></Button>
+                     <Button fx:id="saveButton" mnemonicParsing="false" onAction="#finishEdit" text="Cancel" visible="false" managed="false"></Button>
+                     <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#saveEdit" text="Save" visible="false" managed="false"></Button>
                   </HBox>
                </children>
             </GridPane>
