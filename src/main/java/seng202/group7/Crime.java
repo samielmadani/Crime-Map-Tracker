@@ -271,13 +271,13 @@ public class Crime extends Report {
     @Override
     public String toString() {
         return "Crime{" +
-                "caseNumber='" + caseNumber + '\'' +
-                ", block='" + block + '\'' +
-                ", iucr='" + iucr + '\'' +
-                ", arrest=" + arrest +
-                ", beat=" + beat +
-                ", ward=" + ward +
-                ", fbi CD='" + fbiCD + '\'' +
+                "caseNumber='" + getCaseNumber() + '\'' +
+                ", block='" + getBlock() + '\'' +
+                ", iucr='" + getIucr() + '\'' +
+                ", arrest=" + getArrest() +
+                ", beat=" + getBeat() +
+                ", ward=" + getWard() +
+                ", fbi CD='" + getFbiCD() + '\'' +
                 super.toString() + '\'' +
                 '}';
     }

@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
-   <left>
-      <Button mnemonicParsing="false" onAction="#getFile" prefHeight="25.0" prefWidth="89.0" text="Import Data" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-         </BorderPane.margin>
-      </Button>
-   </left>
+<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
    <center>
-      <Button fx:id="startButton" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#fadeOutScene" prefHeight="25.0" prefWidth="103.0" text="Start" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-         </BorderPane.margin></Button>
+      <GridPane prefHeight="400.0" prefWidth="600.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="503.99997965494794" minWidth="10.0" prefWidth="302.3333333333333" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="372.66666666666674" minWidth="10.0" prefWidth="296.99999999999994" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="227.66667048136392" minHeight="10.0" prefHeight="200.33332697550455" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="346.00000381469727" minHeight="10.0" prefHeight="199.00000635782882" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#importFile" prefHeight="25.0" prefWidth="89.0" text="Import Data" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets bottom="10.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="databaseButton" contentDisplay="CENTER" disable="false" mnemonicParsing="false" onAction="#connectToDB" text="Connect to Database" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER" />
+            <Button fx:id="convertButton" mnemonicParsing="false" onAction="#convertFile" text="Import Data as Database" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+         </padding>
+      </GridPane>
    </center>
-   <right>
-      <Button mnemonicParsing="false" onAction="#exitStage" prefHeight="25.0" prefWidth="82.0" text="Quit" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-         </BorderPane.margin>
-      </Button>
-   </right>
 </BorderPane>
