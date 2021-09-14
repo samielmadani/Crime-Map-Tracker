@@ -98,6 +98,10 @@ public class EditsController implements Initializable {
         pane.setCenter(table);
     }
 
+    /**
+     * Changes the edit button and shows the save and cancel buttons
+     * @param event
+     */
     public void editEntry(ActionEvent event) {
         editButton.setVisible(false);
         editButton.setManaged(false);
