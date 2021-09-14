@@ -51,7 +51,7 @@ public class StartScreenController {
      *
      * @param event     The event action that was triggered.
      */
-    public void fadeOutScene(ActionEvent event) {
+    public void fadeOutScene(Stage stage) {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(300));
@@ -62,7 +62,7 @@ public class StartScreenController {
         fade.setOnFinished(actionEvent -> {
             try {
                 // Transitions to the next scene.
-                toNextScene(event);
+                toNextScene(stage);
             } catch (IOException e) {
                 // catches an error that can be thrown if there is an error when loading the next FXML file.
                 e.printStackTrace();
@@ -76,12 +76,11 @@ public class StartScreenController {
     /**
      * Loads the next scene, dataView.fxml, onto the stage.
      *
-     * @param event             The event action that was triggered.
+     * @param stage             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
-    private void toNextScene(ActionEvent event) throws IOException {
+    private void toNextScene(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/dataView.fxml")));
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -94,69 +93,74 @@ public class StartScreenController {
      * @param event     The event action that was triggered.
      */
     public void exitStage(ActionEvent event) {
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        Stage stage = getStage(event);
         stage.close();
     }
 
     /**
-     * Launches a file chooser that will get CSV file types and then record the data.
+     * Launches a file chooser and returns selected file or null is cancelled
      * So it can be used by the controllers.
      *
-     * @param event     The event action that was triggered.
+     * @param stage     The event action that was triggered.
+     * @return the selected file or null
      */
-    public void getFile(ActionEvent event) {
+    public File getFile(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("src/test/files"));
-        fileChooser.setTitle("Open data file");
+        fileChooser.setTitle("Select file");
         // Limits the types of files to only CSV.
         fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv, .db files", "*.csv", "*.db"));
 
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         // Launches the file chooser.
         File selectedFile = fileChooser.showOpenDialog(stage);
-        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
-        if (selectedFile != null) {
-            ArrayList<Report> reports = null;
-            switch(getFileExtension(selectedFile)){
-                case ".csv":
-                    CSVDataAccessor.getInstance().read(selectedFile);
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Convert file");
-                    alert.setHeaderText("Would you like to convert this file to a database?");
-                    alert.setContentText("Cancelling will proceed with .csv file");
 
-                    Optional<ButtonType> result = alert.showAndWait();
-                    reports = CSVDataAccessor.getInstance().read(selectedFile);
-                    if (result.get() == ButtonType.OK){
-                        reports = chooseDBDirectory(stage, reports);
-                    }
-                    break;
-                case ".sqlite":
-                    reports = SQLiteAccessor.getInstance().read(selectedFile);
-                    break;
-                default:
-                    break;
-            }
-            // Uses the singleton class ControllerData which can allow the reports to be store
-            // and then retrieved by other controllers.
-            ControllerData.getInstance().setReports(reports);
-            // Allows the user to use the start button which changes to the dataView scene.
-            fadeOutScene(event);
+        return selectedFile;
+    }
+
+    public void importFile(ActionEvent event) {
+        Stage stage = getStage(event);
+        File selectedFile = getFile(stage);
+        if(selectedFile == null) {
+            return;
         }
+        ArrayList<Report> reports = CSVDataAccessor.getInstance().read(selectedFile);
+        // Uses the singleton class ControllerData which can allow the reports to be store
+        // and then retrieved by other controllers.
+        ControllerData.getInstance().setReports(reports);
+        // Allows the user to use the start button which changes to the dataView scene.
+        fadeOutScene(stage);
+
     }
 
     public void connectToDB(ActionEvent event) {
+        Stage stage = getStage(event);
+        File selectedFile = getFile(stage);
+        if(selectedFile == null) {
+            return;
+        }
+        ArrayList<Report> reports = SQLiteAccessor.getInstance().read(selectedFile);
+        // Uses the singleton class ControllerData which can allow the reports to be store
+        // and then retrieved by other controllers.
+        ControllerData.getInstance().setReports(reports);
+        // Allows the user to use the start button which changes to the dataView scene.
+        fadeOutScene(stage);
 
     }
 
     public void convertFile(ActionEvent event) {
+        Stage stage = getStage(event);
+        File selectedFile = getFile(stage);
+        if(selectedFile == null) {
+            return;
+        }
+        ArrayList<Report> reports = CSVDataAccessor.getInstance().read(selectedFile);
+        reports = chooseDBDirectory(stage, reports);
+        // Uses the singleton class ControllerData which can allow the reports to be store
+        // and then retrieved by other controllers.
+        ControllerData.getInstance().setReports(reports);
+        // Allows the user to use the start button which changes to the dataView scene.
+        fadeOutScene(stage);
 
-    }
-
-    @NotNull
-    private String getFileExtension(File selectedFile) {
-        String path = selectedFile.getPath();
-        return path.substring(path.lastIndexOf("."));
     }
 
     /**
@@ -189,6 +193,15 @@ public class StartScreenController {
         SQLiteAccessor.getInstance().write(reports, selectedFile);
         reports = SQLiteAccessor.getInstance().read(selectedFile);
         return reports;
+    }
+
+    /**
+     * gets the stage from the event
+     * @param event
+     * @return
+     */
+    private Stage getStage(ActionEvent event) {
+        return (Stage) ((Node) event.getSource()).getScene().getWindow();
     }
 
 }

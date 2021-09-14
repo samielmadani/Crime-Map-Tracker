@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
    <center>
       <GridPane prefHeight="400.0" prefWidth="600.0">
@@ -20,12 +19,12 @@
             <RowConstraints maxHeight="346.00000381469727" minHeight="10.0" prefHeight="199.00000635782882" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#getFile" prefHeight="25.0" prefWidth="89.0" text="Import Data" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#importFile" prefHeight="25.0" prefWidth="89.0" text="Import Data" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="databaseButton" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#connectToDB" text="Connect to Database" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER" />
+            <Button fx:id="databaseButton" contentDisplay="CENTER" disable="false" mnemonicParsing="false" onAction="#connectToDB" text="Connect to Database" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER" />
             <Button fx:id="convertButton" mnemonicParsing="false" onAction="#convertFile" text="Import Data as Database" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets top="10.0" />
