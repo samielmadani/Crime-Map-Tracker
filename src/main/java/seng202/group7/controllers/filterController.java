@@ -2,7 +2,12 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,10 +35,10 @@ public class filterController implements Initializable {
     public DatePicker dateRange;
 
     @FXML
-    private ChoiceBox crimeType;
+    private ChoiceBox<String> crimeType;
 
     @FXML
-    private ChoiceBox locationType;
+    private ChoiceBox<String> locationType;
 
     @FXML
     private TextField wardInput;
@@ -272,7 +277,7 @@ public class filterController implements Initializable {
      * @param actionEvent   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent actionEvent) {
-        ArrayList conditions = new ArrayList(Arrays.asList(
+        ArrayList conditions = new ArrayList<Object>(Arrays.asList(
                 dateRange.getValue(),
                 crimeType.getValue(),
                 locationType.getValue(),

@@ -83,15 +83,23 @@ public class MenuController implements Initializable {
             closeMenu.play();
         }
     }
-//TODO needs comments (Jack).
-    public void toSearch(ActionEvent e) {
+
+    /**
+     * Creates and switches the center view to the programable google search scene.
+     * @param event     The event action that was triggered.
+     */
+    public void toSearch(ActionEvent event) {
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
         mainPane.setCenter(externalSearch);
     }
 
-
-    public void toData(ActionEvent e) throws IOException {
+    /**
+     * Loads and ses the center view to the data view scene.
+     * @param event     The event action that was triggered.
+     * @throws IOException
+     */
+    public void toData(ActionEvent event) throws IOException {
 
         // Loads the raw data viewer screen.
         GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
