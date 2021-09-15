@@ -87,6 +87,12 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </DatePicker>
+                        <Label text="Time of Occurrence" />
+                        <TextField fx:id="timeText">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
                         <Label text="Illinois Unifrom Code" />
                         <TextField fx:id="iucrText">
                            <VBox.margin>
@@ -122,17 +128,43 @@
                            </VBox.margin>
                         </TextField>
                         <Label text="Coordinates" />
-                        <TextField fx:id="coordsText">
+                        <HBox>
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
-                        </TextField>
-                        <Label text="Location" />
-                        <TextField fx:id="locText">
+                           <children>
+                              <Label text="x:" minWidth="10">
+                                 <HBox.margin>
+                                    <Insets right="1.0" top="3" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="xCoordText" HBox.hgrow="SOMETIMES"/>
+                              <Label text="y:" minWidth="10">
+                                 <HBox.margin>
+                                    <Insets left="5.0" right="1.0" top="3" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="yCoordText"/>
+                           </children>
+                        </HBox>
+                        <!-- TODO center latitude and longitude labels -->
+                        <GridPane alignment="TOP_CENTER" prefWidth="100.0">
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <children>
+                              <Label text="Latitude" GridPane.columnIndex="0" />
+                              <Label text="Longitude" GridPane.columnIndex="1" />
+                           </children>
+                        </GridPane>
+                        <HBox>
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
-                        </TextField>
+                           <TextField fx:id="latText" />
+                           <TextField fx:id="longText" />
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">

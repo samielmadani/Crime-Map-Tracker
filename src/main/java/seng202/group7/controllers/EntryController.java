@@ -36,7 +36,7 @@ public class EntryController implements Initializable {
     Crime data;
     @FXML
     private TextField cNoText, iucrText, fbiText, blockText, beatText,
-            wardText, coordsText, locText, priText;
+            wardText, xCoordText, yCoordText, latText, longText, priText, timeText;
     @FXML
     private TextArea secText, locAreaText;
     @FXML
@@ -59,8 +59,8 @@ public class EntryController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerData master = ControllerData.getInstance();
-        editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, coordsText, locText,
-        priText, secText, locAreaText, dateText, arrestCheck, domesticCheck));
+        editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
+        priText, secText, locAreaText, dateText, arrestCheck, domesticCheck, timeText));
 
         data = master.getCurrentRow();
         if (data != null) {
@@ -79,18 +79,23 @@ public class EntryController implements Initializable {
         domesticCheck.setSelected(data.getDomestic());
         // General Information:
         cNoText.setText(data.getCaseNumber());
-        LocalDate date = data.getDate().toLocalDate();
-        dateText.setValue(date);
+        LocalDateTime date = data.getDate();
+        dateText.setValue(date.toLocalDate());
+
+        String time = date.getHour() + ":" + String.format("%02d", date.getMinute());
+
+        timeText.setText(time);
+        
         iucrText.setText(data.getIucr());
         fbiText.setText(data.getFbiCD());
         // Location Information:
         blockText.setText(data.getBlock());
         beatText.setText(String.valueOf(data.getBeat()));
         wardText.setText(String.valueOf(data.getWard()));
-        String coords = "("+data.getXCoord()+", "+data.getYCoord()+")";
-        coordsText.setText(coords);
-        String pos = "("+data.getLatitude()+", "+data.getLongitude()+")";
-        locText.setText(pos);
+        xCoordText.setText(String.valueOf(data.getXCoord()));
+        yCoordText.setText(String.valueOf(data.getYCoord()));
+        latText.setText(String.valueOf(data.getLatitude()));
+        longText.setText(String.valueOf(data.getLatitude()));
         // Case Description:
         priText.setText(data.getPrimaryDescription());
         secText.setText(data.getSecondaryDescription());
@@ -116,7 +121,7 @@ public class EntryController implements Initializable {
     }
 
     /**
-     * Changes the edit button and shows the save and cancel buttons
+     * Allows the user to edit the values in value boxes by enabling them all. Also changes to save/cancel buttons.
      * @param event
      */
     public void editEntry(ActionEvent event) {
@@ -155,7 +160,9 @@ public class EntryController implements Initializable {
         
         // General Information:
         // TODO Date
-        LocalDateTime date = LocalDateTime.now();
+
+        String dateTime = String.join("",dateText.getValue().toString(), "T", timeText.getText());
+        LocalDateTime date = LocalDateTime.parse(dateTime);
         String caseNumber = cNoText.getText();
         String iucr = iucrText.getText();
         String fbiCD = fbiText.getText();
@@ -166,17 +173,32 @@ public class EntryController implements Initializable {
         if (!beatText.getText().isEmpty()) {
             beat = Integer.parseInt(beatText.getText());
         }
-        
+
         Integer ward = null;
         if (!wardText.getText().isEmpty()) {
             ward = Integer.parseInt(wardText.getText());
         }
-        // TODO change coords & lat/long into 2 text boxes
-        // String coords = "("+data.getXCoord()+", "+data.getYCoord()+")";
-        int xCoord = 0;
-        int yCoord = 0;
-        double latitude = 0;
-        double longitude = 0;
+
+        Integer xCoord = null;
+        if (!xCoordText.getText().isEmpty()) {
+            xCoord = Integer.parseInt(xCoordText.getText());
+        }
+
+        Integer yCoord = null;
+        if (!yCoordText.getText().isEmpty()) {
+            yCoord = Integer.parseInt(yCoordText.getText());
+        }
+
+        Double latitude = null;
+        if (!latText.getText().isEmpty()) {
+            latitude = Double.parseDouble(yCoordText.getText());
+        }
+
+        Double longitude = null;
+        if (!longText.getText().isEmpty()) {
+            longitude = Double.parseDouble(latText.getText());
+        }
+
         // coordsText.setText(coords);
         // String pos = "("+data.getLatitude()+", "+data.getLongitude()+")";
         // locText.setText(pos);
