@@ -5,7 +5,6 @@ import seng202.group7.Report;
 
 import java.util.*;
 
-
 public class Rank {
     // TODO Added weighted frequencies based on crime type
 
@@ -15,7 +14,27 @@ public class Rank {
      * @return a list of tuples (string(primary description), int (frequency)), sorted from highest to lowest frequencies
      */
     public static ArrayList<Tuple> primaryFrequencyRank(ArrayList<Report> data) {
-        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        return getFrequencyStringInteger(data);
+    }
+
+    /**
+     * overloaded method of primaryFrequencyRank that filters by a ward first
+     * in a specific ward
+     * @param data The selected data to be analysed for frequencies
+     * @param ward The ward where the crimes will be analysed
+     * @return a list of tuples (string(primary description), int (frequency)), sorted from highest to lowest frequencies
+     */
+    public static ArrayList<Tuple> primaryFrequencyRank(ArrayList<Report> data, int ward) {
+        ArrayList<Report> filteredData = Filter.intFilter(data, "WARD", ward);
+        return getFrequencyStringInteger(filteredData);
+    }
+
+    /**
+     * Helper function for frequency rank converts the data into a hash map of string keys and integer values
+     * then converts it to a sorted List and returns
+     */
+    private static ArrayList<Tuple> getFrequencyStringInteger(ArrayList<Report> data) {
+        HashMap<String, Integer> map = new HashMap<>();
 
         for(Report report : data){
             String primary = report.getPrimaryDescription();
@@ -25,24 +44,30 @@ public class Rank {
     }
 
     /**
-     * overloaded method of primaryFrequencyRank, finds the highest to the lowest frequency of crime type (primary)
-     * in a specific ward
+     * Parses the data and finds the wards with the highest frequency of crime over the dataset
      * @param data The selected data to be analysed for frequencies
-     * @param ward The ward where the crimes will be analysed
-     * @return a list of tuples (string(primary description), int (frequency)), sorted from highest to lowest frequencies
+     * @return a list of tuples (Int(Ward), int (frequency)), sorted from highest to lowest frequencies
      */
-    public static ArrayList<Tuple> primaryFrequencyRank(ArrayList<Report> data, int ward) {
-        ArrayList<Report> filteredData = Filter.intFilter(data, "WARD", ward);
-        HashMap<String, Integer> map = new HashMap<>();
-
-        for(Report report : filteredData){
-            String primary = report.getPrimaryDescription();
-            map.put(primary, map.getOrDefault(primary, 0) + 1);
-        }
-        return hashToListString(map);
+    public static ArrayList<Tuple> wardFrequencyRank(ArrayList<Report> data) {
+        return getFrequencyIntegerInteger(data);
     }
 
-    public static ArrayList<Tuple> wardFrequencyRank(ArrayList<Report> data) {
+    /**
+     *  overloaded method of wardFrequency, that filters by a crime type first
+     * @param data The selected data to be analysed for frequencies
+     * @param primary Crime type
+     * @return a list of tuples (Int(Ward), int (frequency)), sorted from highest to lowest frequencies
+     */
+    public static ArrayList<Tuple> wardFrequencyRank(ArrayList<Report> data, String primary) {
+        ArrayList<Report> filteredData = Filter.stringFilter(data, "PRIMARY", primary);
+        return getFrequencyIntegerInteger(filteredData);
+    }
+
+    /**
+     * Helper function for frequency rank converts the data into a hash map of integer keys and integer values
+     * then converts it to a sorted List and returns
+     */
+    private static ArrayList<Tuple> getFrequencyIntegerInteger(ArrayList<Report> data) {
         HashMap<Integer, Integer> map = new HashMap<>();
 
         for(Report report : data){
@@ -53,12 +78,13 @@ public class Rank {
         return hashToListInt(map);
     }
 
+
     /**
      * Parses the data and finds the highest to the lowest frequency of crime in an area (Most dangerous Street)
      * @param data The selected data to be analysed for frequencies
      * @return a list of tuples (string(address), int (frequency)), sorted from highest to lowest frequencies
      */
-    public static ArrayList<Tuple> blockFrequencyRank(ArrayList<Report> data) {
+    public static ArrayList<Tuple> streetRank(ArrayList<Report> data) {
         HashMap<String, Integer> map = new HashMap<String, Integer>();
 
         for(Report report : data){
@@ -76,21 +102,23 @@ public class Rank {
      * @return a list of tuples (String, int), sorted from highest to lowest frequency
      */
     public static  ArrayList<Tuple> hashToListString(HashMap<String, Integer> hashMap) {
-        ArrayList<Tuple> list = new ArrayList<Tuple>();
+        ArrayList<Tuple> list = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
             list.add(new Tuple(entry.getKey(), entry.getValue()));
         }
-        Collections.sort(list, (a, b) -> (int) a.y - (int) b.y);
+        list.sort((a, b) -> (int) a.y - (int) b.y);
+        Collections.reverse(list);
         return list;
     }
 
     public static  ArrayList<Tuple> hashToListInt(HashMap<Integer, Integer> hashMap) {
-        ArrayList<Tuple> list = new ArrayList<Tuple>();
+        ArrayList<Tuple> list = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : hashMap.entrySet()) {
             list.add(new Tuple(entry.getKey(), entry.getValue()));
         }
-        Collections.sort(list, (a, b) -> (int) a.y - (int) b.y);
+        list.sort((a, b) -> (int) a.y - (int) b.y);
+        Collections.reverse(list);
         return list;
     }
 }
