@@ -159,7 +159,6 @@ public class EntryController implements Initializable {
         boolean domestic = domesticCheck.isSelected();
         
         // General Information:
-        // TODO Date
 
         String dateTime = String.join("",dateText.getValue().toString(), "T", timeText.getText());
         LocalDateTime date = LocalDateTime.parse(dateTime);
