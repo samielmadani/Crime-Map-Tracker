@@ -16,7 +16,6 @@ public class FilterTest {
     //private static CSVDataAccessor dataAccessor;
     private static DataAccessor dataAccessor;
     private static ArrayList<Report> unfilteredData;
-    private static Filter dataFilter;
     private static File smallFile = new File("src/test/files/smallCrimeData.csv");
     private static File mediumFile = new File("src/test/files/crimeData.csv");
     private static File commaFile = new File("src/test/files/commaInFieldTestData.csv");

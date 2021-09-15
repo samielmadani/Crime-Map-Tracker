@@ -1,4 +1,7 @@
-package seng202.group7;
+package seng202.group7.analyses;
+
+import seng202.group7.Crime;
+import seng202.group7.Report;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
