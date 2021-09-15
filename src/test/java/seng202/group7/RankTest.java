@@ -6,6 +6,7 @@ import seng202.group7.analyses.Filter;
 import seng202.group7.analyses.Rank;
 import seng202.group7.analyses.Tuple;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -14,8 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RankTest {
     private static CSVDataAccessor dataAccessor;
     private static ArrayList<Report> unfilteredData;
-    private static String smallFile = "src/test/files/smallCrimeData.csv";
-    private static String mediumFile = "src/test/files/crimeData.csv";
+    private static File smallFile = new File("src/test/files/smallCrimeData.csv");
+    private static File mediumFile = new File("src/test/files/crimeData.csv");
+    private static File commaFile = new File("src/test/files/commaInFieldTestData.csv");
+    private static File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
+    private static File blankRowFile = new File("src/test/files/blankRowTestData.csv");
+    private static File testFile = new File("src/test/files/testData.csv");
 
 
     /**
@@ -24,7 +29,7 @@ public class RankTest {
 
     @BeforeAll
     public static void setup() {
-        dataAccessor = new CSVDataAccessor();
+        dataAccessor = CSVDataAccessor.getInstance();
         unfilteredData = dataAccessor.read(mediumFile);
     }
 
