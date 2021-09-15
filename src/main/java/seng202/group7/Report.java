@@ -85,8 +85,9 @@ public abstract class Report {
     public void setDate(LocalDateTime date) throws InvalidAttributeValueException {
         if (date == null) {
             throw new InvalidAttributeValueException("Date cannot be null");
+        } if (!Objects.equals(getDate(), date)) {
+            this.date = date;
         }
-        this.date = date;
     }
 
     /**
@@ -106,7 +107,7 @@ public abstract class Report {
     public void setPrimaryDescription(String primaryDescription) throws InvalidAttributeValueException {
         if (Objects.equals(primaryDescription, "") || (primaryDescription == null)) {
             throw new InvalidAttributeValueException("Primary description cannot be null");
-        } else {
+        } else if (!Objects.equals(getPrimaryDescription(), primaryDescription)) {
             this.primaryDescription.setValue(primaryDescription);
         }
     }
@@ -128,7 +129,7 @@ public abstract class Report {
     public void setSecondaryDescription(String secondaryDescription) throws InvalidAttributeValueException {
         if (Objects.equals(secondaryDescription, "") || (secondaryDescription == null)) {
             throw new InvalidAttributeValueException("Secondary description cannot be null");
-        } else {
+        } else if (!Objects.equals(getSecondaryDescription(), secondaryDescription)){
             this.secondaryDescription.setValue(secondaryDescription);
         }
     }
@@ -148,7 +149,7 @@ public abstract class Report {
     public void setLocationDescription(String locationDescription) {
         if (Objects.equals(locationDescription, "")) {
             this.locationDescription.setValue(null);
-        } else {
+        } else if (!Objects.equals(getLocationDescription(), locationDescription)) {
             this.locationDescription.setValue(locationDescription);
         }
     }
@@ -166,7 +167,9 @@ public abstract class Report {
      * @param domestic
      */
     public void setDomestic(Boolean domestic) {
-        this.domestic.setValue(domestic);
+        if (!Objects.equals(getDomestic(), domestic)) {
+            this.domestic.setValue(domestic);
+        }
     }
 
     /**
@@ -182,7 +185,9 @@ public abstract class Report {
      * @param xCoord
      */
     public void setXCoord(Integer xCoord) {
-        this.xCoord.setValue(xCoord);
+        if (!Objects.equals(getXCoord(), xCoord)) {
+            this.xCoord.setValue(xCoord);
+        }
     }
 
     /**
@@ -199,7 +204,9 @@ public abstract class Report {
      * @param yCoord
      */
     public void setYCoord(Integer yCoord) {
-        this.yCoord.setValue(yCoord);
+        if (!Objects.equals(getYCoord(), yCoord)) {
+            this.yCoord.setValue(yCoord);
+        }
     }
 
     /**
@@ -216,7 +223,9 @@ public abstract class Report {
      * @param latitude
      */
     public void setLatitude(Double latitude) {
-        this.latitude.setValue(latitude);
+        if (!Objects.equals(getLatitude(), latitude)) {
+            this.latitude.setValue(latitude);
+        }
     }
 
     /**
@@ -232,8 +241,9 @@ public abstract class Report {
      * Set the geographical longitude of where the report took place
      * @param Longitude
      */
-    public void setLongitude(Double Longitude) {
-        this.longitude.setValue(Longitude);
+    public void setLongitude(Double longitude) {
+        if (!Objects.equals(getLongitude(), longitude))
+        this.longitude.setValue(longitude);
     }
 
     @Override

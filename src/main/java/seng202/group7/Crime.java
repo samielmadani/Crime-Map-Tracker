@@ -71,7 +71,7 @@ public class Crime extends Report {
     public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
         if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
             throw new InvalidAttributeValueException();
-        } else if (!getCaseNumber().equals(caseNumber)){
+        } else if (!Objects.equals(getCaseNumber(), caseNumber)){
             this.caseNumber.setValue(caseNumber);
         }
     }
@@ -91,7 +91,7 @@ public class Crime extends Report {
     public void setBlock(String block) {
         if (Objects.equals(block, "")) {
             this.block.setValue(null);
-        } else if (!getBlock().equals(block)){
+        } else if (!Objects.equals(getBlock(), block)){
             this.block.setValue(block);
         }
     }
@@ -113,7 +113,7 @@ public class Crime extends Report {
     public void setIucr(String iucr) {
         if (Objects.equals(iucr, "")) {
             this.iucr.setValue(null);
-        } else if (!getIucr().equals(iucr)){
+        } else if (!Objects.equals(getIucr(), iucr)){
             this.iucr.setValue(iucr);
         }
     }
@@ -131,7 +131,7 @@ public class Crime extends Report {
      * @param arrest
      */
     public void setArrest(Boolean arrest) {
-        if (!getArrest().equals(arrest)) {
+        if (!Objects.equals(getArrest(), arrest)) {
             this.arrest.setValue(arrest);
         }
     }
@@ -149,7 +149,7 @@ public class Crime extends Report {
      * @param beat
      */
     public void setBeat(Integer beat) {
-        if (!getBeat().equals(beat)) {
+        if (!Objects.equals(getBeat(), beat)) {
             this.beat.setValue(beat);
         }
     }
@@ -167,7 +167,7 @@ public class Crime extends Report {
      * @param ward
      */
     public void setWard(Integer ward) {
-        if (!getWard().equals(ward)) {
+        if (!Objects.equals(getWard(), ward)) {
             this.ward.setValue(ward);
         }
     }
@@ -187,7 +187,7 @@ public class Crime extends Report {
     public void setFbiCD(String fbiCD) {
         if (Objects.equals(fbiCD, "")) {
             this.fbiCD.setValue(null);
-        } else if (!getFbiCD().equals(fbiCD)){
+        } else if (!Objects.equals(getFbiCD(), fbiCD)){
             this.fbiCD.setValue(fbiCD);
         }
     }
