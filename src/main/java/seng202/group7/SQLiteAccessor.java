@@ -73,8 +73,8 @@ public class SQLiteAccessor implements DataAccessor {
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 Timestamp tt = rs.getTimestamp("date");
-                System.out.println(tt);
-                System.out.println(tt.toLocalDateTime());
+                // System.out.println(tt);
+                // System.out.println(tt.toLocalDateTime());
                 Crime crime = new Crime(
                         rs.getString("id"),
                         tt.toLocalDateTime(),

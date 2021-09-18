@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController">
+<GridPane alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController" stylesheets="@style.css">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
@@ -27,7 +27,7 @@
                 <RowConstraints maxHeight="254.0" minHeight="0.0" prefHeight="41.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Label text="General Information:">
                            <font>
@@ -39,7 +39,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
                         <Label text="Location Information:">
                            <font>
@@ -51,7 +51,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2">
                      <children>
                         <Label text="Case Description:">
                            <font>
@@ -63,65 +63,65 @@
                         </Label>
                      </children>
                   </HBox>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
                         <CheckBox fx:id="arrestCheck" mnemonicParsing="false" text="Arrested" />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <children>
                         <CheckBox fx:id="domesticCheck" mnemonicParsing="false" text="Domestic Case" />
                      </children>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="266.0" prefWidth="201.0" GridPane.rowIndex="1">
+                  <VBox prefHeight="266.0" prefWidth="201.0" GridPane.rowIndex="1">
                      <children>
                         <Label text="Case Number" />
-                        <TextField fx:id="cNoText" prefHeight="25.0" prefWidth="200.0">
+                        <TextField fx:id="cNoText" prefHeight="25.0" prefWidth="200.0" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Date of Occurrence" />
-                        <DatePicker fx:id="dateText" prefHeight="25.0" prefWidth="196.0">
+                        <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="196.0">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </DatePicker>
                         <Label text="Time of Occurrence" />
-                        <TextField fx:id="timeText">
+                        <TextField fx:id="timeText" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Illinois Unifrom Code" />
-                        <TextField fx:id="iucrText">
+                        <TextField fx:id="iucrText" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="FBI Crime Code" />
-                        <TextField fx:id="fbiText">
+                        <TextField fx:id="fbiText" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                      </children>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
                      <children>
                         <Label text="Block" />
-                        <TextField fx:id="blockText">
+                        <TextField fx:id="blockText" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
 
                         <HBox>
-                           <VBox alignment="TOP_CENTER">
+                           <VBox>
                               <children>
                                  <Label text="Beat" />
-                                 <TextField fx:id="beatText">
+                                 <TextField fx:id="beatText" onKeyTyped="#activeValidate">
                                     <VBox.margin>
                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </VBox.margin>
@@ -129,10 +129,10 @@
                               </children>
                            </VBox>
 
-                           <VBox alignment="TOP_CENTER">
+                           <VBox>
                               <children>
                                  <Label text="Ward" />
-                                 <TextField fx:id="wardText">
+                                 <TextField fx:id="wardText" onKeyTyped="#activeValidate">
                                     <VBox.margin>
                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </VBox.margin>
@@ -142,20 +142,20 @@
                         </HBox>
 
                         <HBox>
-                           <VBox alignment="TOP_CENTER">
+                           <VBox>
                               <children>
                                  <Label text="X-Coordinate" />
-                                 <TextField fx:id="xCoordText">
+                                 <TextField fx:id="xCoordText" onKeyTyped="#activeValidate">
                                     <VBox.margin>
                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </VBox.margin>
                                  </TextField>
                               </children>
                            </VBox>
-                           <VBox alignment="TOP_CENTER">
+                           <VBox>
                               <children>
                                  <Label text="Y-Coordinate" />
-                                 <TextField fx:id="yCoordText">
+                                 <TextField fx:id="yCoordText" onKeyTyped="#activeValidate">
                                     <VBox.margin>
                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </VBox.margin>
@@ -165,20 +165,20 @@
                         </HBox>
 
                         <HBox>
-                           <VBox alignment="TOP_CENTER">
+                           <VBox>
                               <children>
                                  <Label text="Latitude" />
-                                 <TextField fx:id="latText">
+                                 <TextField fx:id="latText" onKeyTyped="#activeValidate">
                                     <VBox.margin>
                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </VBox.margin>
                                  </TextField>
                               </children>
                            </VBox>
-                           <VBox alignment="TOP_CENTER">
+                           <VBox>
                               <children>
                                  <Label text="Longitude" />
-                                 <TextField fx:id="longText">
+                                 <TextField fx:id="longText" onKeyTyped="#activeValidate">
                                     <VBox.margin>
                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                     </VBox.margin>
@@ -189,21 +189,22 @@
 
                      </children>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <children>
                         <Label text="Primary" />
-                        <TextField fx:id="priText">
+                        <TextField fx:id="priText" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </TextField>
                         <Label text="Secondary" />
-                        <TextArea fx:id="secText" prefHeight="96.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="secText" prefHeight="96.0" prefWidth="200.0" wrapText="true" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </VBox.margin></TextArea>
+                           </VBox.margin>
+                        </TextArea>
                         <Label text="Location Area" />
-                        <TextArea fx:id="locAreaText" prefHeight="107.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="locAreaText" prefHeight="107.0" prefWidth="200.0" wrapText="true" onKeyTyped="#activeValidate">
                            <VBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>

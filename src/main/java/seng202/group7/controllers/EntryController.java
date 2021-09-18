@@ -8,14 +8,21 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import seng202.group7.Crime;
 import seng202.group7.Report;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -40,13 +47,20 @@ public class EntryController implements Initializable {
     @FXML
     private TextArea secText, locAreaText;
     @FXML
-    private DatePicker dateText;
+    private DatePicker datePicker;
     @FXML
     private CheckBox arrestCheck, domesticCheck;
     @FXML
     private Button editButton, deleteButton, saveButton, cancelButton;
 
-    ArrayList<Node> editableValues;
+    private TextField dateText;
+    private ArrayList<Node> allValues;
+    private ArrayList<Node> editableValues;
+    private ArrayList<Node> requiredValues;
+    private ArrayList<Node> intValues;
+    private ArrayList<Node> doubleValues;
+
+    private PseudoClass errorClass;
 
 
     /**
@@ -59,8 +73,24 @@ public class EntryController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerData master = ControllerData.getInstance();
+
+        dateText = datePicker.getEditor();
+        dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                activeValidate(event);
+            }
+        });
+    
+        allValues = new ArrayList<>(Arrays.asList(cNoText, iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
+        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
         editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
-        priText, secText, locAreaText, dateText, arrestCheck, domesticCheck, timeText));
+        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
+        requiredValues = new ArrayList<>(Arrays.asList(cNoText, dateText, timeText, priText));
+        intValues = new ArrayList<>(Arrays.asList(beatText, wardText, xCoordText, yCoordText));
+        doubleValues = new ArrayList<>(Arrays.asList(latText, longText));
+        
+        errorClass = PseudoClass.getPseudoClass("error");
 
         data = master.getCurrentRow();
         if (data != null) {
@@ -68,6 +98,63 @@ public class EntryController implements Initializable {
         } else {
             editEntry(new ActionEvent());
         }
+    }
+
+    public boolean validateRequired(Node inputBox) {
+        boolean valid;
+        valid = !((TextField) inputBox).getText().isEmpty();
+        inputBox.pseudoClassStateChanged(errorClass, !valid);
+        return valid;
+    }
+
+    public boolean validateText(Node inputBox) {
+        boolean valid = true;
+        if (intValues.contains(inputBox)) {
+            valid &=  ((TextField) inputBox).getText().matches("\\d*");
+            inputBox.pseudoClassStateChanged(errorClass, !valid);
+        }
+        if (doubleValues.contains(inputBox)) {
+            valid &= ((TextField) inputBox).getText().matches("(-?)\\d*(\\.\\d+)?");
+            inputBox.pseudoClassStateChanged(errorClass, !valid);
+        }
+        if (inputBox == dateText) {
+            try {
+                // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
+                // return LocalDateTime.parse(date, formatter);
+                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate date = LocalDate.parse(((TextField) inputBox).getText(), dateFormat);
+                datePicker.setValue(date);
+            } catch (DateTimeParseException e) {
+                valid = false;
+                inputBox.pseudoClassStateChanged(errorClass, !valid);
+            }
+        }
+        if (inputBox == timeText) {
+            try {
+                LocalTime.parse(((TextField) inputBox).getText());
+            } catch (DateTimeParseException e) {
+                valid = false;
+                inputBox.pseudoClassStateChanged(errorClass, !valid);
+            }
+        }
+        return valid;
+    }
+
+    public boolean validateValue(Node inputBox) {
+        boolean valid = true;
+        if (requiredValues.contains(inputBox)) {
+            valid &= validateRequired(inputBox);
+        }
+        if (valid) {
+            valid &= validateText(inputBox);
+        }
+        return valid;
+
+    }
+
+    public void activeValidate(KeyEvent event) {
+        Node inputBox = (Node) event.getSource();
+        validateValue(inputBox);
     }
 
     /**
@@ -80,31 +167,35 @@ public class EntryController implements Initializable {
         // General Information:
         cNoText.setText(data.getCaseNumber());
         LocalDateTime date = data.getDate();
-        dateText.setValue(date.toLocalDate());
+        if (date == null) {
+            datePicker.setValue(null);
+            timeText.setText(null);
+        } else {
+            datePicker.setValue(date.toLocalDate());
+            String time = date.getHour() + ":" + String.format("%02d", date.getMinute());
+            timeText.setText(time);
+        }
 
-        String time = date.getHour() + ":" + String.format("%02d", date.getMinute());
-
-        timeText.setText(time);
-        
         iucrText.setText(data.getIucr());
         fbiText.setText(data.getFbiCD());
         // Location Information:
         blockText.setText(data.getBlock());
+
         beatText.setText(String.valueOf(data.getBeat()));
         wardText.setText(String.valueOf(data.getWard()));
         xCoordText.setText(String.valueOf(data.getXCoord()));
         yCoordText.setText(String.valueOf(data.getYCoord()));
         latText.setText(String.valueOf(data.getLatitude()));
         longText.setText(String.valueOf(data.getLatitude()));
+
         // Case Description:
         priText.setText(data.getPrimaryDescription());
         secText.setText(data.getSecondaryDescription());
         locAreaText.setText(data.getLocationDescription());
 
-        for (Node node : editableValues) {
+        for (Node node : allValues) {
             node.setDisable(true);
         }
-        cNoText.setDisable(true);
 
     }
 
@@ -154,14 +245,30 @@ public class EntryController implements Initializable {
     }
 
     public void saveEdit(ActionEvent event) throws InvalidAttributeValueException {
-        // CheckBoxes:
-        boolean arrest = arrestCheck.isSelected();
-        boolean domestic = domesticCheck.isSelected();
-        
-        // General Information:
+        boolean valid = true;
+        ArrayList<String> invalidAttributes = new ArrayList<>();
+        for (Node node : allValues) {
+            if (!validateValue(node)) {
+                valid = false;
+                invalidAttributes.add(node.getId());
+            }
+        }
+        if (!valid) {
+            // TODO add error messages
+            return;
+        } 
 
-        String dateTime = String.join("",dateText.getValue().toString(), "T", timeText.getText());
-        LocalDateTime date = LocalDateTime.parse(dateTime);
+        // CheckBoxes:
+        Boolean arrest = arrestCheck.isSelected();
+        Boolean domestic = domesticCheck.isSelected();
+        LocalDateTime date = null;
+        // General Information:
+        if (dateText.getText() != null && timeText.getText() != null) {
+            // String dateTime = String.join("",dateText.getText(), "T", timeText.getText());
+            LocalTime time = LocalTime.parse(timeText.getText());
+            date = LocalDateTime.of(datePicker.getValue(), time);
+            // date = LocalDateTime.parse(dateTime);
+        }
         String caseNumber = cNoText.getText();
         String iucr = iucrText.getText();
         String fbiCD = fbiText.getText();
