@@ -272,11 +272,14 @@ public class EntryController implements Initializable {
         boolean valid = true;
         ArrayList<String> invalidAttributes = new ArrayList<>();
         for (Node node : allValues) {
-            TextArea test = new TextArea();
-            if (node.getClass() == TextField.class)
-            if (!validate((TextField) node)) {
-                valid = false;
-                invalidAttributes.add(node.getId());
+            try {
+                if (!validate((TextField) node)) {
+                    valid = false;
+                    invalidAttributes.add(node.getId());
+                }
+            } catch (Exception e) {
+                //TODO: handle exception
+                
             }
         }
         if (!valid) {
