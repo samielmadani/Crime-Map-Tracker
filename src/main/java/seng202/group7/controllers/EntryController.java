@@ -10,7 +10,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import seng202.group7.Crime;
 import seng202.group7.Report;
 import javafx.css.PseudoClass;
@@ -54,18 +53,16 @@ public class EntryController implements Initializable {
     private Button editButton, deleteButton, saveButton, cancelButton;
 
     private TextField dateText;
-    private ArrayList<Node> allValues;
-    private ArrayList<Node> editableValues;
-    private ArrayList<Node> requiredValues;
-    private ArrayList<Node> intValues;
-    private ArrayList<Node> doubleValues;
+    private ArrayList<Node> allValues, editableValues, requiredValues;
+    private ArrayList<TextField> intValues, doubleValues;
 
     private PseudoClass errorClass;
 
 
     /**
      * This method is run during the loading of the crime edit fxml file.
-     * It runs methods to get and then store values in the text fields of the screen.
+     * It initializes the ArrayLists for value validation before running methods to get
+     * and store values in the text fields of the screen.
      *
      * @param location      A URL object.
      * @param resources     A ResourceBundle object.
@@ -100,47 +97,58 @@ public class EntryController implements Initializable {
         }
     }
 
-    public boolean validateRequired(Node inputBox) {
+    /**
+     * Checks if the input has a value and adds the error class if it is invalid.
+     * @param inputBox The input to be validated
+     * @return If the field has an entry
+     */
+    private boolean validateRequired(TextField inputBox) {
         boolean valid;
-        valid = !((TextField) inputBox).getText().isEmpty();
+        valid = !(inputBox.getText().isEmpty());
         inputBox.pseudoClassStateChanged(errorClass, !valid);
         return valid;
     }
 
-    public boolean validateText(Node inputBox) {
+    /**
+     * Validates the value in each box. The validation is currently limited to Integer, Double, Date, and Time. <p>
+     * For a input box to be validated against a condition it must be added to the ArrayList during initialization.
+     * @param inputBox The input to be validated
+     * @return If the input is valid
+     */
+    private boolean validateText(TextField inputBox) {
         boolean valid = true;
         if (intValues.contains(inputBox)) {
-            valid &=  ((TextField) inputBox).getText().matches("\\d*");
-            inputBox.pseudoClassStateChanged(errorClass, !valid);
+            valid &=  inputBox.getText().matches("\\d*");
         }
         if (doubleValues.contains(inputBox)) {
-            valid &= ((TextField) inputBox).getText().matches("(-?)\\d*(\\.\\d+)?");
-            inputBox.pseudoClassStateChanged(errorClass, !valid);
+            valid &= inputBox.getText().matches("(-?)\\d*(\\.\\d+)?");
         }
         if (inputBox == dateText) {
             try {
-                // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
-                // return LocalDateTime.parse(date, formatter);
                 DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDate date = LocalDate.parse(((TextField) inputBox).getText(), dateFormat);
+                LocalDate date = LocalDate.parse(inputBox.getText(), dateFormat);
                 datePicker.setValue(date);
             } catch (DateTimeParseException e) {
                 valid = false;
-                inputBox.pseudoClassStateChanged(errorClass, !valid);
             }
         }
         if (inputBox == timeText) {
             try {
-                LocalTime.parse(((TextField) inputBox).getText());
+                LocalTime.parse(inputBox.getText());
             } catch (DateTimeParseException e) {
                 valid = false;
-                inputBox.pseudoClassStateChanged(errorClass, !valid);
             }
         }
+        inputBox.pseudoClassStateChanged(errorClass, !valid);
         return valid;
     }
 
-    public boolean validateValue(Node inputBox) {
+    /**
+     * Passes the value through the required validation methods
+     * @param inputBox The input to be validated
+     * @return If the input is valid
+     */
+    private boolean validate(TextField inputBox) {
         boolean valid = true;
         if (requiredValues.contains(inputBox)) {
             valid &= validateRequired(inputBox);
@@ -152,9 +160,13 @@ public class EntryController implements Initializable {
 
     }
 
+    /**
+     * When a key is pressed on a node with this set, send the node to validation
+     * @param event The keyboard event trigger.
+     */
     public void activeValidate(KeyEvent event) {
-        Node inputBox = (Node) event.getSource();
-        validateValue(inputBox);
+        TextField inputBox = (TextField) event.getSource();
+        validate(inputBox);
     }
 
     /**
@@ -201,19 +213,18 @@ public class EntryController implements Initializable {
 
     /**
      * Returns to the stored table state by retrieving it from the ControllerData object and setting it on the root pane.
-     * @param event      The event action that was triggered.
+     * @param event The action event that was triggered.
      */
-    public void fullDataView(ActionEvent event) {
+    public void returnView(ActionEvent event) {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         ControllerData master = ControllerData.getInstance();
-        GridPane table = master.getTableState();
-        pane.setCenter(table);
+        pane.setCenter(master.getTableState());
     }
 
     /**
      * Allows the user to edit the values in value boxes by enabling them all. Also changes to save/cancel buttons.
-     * @param event
+     * @param event The action event that was triggered.
      */
     public void editEntry(ActionEvent event) {
         editButton.setVisible(false);
@@ -231,7 +242,16 @@ public class EntryController implements Initializable {
         }
     }
 
+    /**
+     * Checks if there is valid data, if there is, modifies the visible buttons and calls the method
+     * to fill all fields with the data. Otherwise returns to previous view.
+     * @param event The action event that was triggered.
+     */
     public void finishEdit(ActionEvent event) {
+        if (data == null) {
+            returnView(event);
+            return;
+        }
         editButton.setVisible(true);
         editButton.setManaged(true);
         deleteButton.setVisible(true);
@@ -244,11 +264,17 @@ public class EntryController implements Initializable {
         setData();
     }
 
-    public void saveEdit(ActionEvent event) throws InvalidAttributeValueException {
+    /**
+     * Checks if all the data is valid, then modifies the existing data object to reflect the changes the user made.
+     * @param event The action event that was triggered.
+     */
+    public void saveEdit(ActionEvent event) {
         boolean valid = true;
         ArrayList<String> invalidAttributes = new ArrayList<>();
         for (Node node : allValues) {
-            if (!validateValue(node)) {
+            TextArea test = new TextArea();
+            if (node.getClass() == TextField.class)
+            if (!validate((TextField) node)) {
                 valid = false;
                 invalidAttributes.add(node.getId());
             }
@@ -261,53 +287,23 @@ public class EntryController implements Initializable {
         // CheckBoxes:
         Boolean arrest = arrestCheck.isSelected();
         Boolean domestic = domesticCheck.isSelected();
-        LocalDateTime date = null;
         // General Information:
-        if (dateText.getText() != null && timeText.getText() != null) {
-            // String dateTime = String.join("",dateText.getText(), "T", timeText.getText());
-            LocalTime time = LocalTime.parse(timeText.getText());
-            date = LocalDateTime.of(datePicker.getValue(), time);
-            // date = LocalDateTime.parse(dateTime);
-        }
+        
         String caseNumber = cNoText.getText();
+        LocalDateTime date = getDateTime();
         String iucr = iucrText.getText();
         String fbiCD = fbiText.getText();
 
         // Location Information:
         String block = blockText.getText();
-        Integer beat = null;
-        if (!beatText.getText().isEmpty()) {
-            beat = Integer.parseInt(beatText.getText());
-        }
 
-        Integer ward = null;
-        if (!wardText.getText().isEmpty()) {
-            ward = Integer.parseInt(wardText.getText());
-        }
-
-        Integer xCoord = null;
-        if (!xCoordText.getText().isEmpty()) {
-            xCoord = Integer.parseInt(xCoordText.getText());
-        }
-
-        Integer yCoord = null;
-        if (!yCoordText.getText().isEmpty()) {
-            yCoord = Integer.parseInt(yCoordText.getText());
-        }
-
-        Double latitude = null;
-        if (!latText.getText().isEmpty()) {
-            latitude = Double.parseDouble(latText.getText());
-        }
-
-        Double longitude = null;
-        if (!longText.getText().isEmpty()) {
-            longitude = Double.parseDouble(longText.getText());
-        }
-
-        // coordsText.setText(coords);
-        // String pos = "("+data.getLatitude()+", "+data.getLongitude()+")";
-        // locText.setText(pos);
+        Integer beat = getInt(beatText);
+        Integer ward = getInt(wardText);
+        Integer xCoord = getInt(xCoordText);
+        Integer yCoord = getInt(yCoordText);
+ 
+        Double latitude = getDouble(latText);
+        Double longitude = getDouble(longText);
 
         // Case Description:
         String primaryDescription = priText.getText();
@@ -318,9 +314,50 @@ public class EntryController implements Initializable {
             data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
             ControllerData.getInstance().addReports(new ArrayList<Report>(Arrays.asList(data)));
         } else {
-            data.update(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
+            try {
+                data.update(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
+            } catch (InvalidAttributeValueException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         finishEdit(event);
+    }
+
+    /**
+     * Converts the LocalDate and LocalTime values from datePicker and timeText into a LocalDateTime object
+     * @return LocalDateTime combination of datePicker and timeText
+     */
+    private LocalDateTime getDateTime() {
+        if (dateText.getText() != null && timeText.getText() != null) {
+            LocalTime time = LocalTime.parse(timeText.getText());
+            return LocalDateTime.of(datePicker.getValue(), time);
+        }
+        return null;
+    }
+
+    /**
+     * Turns a TextField node into an integer value.
+     * @param node A TextField to convert to an Integer
+     * @return
+     */
+    private Integer getInt(TextField node) {
+        if (!node.getText().isEmpty()) {
+            return Integer.parseInt(node.getText());
+        }
+        return null;
+    }
+
+    /**
+     * Turns a TextField node into a Double value.
+     * @param node A TextField to convert to a Double
+     * @return 
+     */
+    private Double getDouble(TextField node) {
+        if (!node.getText().isEmpty()) {
+            return Double.parseDouble(node.getText());
+        }
+        return null;
     }
 
 }

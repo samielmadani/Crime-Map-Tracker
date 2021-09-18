@@ -45,6 +45,19 @@ public abstract class Report {
         this.longitude.setValue(longitude);
     }
 
+    /**
+     * Updates the values found in the report object.
+     * @param date
+     * @param primaryDescription
+     * @param secondaryDescription
+     * @param locationDescription
+     * @param domestic
+     * @param xCoord
+     * @param yCoord
+     * @param latitude
+     * @param longitude
+     * @throws InvalidAttributeValueException
+     */
     public void update(LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
             Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) throws InvalidAttributeValueException {
         setDate(date);

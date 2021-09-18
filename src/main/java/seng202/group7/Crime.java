@@ -192,6 +192,26 @@ public class Crime extends Report {
         }
     }
 
+    /**
+     * Updates the values found in the crime record.
+     * @param caseNumber
+     * @param date
+     * @param block
+     * @param iucr
+     * @param primaryDescription
+     * @param secondaryDescription
+     * @param locationDescription
+     * @param arrest
+     * @param domestic
+     * @param beat
+     * @param ward
+     * @param fbiCD
+     * @param xCoord
+     * @param yCoord
+     * @param latitude
+     * @param longitude
+     * @throws InvalidAttributeValueException
+     */
     public void update(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
     Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) throws InvalidAttributeValueException {
@@ -226,9 +246,6 @@ public class Crime extends Report {
         return attributes;
     }
 
-    /**
-     * 
-     */
     public ArrayList<String> getSchema() {
         ArrayList<String> schema = new ArrayList<>();
         schema.add("CASE NUMBER");

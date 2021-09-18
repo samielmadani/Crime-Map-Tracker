@@ -35,7 +35,6 @@ public class GeneralMenuController {
         pane.setLeft(menuItems);
     }
 
-
     /**
      * Gets a new file to be stored in the data view table.
      * If no file is selected the table is reloaded with the current file.
@@ -54,6 +53,11 @@ public class GeneralMenuController {
         rootPane.setCenter(dataView);
     }
 
+    /**
+     * Moves the program to an empty entry view to create a new crime object.
+     * @param event The event action that was triggered.
+     * @throws IOException An error that occurs when loading the FXML file.
+     */
     public void toNewEntry(ActionEvent event) throws IOException {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
