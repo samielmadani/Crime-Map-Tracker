@@ -297,12 +297,12 @@ public class EntryController implements Initializable {
 
         Double latitude = null;
         if (!latText.getText().isEmpty()) {
-            latitude = Double.parseDouble(yCoordText.getText());
+            latitude = Double.parseDouble(latText.getText());
         }
 
         Double longitude = null;
         if (!longText.getText().isEmpty()) {
-            longitude = Double.parseDouble(latText.getText());
+            longitude = Double.parseDouble(longText.getText());
         }
 
         // coordsText.setText(coords);
