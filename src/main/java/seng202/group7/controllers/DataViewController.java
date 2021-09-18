@@ -53,6 +53,7 @@ public class DataViewController implements Initializable {
     @FXML
     private TableColumn<Crime, Boolean> arrestCol;
 
+
     /**
      * This method is run during the loading of the data view fxml file.
      * It generates what values will be stored in the columns.
@@ -119,7 +120,7 @@ public class DataViewController implements Initializable {
     /**
      * Creates an observable list which is used to store the data that will be displayed in the table.
      */
-    private void setTableContent() {
+    public void setTableContent() {
         ArrayList<Report> reports = new ArrayList<>(ControllerData.getInstance().getReports());
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.

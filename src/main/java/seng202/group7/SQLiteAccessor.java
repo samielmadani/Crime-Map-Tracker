@@ -25,6 +25,10 @@ public class SQLiteAccessor implements DataAccessor {
         return INSTANCE;
     }
 
+    private final String dbpath = "src/test/files/database.db";
+
+    Connection conn;
+
 
     public Connection connect(File file) {
         Connection connection = null;
@@ -33,6 +37,7 @@ public class SQLiteAccessor implements DataAccessor {
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.connect: " + e);
         }
+        conn = connection;
         return connection;
     }
 
@@ -64,6 +69,13 @@ public class SQLiteAccessor implements DataAccessor {
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.delete: " + e);
         }
+    }
+
+    public ArrayList<Report> select(String query) {
+        if(conn != null){
+            return select(conn, query);
+        }
+        return null;
     }
 
     public ArrayList<Report> select(Connection connection, String query){

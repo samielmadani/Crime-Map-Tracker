@@ -19,6 +19,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import seng202.group7.QueryBuilder;
+import seng202.group7.Report;
+import seng202.group7.SQLiteAccessor;
 
 /**
  * Controller class. Linked to filter menu FXML.
@@ -27,27 +30,31 @@ import javafx.scene.layout.VBox;
  *
  * @author Sami Elmadani
  * @author John Elliott
+ * @author Shaylin Simadari
  */
 //TODO remove large lists and add them to a default file we import in maybe.
 public class filterController implements Initializable {
 
     @FXML
-    public DatePicker dateRange;
+    public DatePicker datePicker;
 
     @FXML
-    private ChoiceBox<String> crimeType;
+    private ChoiceBox<String> primaryBox;
 
     @FXML
-    private ChoiceBox<String> locationType;
+    private ChoiceBox<String> locationBox;
 
     @FXML
-    private TextField wardInput;
+    private TextField wardField;
 
     @FXML
-    private TextField beatInput;
+    private TextField beatField;
 
-    private String arrest = "N";
-    private String domestic = "N";
+    @FXML
+    private ChoiceBox<String> arrestBox;
+
+    @FXML
+    private ChoiceBox<String> domesticBox;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -87,8 +94,9 @@ public class filterController implements Initializable {
                 "OTHER NARCOTIC VIOLATION"));
 
         Collections.sort(crimeTypes);
+        primaryBox.getItems().add(null);
         for (String crime : crimeTypes) {
-            crimeType.getItems().add(crime);
+            primaryBox.getItems().add(crime);
         }
 
         ArrayList<String> locationTypes = new ArrayList<>(Arrays.asList(
@@ -187,9 +195,14 @@ public class filterController implements Initializable {
                 "SPORTS ARENA / STADIUM"));
 
         Collections.sort(locationTypes);
+        locationBox.getItems().add(null);
         for (String place : locationTypes) {
-            locationType.getItems().add(place);
+            locationBox.getItems().add(place);
         }
+
+        arrestBox.getItems().addAll(null, "Y", "N");
+
+        domesticBox.getItems().addAll(null, "Y", "N");
     }
 
     /**
@@ -217,16 +230,16 @@ public class filterController implements Initializable {
      * @param event     The event action that was triggered.
      */
     public void wardCheck(KeyEvent event) {
-        int currentCaret = wardInput.getCaretPosition();
-        Integer input = numberOnly(wardInput);
+        int currentCaret = wardField.getCaretPosition();
+        Integer input = numberOnly(wardField);
         if (input != -1) {
             if (input < 0) {
-                wardInput.setText("0");
+                wardField.setText("0");
             } else if (input > 50) {
-                wardInput.setText("50");
+                wardField.setText("50");
             }
         }
-        wardInput.positionCaret(currentCaret - 1);
+        wardField.positionCaret(currentCaret - 1);
     }
 
     /**
@@ -235,42 +248,16 @@ public class filterController implements Initializable {
      * @param event     The event action that was triggered.
      */
     public void beatCheck(KeyEvent event) {
-        int currentCaret = beatInput.getCaretPosition();
-        Integer input = numberOnly(beatInput);
+        int currentCaret = beatField.getCaretPosition();
+        Integer input = numberOnly(beatField);
         if (input != -1) {
             if (input < 0) {
-                beatInput.setText("0");
+                beatField.setText("0");
             } else if (input > 2000) {
-                beatInput.setText("2000");
+                beatField.setText("2000");
             }
         }
-        beatInput.positionCaret(currentCaret - 1);
-    }
-
-    /**
-     * Toggles the value of whether an arrest was involved between Y and N.
-     *
-     * @param actionEvent   The event action that was triggered.
-     */
-    public void toggleArrest(ActionEvent actionEvent) {
-        if (arrest == "N") {
-            arrest = "Y";
-        } else {
-            arrest = "N";
-        }
-    }
-
-    /**
-     * Toggles the value of whether domestic violence was involved between Y and N.
-     *
-     * @param actionEvent   The event action that was triggered.
-     */
-    public void toggleDomestic(ActionEvent actionEvent) {
-        if (domestic == "N") {
-            domestic = "Y";
-        } else {
-            domestic = "N";
-        }
+        beatField.positionCaret(currentCaret - 1);
     }
 
     /**
@@ -279,16 +266,32 @@ public class filterController implements Initializable {
      * @param actionEvent   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent actionEvent) {
-        ArrayList conditions = new ArrayList<Object>(Arrays.asList(
-                dateRange.getValue(),
-                crimeType.getValue(),
-                locationType.getValue(),
-                wardInput.getText(),
-                beatInput.getText(),
-                arrest,
-                domestic));
 
-        // System.out.println(conditions);
+        String sql = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
+                getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
+                getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
+        System.out.println(sql);
+        ControllerData.getInstance().setReports(SQLiteAccessor.getInstance().select(sql));
+        DataViewController.updateTableContents(new ArrayList<Report>());
+
+    }
+
+    private Integer getIntegerFromString(String str) {
+        if(str.equals("")){
+            return null;
+        }
+        return Integer.parseInt(str);
+    }
+
+    private Boolean getBooleanFromString(String str) {
+        if(str == null){
+            return null;
+        }
+        return str.equals("Y") ? true : false;
+    }
+
+    public void clearDate(){
+        datePicker.setValue(null);
     }
 
     /**
