@@ -31,6 +31,10 @@ public class GeneralMenuController {
         pane.setLeft(menuItems);
     }
 
+    /**
+     *
+     */
+
 
     /**
      * Gets a new file to be stored in the data view table.

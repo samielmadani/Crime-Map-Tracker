@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -23,6 +24,7 @@ import javafx.util.Duration;
  * @author John Elliott
  * @author Jack McCorkindale
  * @author Sami Elmadani
+ * @author Sam McMillan
  */
 public class MenuController implements Initializable {
     /**
@@ -94,6 +96,7 @@ public class MenuController implements Initializable {
         mainPane.setCenter(externalSearch);
     }
 
+
     /**
      * Loads and ses the center view to the data view scene.
      * @param event     The event action that was triggered.
@@ -106,5 +109,19 @@ public class MenuController implements Initializable {
         
         // Adds the data view to the center of the screen.
         mainPane.setCenter(dataView);
+    }
+
+    public void toGraph(ActionEvent event) throws IOException {
+
+        //Loads graph screen
+        GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+        //Adds the graph view to the center of the screen.
+        mainPane.setCenter(graphView);
+
+        //Loads graph menu
+        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
+        //Changes side menu to the graph menu
+        pane.setLeft(menuItems);
     }
 }
