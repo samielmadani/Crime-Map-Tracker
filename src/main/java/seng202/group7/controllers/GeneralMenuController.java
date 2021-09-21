@@ -1,5 +1,6 @@
 package seng202.group7.controllers;
 
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +32,28 @@ public class GeneralMenuController {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/filterMenu.fxml")));
+        // Changes side menu to the filter menu.
+        pane.setLeft(menuItems);
+    }
+
+
+    public void toDistance(ActionEvent event) throws IOException{
+        // As the side panels root is the main border panel we use .getRoot().
+        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        
+        pane.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), true);
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/distanceMenu.fxml")));
+        // Changes side menu to the filter menu.
+        pane.setLeft(menuItems);
+    }
+
+    public void toTime(ActionEvent event) throws IOException{
+        // As the side panels root is the main border panel we use .getRoot().
+        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        
+        pane.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/distanceMenu.fxml")));
+        
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
     }
