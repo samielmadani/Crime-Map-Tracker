@@ -29,7 +29,7 @@ import javafx.scene.layout.VBox;
  * @author John Elliott
  */
 //TODO remove large lists and add them to a default file we import in maybe.
-public class filterController implements Initializable {
+public class FilterController implements Initializable {
 
     @FXML
     public DatePicker dateRange;
