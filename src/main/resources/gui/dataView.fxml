@@ -3,15 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="tablePane" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.DataViewController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-   </rowConstraints>
-   <children>
-       <TableView fx:id="tableView" prefHeight="450.0" prefWidth="775.0">
+<BorderPane fx:id="tablePane" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.DataViewController">
+   <center>
+       <TableView fx:id="tableView" prefHeight="450.0" prefWidth="775.0" BorderPane.alignment="CENTER">
            <columns>
                <TableColumn fx:id="caseCol" editable="false" prefWidth="95.0" reorderable="false" resizable="false" text="Case Number" />
                <TableColumn fx:id="dateCol" prefWidth="122.0" reorderable="false" resizable="false" text="Date" />
@@ -20,5 +14,5 @@
                <TableColumn fx:id="descCol" prefWidth="291.0" reorderable="false" resizable="false" text="Primary Description" />
            </columns>
        </TableView>
-   </children>
-</GridPane>
+   </center>
+</BorderPane>

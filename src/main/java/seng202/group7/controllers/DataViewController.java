@@ -6,15 +6,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import seng202.group7.Crime;
-import seng202.group7.Report;
+import seng202.group7.data.Crime;
+import seng202.group7.data.Report;
+import seng202.group7.data.DataAccessor;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +36,7 @@ public class DataViewController implements Initializable {
      * This is the GridPane that holds the table and is the root node.
      */
     @FXML
-    private GridPane tablePane;
+    private BorderPane tablePane;
 
     /**
      * This is the Table.
@@ -52,6 +53,7 @@ public class DataViewController implements Initializable {
      */
     @FXML
     private TableColumn<Crime, Boolean> arrestCol;
+
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -83,7 +85,7 @@ public class DataViewController implements Initializable {
                     swapViews(event, rowData);
                 }
             });
-            return row ;
+            return row;
         });
         setTableContent();
     }
@@ -98,21 +100,20 @@ public class DataViewController implements Initializable {
      */
     private void swapViews(MouseEvent event, Crime rowData) {
         // This section must come first as the rowData is need when initializing the crimeEdit FXML.
-        ControllerData master = ControllerData.getInstance();
-        master.setCurrentRow(rowData);
-        master.setTableState(tablePane);
+        ControllerData conData = ControllerData.getInstance();
+        conData.setCurrentRow(rowData);
+        // Must get two calls to the Parent as there is a stake pane between these two "scenes".
+        conData.setTableState((Pagination) tablePane.getParent().getParent());
 
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        GridPane detailView = null;
         try {
-            detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/crimeEdit.fxml")));
+            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+            // Changes center screen to the crime edit.
+            pane.setCenter(detailView);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Changes center screen to the crime edit.
-        pane.setCenter(detailView);
-
     }
 
 
@@ -120,27 +121,14 @@ public class DataViewController implements Initializable {
      * Creates an observable list which is used to store the data that will be displayed in the table.
      */
     private void setTableContent() {
-        ArrayList<Report> reports = new ArrayList<>(ControllerData.getInstance().getReports());
+        ControllerData conData = ControllerData.getInstance();
+        // Gets the current set of reports based on the pagination's current page.
+        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(conData.getCurrentPage());
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
         for (Report report : reports) {
             data.add((Crime) report);
         }
-        // Displays the table.
         tableView.setItems(data);
-    }
-
-    /**
-     * Updates the table with a new list of reports to be observed.
-     *
-     * @param reports       The new list of reports that will be shown in the table.
-     */
-    public static void updateTableContents(ArrayList<Report> reports) {
-        reports.addAll(ControllerData.getInstance().getReports());
-        ObservableList<Crime> data = FXCollections.observableArrayList();
-        // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
-        for (Report report : reports) {
-            data.add((Crime) report);
-        }
     }
 }

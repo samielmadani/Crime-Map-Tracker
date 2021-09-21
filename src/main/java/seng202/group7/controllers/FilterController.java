@@ -253,7 +253,7 @@ public class FilterController implements Initializable {
      * @param actionEvent   The event action that was triggered.
      */
     public void toggleArrest(ActionEvent actionEvent) {
-        if (arrest == "N") {
+        if (Objects.equals(arrest, "N")) {
             arrest = "Y";
         } else {
             arrest = "N";
@@ -266,20 +266,21 @@ public class FilterController implements Initializable {
      * @param actionEvent   The event action that was triggered.
      */
     public void toggleDomestic(ActionEvent actionEvent) {
-        if (domestic == "N") {
+        if (Objects.equals(domestic, "N")) {
             domestic = "Y";
         } else {
             domestic = "N";
         }
     }
 
+    //TODO never used.
     /**
      * Makes an array list with all the user input conditions given to filter with.
      *
      * @param actionEvent   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent actionEvent) {
-        ArrayList conditions = new ArrayList<Object>(Arrays.asList(
+        ArrayList<Object> conditions = new ArrayList<>(Arrays.asList(
                 dateRange.getValue(),
                 crimeType.getValue(),
                 locationType.getValue(),
