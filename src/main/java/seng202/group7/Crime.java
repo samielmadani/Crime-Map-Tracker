@@ -71,7 +71,7 @@ public class Crime extends Report {
     public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
         if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
             throw new InvalidAttributeValueException();
-        } else {
+        } else if (!Objects.equals(getCaseNumber(), caseNumber)){
             this.caseNumber.setValue(caseNumber);
         }
     }
@@ -91,7 +91,7 @@ public class Crime extends Report {
     public void setBlock(String block) {
         if (Objects.equals(block, "")) {
             this.block.setValue(null);
-        } else {
+        } else if (!Objects.equals(getBlock(), block)){
             this.block.setValue(block);
         }
     }
@@ -113,7 +113,7 @@ public class Crime extends Report {
     public void setIucr(String iucr) {
         if (Objects.equals(iucr, "")) {
             this.iucr.setValue(null);
-        } else {
+        } else if (!Objects.equals(getIucr(), iucr)){
             this.iucr.setValue(iucr);
         }
     }
@@ -131,7 +131,9 @@ public class Crime extends Report {
      * @param arrest
      */
     public void setArrest(Boolean arrest) {
-        this.arrest.setValue(arrest);
+        if (!Objects.equals(getArrest(), arrest)) {
+            this.arrest.setValue(arrest);
+        }
     }
 
     /**
@@ -147,7 +149,9 @@ public class Crime extends Report {
      * @param beat
      */
     public void setBeat(Integer beat) {
-        this.beat.setValue(beat);
+        if (!Objects.equals(getBeat(), beat)) {
+            this.beat.setValue(beat);
+        }
     }
 
     /**
@@ -163,8 +167,9 @@ public class Crime extends Report {
      * @param ward
      */
     public void setWard(Integer ward) {
-        this.ward.setValue(ward);
-
+        if (!Objects.equals(getWard(), ward)) {
+            this.ward.setValue(ward);
+        }
     }
 
     /**
@@ -182,9 +187,42 @@ public class Crime extends Report {
     public void setFbiCD(String fbiCD) {
         if (Objects.equals(fbiCD, "")) {
             this.fbiCD.setValue(null);
-        } else {
+        } else if (!Objects.equals(getFbiCD(), fbiCD)){
             this.fbiCD.setValue(fbiCD);
         }
+    }
+
+    /**
+     * Updates the values found in the crime record.
+     * @param caseNumber
+     * @param date
+     * @param block
+     * @param iucr
+     * @param primaryDescription
+     * @param secondaryDescription
+     * @param locationDescription
+     * @param arrest
+     * @param domestic
+     * @param beat
+     * @param ward
+     * @param fbiCD
+     * @param xCoord
+     * @param yCoord
+     * @param latitude
+     * @param longitude
+     * @throws InvalidAttributeValueException
+     */
+    public void update(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
+    String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
+    Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) throws InvalidAttributeValueException {
+        super.update(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
+        setCaseNumber(caseNumber);
+        setBlock(block);
+        setIucr(iucr);
+        setArrest(arrest);
+        setBeat(beat);
+        setWard(ward);
+        setFbiCD(fbiCD);
     }
 
     public ArrayList<String> getAttributes() {
@@ -208,9 +246,6 @@ public class Crime extends Report {
         return attributes;
     }
 
-    /**
-     * 
-     */
     public ArrayList<String> getSchema() {
         ArrayList<String> schema = new ArrayList<>();
         schema.add("CASE NUMBER");

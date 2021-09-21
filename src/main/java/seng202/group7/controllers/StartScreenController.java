@@ -6,26 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.FileChooser.ExtensionFilter;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
-import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
-import seng202.group7.CSVDataAccessor;
-import seng202.group7.DataAccessor;
-import seng202.group7.Report;
-import seng202.group7.SQLiteAccessor;
 
 /**
  * The controller, used by / linked to, the Start Screen FXML file.

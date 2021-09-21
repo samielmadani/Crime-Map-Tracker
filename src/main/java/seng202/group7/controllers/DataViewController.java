@@ -83,7 +83,7 @@ public class DataViewController implements Initializable {
                     swapViews(event, rowData);
                 }
             });
-            return row ;
+            return row;
         });
         setTableContent();
     }
@@ -106,7 +106,7 @@ public class DataViewController implements Initializable {
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         GridPane detailView = null;
         try {
-            detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/crimeEdit.fxml")));
+            detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }

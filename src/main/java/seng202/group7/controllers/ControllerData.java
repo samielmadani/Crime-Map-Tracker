@@ -178,5 +178,13 @@ public final class ControllerData {
         this.reports = reports;
     }
 
+    /**
+     * Adds the new reports to the current list of reports.
+     * @param newReports ArrayList of reports to be added to the existing reports.
+     */
+    public void addReports(ArrayList<Report> newReports) {
+        reports.addAll(newReports);
+    }
+
 
 }

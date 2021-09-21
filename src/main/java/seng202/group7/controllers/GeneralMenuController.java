@@ -1,6 +1,7 @@
 package seng202.group7.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +18,9 @@ import java.util.Objects;
  */
 public class GeneralMenuController {
 
+    @FXML
+    private Node frame;
+
     /**
      * Gets the current side panel and replace it with the filter menu panel.
      *
@@ -30,7 +34,6 @@ public class GeneralMenuController {
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
     }
-
 
     /**
      * Gets a new file to be stored in the data view table.
@@ -48,5 +51,21 @@ public class GeneralMenuController {
 
         // Adds the data view to the center of the screen.
         rootPane.setCenter(dataView);
+    }
+
+    /**
+     * Moves the program to an empty entry view to create a new crime object.
+     * @param event The event action that was triggered.
+     * @throws IOException An error that occurs when loading the FXML file.
+     */
+    public void toNewEntry(ActionEvent event) throws IOException {
+        BorderPane rootPane = (BorderPane) frame.getParent();
+
+        ControllerData.getInstance().setCurrentRow(null);
+        ControllerData.getInstance().setTableState((GridPane) rootPane.getCenter());
+        Node newFrame;
+        newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+
+        rootPane.setCenter(newFrame);
     }
 }
