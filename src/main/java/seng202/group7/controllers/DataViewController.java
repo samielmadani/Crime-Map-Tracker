@@ -108,7 +108,7 @@ public class DataViewController implements Initializable {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         try {
-            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/crimeEdit.fxml")));
+            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
             // Changes center screen to the crime edit.
             pane.setCenter(detailView);
         } catch (IOException e) {

@@ -93,7 +93,7 @@ public final class DataAccessor {
         // This only get 1000 reports per page of the paginator.
         int start = page * 1000;
         int end = 1000;
-        String query = "SELECT * FROM 'crimedb' LIMIT "+end+" OFFSET "+start+";";
+        String query = "SELECT * FROM crimedb LIMIT "+end+" OFFSET "+start+";";
         ArrayList<Report> reports = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();

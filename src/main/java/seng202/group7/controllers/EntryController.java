@@ -10,11 +10,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import seng202.group7.Crime;
-import seng202.group7.Report;
+import seng202.group7.data.Crime;
+import seng202.group7.data.Report;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import seng202.group7.data.Crime;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -315,7 +316,7 @@ public class EntryController implements Initializable {
 
         if (data == null) {
             data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
-            ControllerData.getInstance().addReports(new ArrayList<Report>(Arrays.asList(data)));
+            //ControllerData.getInstance().addReports(new ArrayList<Report>(Arrays.asList(data)));
         } else {
             try {
                 data.update(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);

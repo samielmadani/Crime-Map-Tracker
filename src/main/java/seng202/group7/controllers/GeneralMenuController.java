@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Pagination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
@@ -55,14 +56,13 @@ public class GeneralMenuController {
 
     /**
      * Moves the program to an empty entry view to create a new crime object.
-     * @param event The event action that was triggered.
      * @throws IOException An error that occurs when loading the FXML file.
      */
-    public void toNewEntry(ActionEvent event) throws IOException {
+    public void toNewEntry() throws IOException {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         ControllerData.getInstance().setCurrentRow(null);
-        ControllerData.getInstance().setTableState((GridPane) rootPane.getCenter());
+        ControllerData.getInstance().setTableState((Pagination) rootPane.getCenter());
         Node newFrame;
         newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
 
