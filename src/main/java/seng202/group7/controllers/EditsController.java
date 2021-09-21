@@ -1,19 +1,18 @@
 package seng202.group7.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import seng202.group7.Crime;
+import seng202.group7.data.Crime;
 import javafx.event.ActionEvent;
+
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -93,16 +92,15 @@ public class EditsController implements Initializable {
     public void fullDataView(ActionEvent event) {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        ControllerData master = ControllerData.getInstance();
-        GridPane table = master.getTableState();
+        ControllerData conData = ControllerData.getInstance();
+        Pagination table = conData.getTableState();
         pane.setCenter(table);
     }
 
     /**
-     * Changes the edit button and shows the save and cancel buttons
-     * @param event
+     * Changes the edit button and shows the save and cancel buttons.
      */
-    public void editEntry(ActionEvent event) {
+    public void editEntry() {
         editButton.setVisible(false);
         editButton.setManaged(false);
 

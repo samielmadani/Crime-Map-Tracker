@@ -2,25 +2,25 @@ package seng202.group7;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import seng202.group7.analyses.Filter;
 import seng202.group7.analyses.Rank;
 import seng202.group7.analyses.Tuple;
+import seng202.group7.data.DataAccessor;
+import seng202.group7.data.Report;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RankTest {
-    private static CSVDataAccessor dataAccessor;
+    private static DataAccessor dataAccessor;
     private static ArrayList<Report> unfilteredData;
-    private static File smallFile = new File("src/test/files/smallCrimeData.csv");
-    private static File mediumFile = new File("src/test/files/crimeData.csv");
-    private static File commaFile = new File("src/test/files/commaInFieldTestData.csv");
-    private static File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
-    private static File blankRowFile = new File("src/test/files/blankRowTestData.csv");
-    private static File testFile = new File("src/test/files/testData.csv");
+    private static final File smallFile = new File("src/test/files/smallCrimeData.csv");
+    private static final File mediumFile = new File("src/test/files/crimeData.csv");
+    private static final File commaFile = new File("src/test/files/commaInFieldTestData.csv");
+    private static final File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
+    private static final File blankRowFile = new File("src/test/files/blankRowTestData.csv");
+    private static final File testFile = new File("src/test/files/testData.csv");
 
 
     /**
@@ -29,8 +29,9 @@ public class RankTest {
 
     @BeforeAll
     public static void setup() {
-        dataAccessor = CSVDataAccessor.getInstance();
-        unfilteredData = dataAccessor.read(mediumFile);
+        DataAccessor dataAccessor = DataAccessor.getInstance();
+        // Ensures the reports are the same.
+        dataAccessor.readToDB(smallFile);
     }
 
     /**

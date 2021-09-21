@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="rootPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
    <left>
@@ -16,7 +13,7 @@
       </Button>
    </left>
    <center>
-      <Button fx:id="startButton" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#fadeOutScene" prefHeight="25.0" prefWidth="103.0" text="Start" BorderPane.alignment="CENTER">
+      <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#fadeOutScene" prefHeight="25.0" prefWidth="103.0" text="Start" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="100.0" left="25.0" right="25.0" top="100.0" />
          </BorderPane.margin></Button>

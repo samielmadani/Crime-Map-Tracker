@@ -1,6 +1,7 @@
 package seng202.group7;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,25 +9,31 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import seng202.group7.analyses.*;
+import seng202.group7.data.DataAccessor;
+import seng202.group7.data.Report;
 
 public class ComparerTest {
     //TODO Create tests to ensure the correct values are returned, speed test methods with large data files
 
-    private static DataAccessor dataAccessor;
     private static ArrayList<Report> data;
-    private static File smallFile = new File("src/test/files/smallCrimeData.csv");
-    private static File mediumFile = new File("src/test/files/crimeData.csv");
-    private static File commaFile = new File("src/test/files/commaInFieldTestData.csv");
-    private static File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
-    private static File blankRowFile = new File("src/test/files/blankRowTestData.csv");
-    private static File testFile = new File("src/test/files/testData.csv");
+    private static final File smallFile = new File("src/test/files/smallCrimeData.csv");
+    private static final File mediumFile = new File("src/test/files/crimeData.csv");
+    private static final File commaFile = new File("src/test/files/commaInFieldTestData.csv");
+    private static final File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
+    private static final File blankRowFile = new File("src/test/files/blankRowTestData.csv");
+    private static final File testFile = new File("src/test/files/testData.csv");
 
 
 
     @BeforeAll
     public static void setup() {
-        dataAccessor = CSVDataAccessor.getInstance();
-        data = dataAccessor.read(smallFile);
+        DataAccessor dataAccessor = DataAccessor.getInstance();
+        // Ensures the reports are the same.
+        dataAccessor.readToDB(smallFile);
+    }
+
+    public static void setData(ArrayList<Report> data) {
+        ComparerTest.data = data;
     }
 
     /**
@@ -58,8 +65,8 @@ public class ComparerTest {
      */
     @Test
     public void locationDifference_specificCase() {
-        Double difference  = Comparer.locationDifference(data.get(1), data.get(2));
-        assertEquals(true, difference >= 18.4 || difference <= 18.6);
+        double difference  = Comparer.locationDifference(data.get(1), data.get(2));
+        assertTrue(difference >= 18.4 || difference <= 18.6);
     }
 
     /**
