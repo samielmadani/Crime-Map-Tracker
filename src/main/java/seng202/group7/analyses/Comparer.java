@@ -1,6 +1,6 @@
 package seng202.group7.analyses;
 
-import seng202.group7.Report;
+import seng202.group7.data.Report;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class Comparer {
             lon1 = reportOne.getLongitude();
             lon2 = reportTwo.getLongitude();
         } catch (NullPointerException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
         double theta = lon1 - lon2;
         double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1))

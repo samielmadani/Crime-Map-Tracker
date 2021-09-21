@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.Objects;
@@ -36,7 +35,7 @@ public class GeneralMenuController {
     }
 
     /**
-     * Gets a new file to be stored in the data view table.
+     * Gets a new file to be stored in the main database.
      * If no file is selected the table is reloaded with the current file.
      *
      * @param event             The event action that was triggered.
@@ -44,13 +43,14 @@ public class GeneralMenuController {
      */
     public void newImport(ActionEvent event) throws IOException {
 
-        ControllerData.getInstance().getFile(event);
-        BorderPane rootPane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        // Loads the raw data viewer screen.
-        GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
+        if (ControllerData.getInstance().getFile(event)) {
+            BorderPane rootPane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+            // Loads the paginator screen.
+            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
 
-        // Adds the data view to the center of the screen.
-        rootPane.setCenter(dataView);
+            // Adds the data view to the center of the screen.
+            rootPane.setCenter(dataView);
+        }
     }
 
     /**

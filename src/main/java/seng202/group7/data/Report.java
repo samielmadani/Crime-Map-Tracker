@@ -1,4 +1,4 @@
-package seng202.group7;
+package seng202.group7.data;
 
 import javafx.beans.property.*;
 
