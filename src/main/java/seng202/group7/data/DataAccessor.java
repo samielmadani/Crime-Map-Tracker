@@ -157,15 +157,13 @@ public final class DataAccessor {
     }
 
     //TODO add functionality and use this method.
-    public void delete(Connection connection, String table){
-        String query = "DELETE FROM " + table;
-        try {
-            Statement stmt = connection.createStatement();
-            stmt.executeQuery(query);
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.delete: " + e);
-        }
+    public void delete(String entryId){
+        String crimeQuery = "DELETE FROM crimes WHERE case_number = '" + entryId + "'";
+        String reportQuery = "DELETE FROM reports WHERE report_id = '" + entryId + "'";
+
+        runStatement(crimeQuery);
+        runStatement(reportQuery);
+
     }
 
     /**

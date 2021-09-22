@@ -190,7 +190,7 @@
          <Button mnemonicParsing="false" onAction="#returnView" text="Back" GridPane.columnIndex="0">
          </Button>
          <HBox spacing="5" GridPane.columnIndex="1">
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#editEntry" text="Delete"/>
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteEntry" text="Delete"/>
             <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit"/>
             <Button fx:id="cancelButton" managed="false" mnemonicParsing="false" onAction="#finishEdit" text="Cancel"
                     visible="false"/>

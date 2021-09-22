@@ -371,4 +371,11 @@ public class EntryController implements Initializable {
         return null;
     }
 
+    public void deleteEntry(ActionEvent event) {
+        DataAccessor dataAccessor = DataAccessor.getInstance();
+
+        dataAccessor.delete(cNoText.getText());
+        returnView(event);
+    }
+
 }
