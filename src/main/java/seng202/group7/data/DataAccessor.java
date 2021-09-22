@@ -1,6 +1,7 @@
 package seng202.group7.data;
 
 import au.com.bytecode.opencsv.CSVReader;
+import seng202.group7.controllers.ControllerData;
 
 import java.io.File;
 import java.io.FileReader;
@@ -66,8 +67,9 @@ public final class DataAccessor {
      * @return Size     The number of entries.
      */
     public int getSize() {
+        String condition = ControllerData.getInstance().getWhereQuery();
         // See how many entries are in the view crimedb.
-        String query = "SELECT COUNT(*) FROM crimedb;";
+        String query = "SELECT COUNT(*) FROM crimedb "+condition+";";
         int size = 0;
         try {
             Statement stmt = connection.createStatement();
@@ -77,7 +79,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.delete: " + e);
+            System.out.println("SQLiteAccessor.size: " + e);
         }
         return size;
     }
@@ -86,14 +88,17 @@ public final class DataAccessor {
      * Using the current page of the paginator this method returns the relevant section
      * of reports to be used from the database in the tableview.
      *
-     * @param page          The current page.
      * @return reports      The list of reports to display.
      */
-    public ArrayList<Report> getPageSet(int page) {
+    public ArrayList<Report> getPageSet() {
+        ControllerData connData = ControllerData.getInstance();
+        String condition = connData.getWhereQuery();
+
+        int page = connData.getCurrentPage();
         // This only get 1000 reports per page of the paginator.
         int start = page * 1000;
         int end = 1000;
-        String query = "SELECT * FROM crimedb LIMIT "+end+" OFFSET "+start+";";
+        String query = "SELECT * FROM crimedb "+condition+" ORDER BY id LIMIT "+end+" OFFSET "+start+";";
         ArrayList<Report> reports = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();

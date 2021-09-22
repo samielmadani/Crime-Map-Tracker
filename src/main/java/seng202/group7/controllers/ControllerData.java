@@ -2,7 +2,6 @@ package seng202.group7.controllers;
 
 
 import javafx.scene.control.Pagination;
-import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
 import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;
@@ -39,6 +38,11 @@ public final class ControllerData {
      * Stores the current page of the paginator.
      */
     private int currentPage = 0;
+
+    /**
+     * This is a condition that is used by the data accessor when searching the database.
+     */
+    private String whereQuery = "";
 
 
     /**
@@ -143,5 +147,23 @@ public final class ControllerData {
      */
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    /**
+     * The getter for the where query.
+     *
+     * @return whereQuery       The condition being applied.
+     */
+    public String getWhereQuery() {
+        return whereQuery;
+    }
+
+    /**
+     * The setter for the where query.
+     *
+     * @param searchingQuery    The condition being applied.
+     */
+    public void setWhereQuery(String searchingQuery) {
+        this.whereQuery = searchingQuery;
     }
 }

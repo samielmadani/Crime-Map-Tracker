@@ -37,7 +37,7 @@ public class StartScreenController {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         FadeTransition fade = new FadeTransition();
-        fade.setDuration(Duration.millis(300));
+        fade.setDuration(Duration.millis(100));
         fade.setNode(rootPane);
         fade.setFromValue(1);
         fade.setToValue(0);
@@ -47,7 +47,7 @@ public class StartScreenController {
                 // Transitions to the next scene.
                 toNextScene(stage);
             } catch (IOException e) {
-                // catches an error that can be thrown if there is an error when loading the next FXML file.
+                // Catches an error that can be thrown if there is an error when loading the next FXML file.
                 e.printStackTrace();
             }
         });

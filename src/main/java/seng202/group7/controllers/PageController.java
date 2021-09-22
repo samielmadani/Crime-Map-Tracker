@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
  *
  * @author John Elliott
  */
-public class pageController implements Initializable {
+public class PageController implements Initializable {
     /**
      * The paginator node.
      */
