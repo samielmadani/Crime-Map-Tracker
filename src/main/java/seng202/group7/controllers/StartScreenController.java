@@ -103,7 +103,7 @@ public class StartScreenController {
      * Launches a file chooser and returns selected file or null is cancelled
      * So it can be used by the controllers.
      *
-     * @param stage     The event action that was triggered.
+     * @param stage  The event action that was triggered.
      * @return the selected file or null
      */
     public void getFile(ActionEvent event) {
