@@ -5,8 +5,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import seng202.group7.data.DataAccessor;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
@@ -21,22 +24,15 @@ import java.util.Objects;
 public class MainScreen extends Application {
 
     /**
-     * The stage used to display the GUI scenes.
-     */
-    private Stage windowStage;
-
-    /**
      * Loads the first FXML file and sets it to the current scene for the stage.
      *
-     * @param initialStage      The stage that the scene will be load onto.
+     * @param windowStage      The stage that the scene will be load onto.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     @Override
-    public void start(Stage initialStage) throws IOException {
-        // Sets the initialStage as the class variable.
-        setStage(initialStage);
+    public void start(Stage windowStage) throws IOException {
+        windowStage.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, this::closeWindow);
         windowStage.setTitle("LookOut");
-        windowStage.setResizable(false);
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
         Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
         Scene scene = new Scene(view);
@@ -44,14 +40,17 @@ public class MainScreen extends Application {
         windowStage.show();
     }
 
-
     /**
-     * Setter for the window stage.
-     *
-     * @param initialStage      The stage that the scenes will be load onto.
+     * As connection is made at the start of the application this event ensures,
+     * that the database is closed at the end of the application.
+     * @param event     The window event action that was triggered.
      */
-    private void setStage(Stage initialStage) {
-        windowStage = initialStage;
+    private void closeWindow(WindowEvent event) {
+        try {
+            DataAccessor.getInstance().getConnection().close();
+        } catch (SQLException error) {
+            error.printStackTrace();
+        }
     }
 
 

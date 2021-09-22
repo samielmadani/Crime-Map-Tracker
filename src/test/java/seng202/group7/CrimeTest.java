@@ -2,10 +2,8 @@ package seng202.group7;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDateTime;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.group7.data.Crime;
 
 public class CrimeTest
 {
