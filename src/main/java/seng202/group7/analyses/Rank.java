@@ -44,7 +44,7 @@ public class Rank {
             String primary = report.getPrimaryDescription();
             map.put(primary, map.getOrDefault(primary, 0) + 1);
         }
-        return hashToListString(map);
+        return hashToList(map);
     }
 
     /**
@@ -72,14 +72,14 @@ public class Rank {
      * then converts it to a sorted List and returns
      */
     private static ArrayList<Tuple> getFrequencyIntegerInteger(ArrayList<Report> data) {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        HashMap<String, Integer> map = new HashMap<>();
 
         for(Report report : data){
             Crime c = (Crime) report;
-            Integer ward = c.getWard();
+            String ward = String.valueOf(c.getWard());
             map.put(ward, map.getOrDefault(ward, 0) + 1);
         }
-        return hashToListInt(map);
+        return hashToList(map);
     }
 
 
@@ -97,7 +97,7 @@ public class Rank {
             map.put(address, map.getOrDefault(address, 0) + 1);
         }
 
-        return hashToListString(map);
+        return hashToList(map);
     }
 
     /**
@@ -105,20 +105,10 @@ public class Rank {
      * @param hashMap A hash map of String key and int values corresponding to frequency of occurrence in the data.
      * @return a list of tuples (String, int), sorted from highest to lowest frequency
      */
-    public static  ArrayList<Tuple> hashToListString(HashMap<String, Integer> hashMap) {
+    public static  ArrayList<Tuple> hashToList(HashMap<String, Integer> hashMap) {
         ArrayList<Tuple> list = new ArrayList<>();
 
         for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
-            list.add(new Tuple(entry.getKey(), entry.getValue()));
-        }
-        list.sort((a, b) -> (int) a.y - (int) b.y);
-        Collections.reverse(list);
-        return list;
-    }
-
-    public static  ArrayList<Tuple> hashToListInt(HashMap<Integer, Integer> hashMap) {
-        ArrayList<Tuple> list = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : hashMap.entrySet()) {
             list.add(new Tuple(entry.getKey(), entry.getValue()));
         }
         list.sort((a, b) -> (int) a.y - (int) b.y);
