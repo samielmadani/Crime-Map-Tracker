@@ -1,6 +1,7 @@
 package seng202.group7.data;
 
 import au.com.bytecode.opencsv.CSVReader;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileReader;
@@ -94,6 +95,16 @@ public final class DataAccessor {
         int start = page * 1000;
         int end = 1000;
         String query = "SELECT * FROM crimedb LIMIT "+end+" OFFSET "+start+";";
+        return getData(query);
+    }
+
+    public ArrayList<Report> getAll() {
+        String query = "SELECT * FROM crimedb";
+        return getData(query);
+    }
+
+
+    private ArrayList<Report> getData(String query) {
         ArrayList<Report> reports = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();

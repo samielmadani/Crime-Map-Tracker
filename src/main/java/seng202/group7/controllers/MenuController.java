@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
@@ -103,19 +104,16 @@ public class MenuController implements Initializable {
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Adds the paginator to the center of the screen.
         mainPane.setCenter(dataView);
+
+
+
     }
 
-    public void toGraph(ActionEvent event) throws IOException {
+    public void toGraph() throws IOException {
 
         //Loads graph screen
         GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
         //Adds the graph view to the center of the screen.
         mainPane.setCenter(graphView);
-
-        //Loads graph menu
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
-        //Changes side menu to the graph menu
-        pane.setLeft(menuItems);
     }
 }
