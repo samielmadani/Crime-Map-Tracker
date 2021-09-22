@@ -41,8 +41,8 @@ public class GeneralMenuController {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         
-        pane.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), true);
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/distanceMenu.fxml")));
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
+        menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), true);
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
     }
@@ -51,8 +51,8 @@ public class GeneralMenuController {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         
-        pane.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
+        menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
         
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
@@ -85,7 +85,8 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         ControllerData.getInstance().setCurrentRow(null);
-        ControllerData.getInstance().setTableState((Pagination) rootPane.getCenter());
+        Pagination dataView = (Pagination) ((BorderPane) rootPane.getCenter()).getChildren().get(0);
+        ControllerData.getInstance().setTableState(dataView);
         Node newFrame;
         newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
 

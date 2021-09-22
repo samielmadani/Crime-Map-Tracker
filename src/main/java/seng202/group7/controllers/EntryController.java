@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
+import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
@@ -314,16 +315,22 @@ public class EntryController implements Initializable {
         String secondaryDescription = secText.getText();
         String locationDescription = locAreaText.getText();
 
+        DataAccessor dataAccessor = DataAccessor.getInstance();
         if (data == null) {
-            data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
-            //ControllerData.getInstance().addReports(new ArrayList<Report>(Arrays.asList(data)));
-        } else {
-            try {
-                data.update(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
-            } catch (InvalidAttributeValueException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            if (dataAccessor.getCrime(caseNumber) != null){
+                cNoText.pseudoClassStateChanged(errorClass, true);
+                //errorText.setText("There is already an entry with the id " + caseNumber + ".")
+                return;
             }
+            data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
+            try {
+                dataAccessor.createCrime(data);
+            } catch (Exception e) {
+                System.out.println(e.getClass());
+            }
+        } else {
+            data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
+            dataAccessor.editCrime(data);
         }
         finishEdit(event);
     }

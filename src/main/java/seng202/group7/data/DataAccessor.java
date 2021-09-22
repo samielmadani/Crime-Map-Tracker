@@ -290,6 +290,51 @@ public final class DataAccessor {
         }
     }
 
+    public void createCrime(Crime crime) {
+        runStatement(String.format("INSERT INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
+            getCrimeValues(crime) + ";" ));
+        runStatement(String.format("INSERT INTO reports(report_id, date, primary_description, secondary_description," +
+            "domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+            getReportValues(crime, crime.getCaseNumber()) + ";"));
+    }
+
+    public void editCrime(Crime crime) {
+        runStatement(String.format("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
+            getCrimeValues(crime) + ";" ));
+        runStatement(String.format("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description," +
+            "domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+            getReportValues(crime, crime.getCaseNumber()) + ";"));
+    }
+
+    private String getCrimeValues(Crime crime) {
+        String values = String.format("VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+        crime.getCaseNumber(),
+        crime.getBlock(),
+        crime.getIucr(),
+        crime.getFbiCD(),
+        crime.getArrest(),
+        crime.getBeat(),
+        crime.getWard() );
+        return values;
+    }
+
+    private String getReportValues(Report report, String id) {
+        Timestamp date = Timestamp.valueOf(report.getDate());
+        String values = String.format("VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+        id,
+        date,
+        report.getPrimaryDescription(),
+        report.getSecondaryDescription(),
+        report.getDomestic(),
+        report.getXCoord(),
+        report.getYCoord(),
+        report.getLatitude(),
+        report.getLongitude(),
+        report.getLocationDescription()
+         );
+         return values;
+    }
+
     /**
      * Adds a list of reports in the form of a string[] into the database.
      *

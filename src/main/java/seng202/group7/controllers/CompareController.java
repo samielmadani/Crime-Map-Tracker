@@ -46,7 +46,7 @@ public class CompareController implements Initializable {
         frame.parentProperty().addListener((obs, oldParent, newParent) -> {
 
             if (newParent != null) {
-                setType(newParent.getPseudoClassStates());
+                setType(frame.getPseudoClassStates());
             }
 
         });
@@ -55,10 +55,10 @@ public class CompareController implements Initializable {
     public void setType(ObservableSet<PseudoClass> pseudoClasses) {
         if (pseudoClasses.contains(PseudoClass.getPseudoClass("distance"))) {
             menuText.setText("Distance Compare");
-            frame.getParent().pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), false);
+            frame.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), false);
         } else if (pseudoClasses.contains(PseudoClass.getPseudoClass("time"))) {
             menuText.setText("Time Compare");
-            frame.getParent().pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), false);
+            frame.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), false);
         }
     }
 
