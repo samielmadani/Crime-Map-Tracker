@@ -69,11 +69,4 @@ public class GeneralMenuController {
 
         rootPane.setCenter(newFrame);
     }
-
-    public void toGraphMenu(ActionEvent event) throws IOException {
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setLeft(menuItems);
-    }
 }

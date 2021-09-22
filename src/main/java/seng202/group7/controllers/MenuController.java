@@ -86,10 +86,15 @@ public class MenuController implements Initializable {
     /**
      * Creates and switches the center view to the programmable google search scene.
      */
-    public void toSearch() {
+    public void toSearch() throws IOException {
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
         mainPane.setCenter(externalSearch);
+
+        // Loads the first side menu screen.
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+        // Sets the menu to the main panel and hides it, so it starts closed.
+        mainPane.setLeft(menuItems);
     }
 
 
@@ -105,15 +110,20 @@ public class MenuController implements Initializable {
         // Adds the paginator to the center of the screen.
         mainPane.setCenter(dataView);
 
-
-
+        // Loads the first side menu screen.
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+        // Sets the menu to the main panel and hides it, so it starts closed.
+        mainPane.setLeft(menuItems);
     }
 
     public void toGraph() throws IOException {
-
         //Loads graph screen
         GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
         //Adds the graph view to the center of the screen.
         mainPane.setCenter(graphView);
+        VBox graphMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
+        // Changes side menu to the filter menu.
+        mainPane.setLeft(graphMenu);
     }
+
 }

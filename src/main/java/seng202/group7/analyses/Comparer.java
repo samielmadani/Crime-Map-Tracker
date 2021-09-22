@@ -5,6 +5,9 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 
+/**
+ * @author Sam McMillan
+ */
 
 public class Comparer {
 

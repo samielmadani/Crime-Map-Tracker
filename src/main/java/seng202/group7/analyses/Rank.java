@@ -5,6 +5,10 @@ import seng202.group7.data.Report;
 
 import java.util.*;
 
+/**
+ * @author Sam
+ * @author Shaylin
+ */
 public class Rank {
     // TODO Added weighted frequencies based on crime type
 
