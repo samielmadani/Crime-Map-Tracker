@@ -2,7 +2,6 @@ package seng202.group7.controllers;
 
 
 import javafx.scene.control.Pagination;
-import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
 import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;

@@ -5,7 +5,16 @@ import au.com.bytecode.opencsv.CSVReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -94,6 +103,11 @@ public final class DataAccessor {
         int start = page * 1000;
         int end = 1000;
         String query = "SELECT * FROM crimedb LIMIT "+end+" OFFSET "+start+";";
+        ArrayList<Report> reports = getReports(query);
+        return reports;
+    }
+
+    private ArrayList<Report> getReports(String query) {
         ArrayList<Report> reports = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
@@ -125,9 +139,21 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.select: " + e);
+            System.out.println(e);
+            return null;
         }
         return reports;
+    }
+
+    
+    public Crime getCrime(String entry) {
+        String query = "SELECT * FROM crimedb WHERE id = '" + entry + "';";
+        ArrayList<Report> reports = getReports(query);
+        if (reports != null && reports.size() == 1) {
+            return (Crime) reports.get(0);
+        } else {
+            return null;
+        }
     }
 
     //TODO add functionality and use this method.
@@ -213,6 +239,7 @@ public final class DataAccessor {
             System.out.println("Invalid Schema.");
         }
     }
+
 
     /**
      * Runs a query with no result set and ensures that the statements are then closed.

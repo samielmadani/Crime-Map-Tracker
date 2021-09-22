@@ -17,8 +17,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import seng202.group7.Crime;
-import seng202.group7.Report;
+import seng202.group7.data.Crime;
+import seng202.group7.data.DataAccessor;
+import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
 
 public class CompareController implements Initializable {
@@ -35,8 +36,13 @@ public class CompareController implements Initializable {
     @FXML
     private VBox frame;
 
+    private PseudoClass errorClass;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        errorClass = PseudoClass.getPseudoClass("error");
+
         frame.parentProperty().addListener((obs, oldParent, newParent) -> {
 
             if (newParent != null) {
@@ -71,20 +77,15 @@ public class CompareController implements Initializable {
     }
 
     public void compareReports(ActionEvent event) {
-        ControllerData data = ControllerData.getInstance();
-        ArrayList<Report> reports = data.getReports();
-        Report reportOne = null;
-        Report reportTwo = null;
-        for (Report report : reports) {
-            if (report.getClass() == Crime.class) {
-                String test = reportOneText.getText();
-                if (((Crime) report).getCaseNumber().equals(reportOneText.getText())) {
-                    reportOne = report;
-                }
-                if (((Crime) report).getCaseNumber().equals(reportTwoText.getText())) {
-                    reportTwo = report;
-                }                    
-            }
+        DataAccessor data = DataAccessor.getInstance();
+        resultText.setText("");
+
+        Report reportOne = data.getCrime(reportOneText.getText());
+        Report reportTwo = data.getCrime(reportTwoText.getText());
+        reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);
+        reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);
+        if (reportOne == null || reportTwo == null) {
+            return;
         }
         if (menuText.getText().contains("Distance")) {
             compareDistance(reportOne, reportTwo);
@@ -95,10 +96,12 @@ public class CompareController implements Initializable {
 
     private void compareDistance(Report reportOne, Report reportTwo) {
         double distance = Comparer.locationDifference(reportOne, reportTwo);
-        resultText.setText(String.format("Crime %s and %s are %.2fkm apart", reportOneText.getText(), reportTwoText.getText(), distance));
+        resultText.setText(String.format("Crime %s and %s occurred %.2fkm apart.", reportOneText.getText(), reportTwoText.getText(), distance));
     }
 
     private void compareTime(Report reportOne, Report reportTwo) {
+        //TODO Have and between elements
+        //TODO When value is 1 use singular
         ArrayList<Long> time = Comparer.timeDifference(reportOne, reportTwo);
         String timeString = "";
         if (time.get(3) > 0) {
@@ -108,12 +111,15 @@ public class CompareController implements Initializable {
             timeString += String.format("%d days ", time.get(2));
         }
         if (time.get(1) > 0) {
-            timeString += String.format("%d minutes ", time.get(1));
+            timeString += String.format("%d hours ", time.get(1));
         }
         if (time.get(0) > 0) {
-            timeString += String.format("%d seconds ", time.get(0));
+            timeString += String.format("%d minutes ", time.get(0));
         }
-        resultText.setText(String.format("Crime %s and %s occurred %sapart", reportOneText.getText(), reportTwoText.getText(), timeString));
+        if (timeString == "") {
+            resultText.setText(String.format("Crime %s and %s occurred at the same time.", reportOneText.getText(), reportTwoText.getText(), timeString));
+        } else {
+            resultText.setText(String.format("Crime %s and %s occurred %sapart.", reportOneText.getText(), reportTwoText.getText(), timeString));
+        }
     }
-
 }

@@ -52,7 +52,7 @@ public class GeneralMenuController {
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         
         pane.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/distanceMenu.fxml")));
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
         
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
