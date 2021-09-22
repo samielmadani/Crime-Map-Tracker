@@ -1,11 +1,11 @@
 package seng202.group7.controllers;
 
 
-import javafx.scene.layout.GridPane;
-import seng202.group7.CSVDataAccessor;
-import seng202.group7.Crime;
-import seng202.group7.Report;
-import seng202.group7.SQLiteAccessor;
+import javafx.scene.control.Pagination;
+import javafx.scene.layout.BorderPane;
+import seng202.group7.data.Crime;
+import seng202.group7.data.Report;
+import seng202.group7.data.DataAccessor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,14 +31,14 @@ public final class ControllerData {
     private Crime currentRow;
 
     /**
-     * Stores the current reports (data) being used by the table and maps.
-     */
-    private ArrayList<Report> reports = new ArrayList<>();
-
-    /**
      * Stores the current table state so when the back button is pushed the position is the same.
      */
-    private GridPane tableState;
+    private Pagination tableState;
+
+    /**
+     * Stores the current page of the paginator.
+     */
+    private int currentPage = 0;
 
 
     /**
@@ -79,7 +79,7 @@ public final class ControllerData {
      *
      * @param tableView       The table state.
      */
-    public void setTableState(GridPane tableView) {
+    public void setTableState(Pagination tableView) {
         tableState = tableView;
     }
 
@@ -88,28 +88,19 @@ public final class ControllerData {
      *
      * @return tableState       The current state of the table.
      */
-    public GridPane getTableState() {
+    public Pagination getTableState() {
         return tableState;
     }
 
-    /**
-     * A getter for the list of reports currently stored.
-     *
-     * @return reports      The list of reports currently being used.
-     */
-    public ArrayList<Report> getReports() {
-        return reports;
-    }
 
 
-    //TODO Im not sure this belongs in this class it might belong in the DataViewController class.
     /**
      * Makes a screen to get a file from a user using the FilerChooser class.
      * Then it sends this files data to the data access layer and returns the data that need to be stored.
      *
      * @param event     The event action that was triggered.
      */
-    public void getFile(ActionEvent event) {
+    public boolean getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("src/test/files"));
         fileChooser.setTitle("Select file");
@@ -122,61 +113,35 @@ public final class ControllerData {
         if (selectedFile != null) {
             ArrayList<Report> reports;
             String fileName = selectedFile.getName();
-            if (fileName.substring(fileName.length()-3).equals("csv")) {
-                // Uses the CSVDataAccessor class to read the file and get the list of data as an array list of reports.
-                reports = CSVDataAccessor.getInstance().read(selectedFile);
-                chooseDBDirectory(stage, reports);
+            DataAccessor accessor = DataAccessor.getInstance();
+            if (fileName.endsWith(".csv")) {
+                // Reads a CSV into the database.
+                accessor.readToDB(selectedFile);
             } else {
-                reports = SQLiteAccessor.getInstance().read(selectedFile);
+                // Reads a outside database into the main database.
+                accessor.importInDB(selectedFile);
             }
-            
-            // Uses the singleton class ControllerData which can allow the reports to be store
-            // and then retrieved by other controllers.
-            ControllerData.getInstance().setReports(reports);
-            DataViewController.updateTableContents(reports);
+            return true;
+        } else {
+            return false;
         }
     }
 
-        /**
-     * Launches a fileChooser to choose directory to create a DB in
-     * @param stage stage to show the filechooser on
-     * @param reports report to write to the DB
-     * @return reports in the DB
-     */
-    private ArrayList<Report> chooseDBDirectory(Stage stage, ArrayList<Report> reports) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("src/test/files"));
-        fileChooser.setTitle("Create .sqlite file");
-        fileChooser.getExtensionFilters().add(new ExtensionFilter(".db files", "*.db"));
-        File selectedFile = fileChooser.showSaveDialog(stage);
-        if(selectedFile != null) {
-            reports = convertCSVtoDB(reports, selectedFile);
-        }
-        return reports;
-    }
-
-        /**
-     * creates a new database and populates it
-     * @param reports reports to write to database
-     * @param selectedFile location to create the database in
-     * @return reports in the database
-     */
-    private ArrayList<Report> convertCSVtoDB(ArrayList<Report> reports, File selectedFile) {
-        SQLiteAccessor.getInstance().connect(selectedFile);
-        SQLiteAccessor.getInstance().create(selectedFile);
-        SQLiteAccessor.getInstance().write(reports, selectedFile);
-        reports = SQLiteAccessor.getInstance().read(selectedFile);
-        return reports;
-    }
-    
     /**
-     * A setter for the list of reports.
+     * Gets the current page of the paginator.
      *
-     * @param reports       A list of new reports.
+     * @return Page     The current page.
      */
-    public void setReports(ArrayList<Report> reports) {
-        this.reports = reports;
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-
+    /**
+     * Sets the current page of the paginator.
+     *
+     * @param currentPage       The current page.
+     */
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
 }

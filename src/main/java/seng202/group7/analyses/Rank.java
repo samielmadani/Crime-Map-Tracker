@@ -1,7 +1,7 @@
 package seng202.group7.analyses;
 
-import seng202.group7.Crime;
-import seng202.group7.Report;
+import seng202.group7.data.Crime;
+import seng202.group7.data.Report;
 
 import java.util.*;
 

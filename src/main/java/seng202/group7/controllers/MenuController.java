@@ -5,13 +5,11 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
@@ -52,8 +50,8 @@ public class MenuController implements Initializable {
             pane.setTranslateX(-(pane.getPrefWidth()));
             mainPane.getLeft().setVisible(false);
             mainPane.getLeft().setManaged(false);
-            toData(new ActionEvent());
-            
+            toData();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,10 +59,8 @@ public class MenuController implements Initializable {
 
     /**
      * Runs the opening and closing animation for the side menu screen.
-     *
-     * @param event     The event action that was triggered.
      */
-    public void menuAnimation(ActionEvent event) {
+    public void menuAnimation() {
         VBox pane = (VBox) mainPane.getLeft();
         // Creates an animation for opening the menu.
         TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
@@ -87,10 +83,9 @@ public class MenuController implements Initializable {
     }
 
     /**
-     * Creates and switches the center view to the programable google search scene.
-     * @param event     The event action that was triggered.
+     * Creates and switches the center view to the programmable google search scene.
      */
-    public void toSearch(ActionEvent event) {
+    public void toSearch() {
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
         mainPane.setCenter(externalSearch);
@@ -98,16 +93,15 @@ public class MenuController implements Initializable {
 
 
     /**
-     * Loads and ses the center view to the data view scene.
-     * @param event     The event action that was triggered.
-     * @throws IOException
+     * Loads and sets the center view to the paginator scene.
+     * This is done this way so that the raw data button can call this method.
+     *
+     * @throws IOException      Error when loading the FXML file.
      */
-    public void toData(ActionEvent event) throws IOException {
-
-        // Loads the raw data viewer screen.
-        GridPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
-        
-        // Adds the data view to the center of the screen.
+    public void toData() throws IOException {
+        // Loads the paginator which generates the raw data tables.
+        BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+        // Adds the paginator to the center of the screen.
         mainPane.setCenter(dataView);
     }
 
