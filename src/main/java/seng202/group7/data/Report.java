@@ -38,7 +38,9 @@ public abstract class Report {
         this.date = date;
         this.primaryDescription = new SimpleStringProperty(primaryDescription);
         this.secondaryDescription = new SimpleStringProperty(secondaryDescription);
-        this.locationDescription.setValue(locationDescription);
+        if (locationDescription != null && !locationDescription.isEmpty()) {
+            this.locationDescription.setValue(locationDescription);
+        }
         this.domestic.setValue(domestic);
         this.xCoord.setValue(xCoord);
         this.yCoord.setValue(yCoord);

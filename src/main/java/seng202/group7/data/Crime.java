@@ -46,12 +46,19 @@ public class Crime extends Report {
     Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         super(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
         this.caseNumber = new SimpleStringProperty(caseNumber);
-        this.block.setValue(block);
-        this.iucr.setValue(iucr);
+
+        if (block != null && !block.isEmpty()) {
+            this.block.setValue(block);
+        }
+        if (iucr != null && !iucr.isEmpty()) {
+            this.iucr.setValue(iucr);
+        }
         this.arrest.setValue(arrest);
         this.beat.setValue(beat);
         this.ward.setValue(ward);
-        this.fbiCD.setValue(fbiCD);
+        if (block != null && !fbiCD.isEmpty()) {
+            this.fbiCD.setValue(fbiCD);
+        }
     }
 
     /**
