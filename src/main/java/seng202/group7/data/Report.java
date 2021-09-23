@@ -3,7 +3,6 @@ package seng202.group7.data;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
 
