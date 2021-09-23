@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Pagination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
@@ -29,8 +28,7 @@ public class GeneralMenuController {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toFilter(ActionEvent event) throws IOException {
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/filterMenu.fxml")));
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
@@ -38,8 +36,7 @@ public class GeneralMenuController {
 
 
     public void toDistance(ActionEvent event) throws IOException{
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        BorderPane pane = (BorderPane) frame.getParent();
         
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
         menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), true);
@@ -48,8 +45,7 @@ public class GeneralMenuController {
     }
 
     public void toTime(ActionEvent event) throws IOException{
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        BorderPane pane = (BorderPane) frame.getParent();
         
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
         menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
@@ -68,7 +64,7 @@ public class GeneralMenuController {
     public void newImport(ActionEvent event) throws IOException {
 
         if (ControllerData.getInstance().getFile(event)) {
-            BorderPane rootPane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+            BorderPane rootPane = (BorderPane) frame.getParent();
             // Loads the paginator screen.
             BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
 
@@ -85,7 +81,7 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         ControllerData.getInstance().setCurrentRow(null);
-        Pagination dataView = (Pagination) ((BorderPane) rootPane.getCenter()).getChildren().get(0);
+        Node dataView = rootPane.getCenter();
         ControllerData.getInstance().setTableState(dataView);
         Node newFrame;
         newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));

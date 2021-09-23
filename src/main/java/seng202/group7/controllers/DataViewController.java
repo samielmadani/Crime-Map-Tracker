@@ -36,7 +36,7 @@ public class DataViewController implements Initializable {
      * This is the GridPane that holds the table and is the root node.
      */
     @FXML
-    private BorderPane tablePane;
+    private BorderPane frame;
 
     /**
      * This is the Table.
@@ -64,6 +64,7 @@ public class DataViewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
         wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
@@ -100,17 +101,26 @@ public class DataViewController implements Initializable {
      */
     private void swapViews(MouseEvent event, Crime rowData) {
         // This section must come first as the rowData is need when initializing the crimeEdit FXML.
-        ControllerData conData = ControllerData.getInstance();
-        conData.setCurrentRow(rowData);
-        // Must get two calls to the Parent as there is a stake pane between these two "scenes".
-        conData.setTableState((Pagination) tablePane.getParent().getParent());
+        ControllerData controllerData = ControllerData.getInstance();
+        controllerData.setCurrentRow(rowData);
+        
+        Pagination page = (Pagination) frame.getParent().getParent();
 
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        int currentPage = controllerData.getCurrentPage();
+        if (currentPage == 0) {
+            page.setCurrentPageIndex(currentPage + 1);
+        } else {
+            page.setCurrentPageIndex(currentPage - 1);
+        }
+        controllerData.setCurrentPage(currentPage);
+
+        Node table = page.getParent();
         try {
             BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
             // Changes center screen to the crime edit.
-            pane.setCenter(detailView);
+            ((BorderPane) table.getParent()).setCenter(detailView);
+            controllerData.setTableState(table);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,9 +131,9 @@ public class DataViewController implements Initializable {
      * Creates an observable list which is used to store the data that will be displayed in the table.
      */
     private void setTableContent() {
-        ControllerData conData = ControllerData.getInstance();
+        ControllerData controllerData = ControllerData.getInstance();
         // Gets the current set of reports based on the pagination's current page.
-        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(conData.getCurrentPage());
+        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(controllerData.getCurrentPage());
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
         for (Report report : reports) {

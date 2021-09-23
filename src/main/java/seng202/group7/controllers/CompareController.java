@@ -69,8 +69,7 @@ public class CompareController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu(ActionEvent event) throws IOException {
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);

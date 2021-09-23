@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class creates the paginator that then itself generates the tables,
@@ -25,6 +26,9 @@ public class pageController implements Initializable {
     @FXML
     private Pagination pages;
 
+    @FXML
+    private Node frame;
+
 
     /**
      * This method is run during the loading of the pages fxml file.
@@ -35,8 +39,17 @@ public class pageController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        int size = DataAccessor.getInstance().getSize();
-        pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
+
+        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+            if (newParent != null) {
+                int size = DataAccessor.getInstance().getSize();
+                
+                pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
+                pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());
+            }
+
+        });
+
         pages.setPageFactory(this::createPage); // When ever a page is swapped it calls this method.
     }
 
