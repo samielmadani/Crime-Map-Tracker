@@ -27,13 +27,13 @@ import seng202.group7.data.QueryBuilder;
 public class FilterController implements Initializable {
 
     @FXML
-    public DatePicker dateRange;
+    public DatePicker datePicker;
 
     @FXML
-    private ChoiceBox<String> primaryBox;
+    private ComboBox<String> primaryBox;
 
     @FXML
-    private ChoiceBox<String> locationBox;
+    private ComboBox<String> locationBox;
 
     @FXML
     private TextField wardField;
@@ -42,10 +42,10 @@ public class FilterController implements Initializable {
     private TextField beatField;
 
     @FXML
-    private ChoiceBox<String> arrestBox;
+    private ComboBox<String> arrestBox;
 
     @FXML
-    private ChoiceBox<String> domesticBox;
+    private ComboBox<String> domesticBox;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -57,7 +57,7 @@ public class FilterController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         primaryBox.setItems(FXCollections.observableArrayList(
-                "THEFT", "ASSAULT", "DECEPTIVE PRACTICE", "BATTERY", "HOMICIDE", "OTHER OFFENSE",
+                null, "THEFT", "ASSAULT", "DECEPTIVE PRACTICE", "BATTERY", "HOMICIDE", "OTHER OFFENSE",
                 "CRIMINAL DAMAGE", "WEAPONS VIOLATION", "CRIMINAL TRESPASS", "ARSON", "MOTOR VEHICLE THEFT",
                 "ROBBERY", "STALKING", "BURGLARY", "OFFENSE INVOLVING CHILDREN", "SEX OFFENSE", "CRIMINAL SEXUAL ASSAULT",
                 "NARCOTICS", "PUBLIC PEACE VIOLATION", "PROSTITUTION", "INTERFERENCE WITH PUBLIC OFFICER",
@@ -65,7 +65,7 @@ public class FilterController implements Initializable {
                 "OTHER NARCOTIC VIOLATION").sorted());
 
         locationBox.setItems(FXCollections.observableArrayList(
-                "APARTMENT", "STREET", "SIDEWALK", "PARK PROPERTY", "RESIDENCE", "DRUG STORE",
+                null, "APARTMENT", "STREET", "SIDEWALK", "PARK PROPERTY", "RESIDENCE", "DRUG STORE",
                 "DEPARTMENT STORE", "PARKING LOT / GARAGE (NON RESIDENTIAL)", "ALLEY", "RESIDENCE - PORCH / HALLWAY",
                 "SMALL RETAIL STORE", "AUTO", "RESTAURANT", "GROCERY FOOD STORE", "CTA PLATFORM", "GAS STATION",
                 "POLICE FACILITY / VEHICLE PARKING LOT", "TAXICAB", "RESIDENCE - YARD (FRONT / BACK)",
@@ -90,6 +90,10 @@ public class FilterController implements Initializable {
                 "AIRPORT BUILDING NON-TERMINAL - SECURE AREA", "AIRCRAFT", "WAREHOUSE",
                 "AIRPORT TERMINAL UPPER LEVEL - NON-SECURE AREA", "BOAT / WATERCRAFT", "PORCH", "SCHOOL - PUBLIC GROUNDS",
                 "HOUSE", "DAY CARE CENTER", "AIRPORT VENDING ESTABLISHMENT", "SPORTS ARENA / STADIUM").sorted());
+
+        arrestBox.getItems().addAll(null, "Y", "N");
+
+        domesticBox.getItems().addAll(null, "Y", "N");
     }
 
     /**
@@ -149,9 +153,9 @@ public class FilterController implements Initializable {
      * @param event   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent event) throws IOException {
-        String query = QueryBuilder.where(dateRange.getValue(), primaryBox.getValue(), locationBox.getValue(),
+        String query = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
                 getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
-                true, true);
+                getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
 
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
         ControllerData.getInstance().setWhereQuery(query);
@@ -169,8 +173,15 @@ public class FilterController implements Initializable {
         return Integer.parseInt(str);
     }
 
-    public void clearDate() {
+    private Boolean getBooleanFromString(String str) {
+        if(str == null){
+            return null;
+        }
+        return str.equals("Y") ? true : false;
+    }
 
+    public void clearDate(){
+        datePicker.setValue(null);
     }
 
     /**
