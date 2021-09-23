@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
 
-
+/**
+ * Used to create and store report objects which is the super class of Crime.
+ * @author Jack McCorkindale
+ */
 public abstract class Report {
     private LocalDateTime date = null;
     private SimpleStringProperty primaryDescription = new SimpleStringProperty(null);

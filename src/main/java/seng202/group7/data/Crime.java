@@ -8,6 +8,10 @@ import java.util.Objects;
 
 import javax.naming.directory.InvalidAttributeValueException;
 
+/**
+ * Used to create and store crime objects.
+ * @author Jack McCorkindale
+ */
 public class Crime extends Report {
     private SimpleStringProperty caseNumber = new SimpleStringProperty(null);
     private SimpleStringProperty block = new SimpleStringProperty(null);
