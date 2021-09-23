@@ -117,7 +117,6 @@ public class MenuController implements Initializable {
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Sets the menu to the main panel and hides it, so it starts closed.
         menuFrame.setLeft(menuItems);
-        menuFrame.setCenter(dataView);
     }
 
     /**
@@ -129,9 +128,14 @@ public class MenuController implements Initializable {
 
         // Loads the help screen.
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/helpScreen.fxml")));
-
         // Adds the help screen to the center of the screen.
         menuFrame.setCenter(dataView);
+
+        // Loads the first side menu screen.
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+        // Sets the menu to the main panel and hides it, so it starts closed.
+        menuFrame.setLeft(menuItems);
+
 
     }
 
