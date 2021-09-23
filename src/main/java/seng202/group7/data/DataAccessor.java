@@ -99,6 +99,7 @@ public final class DataAccessor {
      * Using the current page of the paginator this method returns the relevant section
      * of reports to be used from the database in the tableview.
      *
+     * @param page          The current page.
      * @return reports      The list of reports to display.
      */
     public ArrayList<Report> getPageSet() {
@@ -110,6 +111,11 @@ public final class DataAccessor {
         int end = 1000;
 
         String query = "SELECT * FROM crimedb "+condition+" ORDER BY id LIMIT "+end+" OFFSET "+start+";";
+        return selectReports(query);
+    }
+
+    public ArrayList<Report> getAll() {
+        String query = "SELECT * FROM crimedb";
         return selectReports(query);
     }
 
@@ -314,7 +320,7 @@ public final class DataAccessor {
             PSTypes.setPSInteger(psCrime, 7, crime.getWard()); // Ward
 
             PSTypes.setPSString(psReport, 1, crime.getCaseNumber()); // Case Number
-            
+
             Timestamp date = Timestamp.valueOf(crime.getDate());
             psReport.setTimestamp(2, date); // Date
             PSTypes.setPSString(psReport, 3, crime.getPrimaryDescription()); // Primary Description

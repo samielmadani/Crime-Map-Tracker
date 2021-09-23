@@ -5,11 +5,11 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
@@ -19,9 +19,11 @@ import javafx.util.Duration;
  * The controller, used by / linked to, the Menu FXML file.
  * This controller links the main screen menu system together with its components.
  *
+ * @author John Elliott
  * @author Jack McCorkindale
  * @author John Elliott
  * @author Sami Elmadani
+ * @author Sam McMillan
  */
 public class MenuController implements Initializable {
     /**
@@ -84,11 +86,17 @@ public class MenuController implements Initializable {
     /**
      * Creates and switches the center view to the programmable google search scene.
      */
-    public void toSearch() {
+    public void toSearch() throws IOException {
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
         menuFrame.setCenter(externalSearch);
+
+        // Loads the first side menu screen.
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+        // Sets the menu to the main panel and hides it, so it starts closed.
+        menuFrame.setLeft(menuItems);
     }
+
 
     /**
      * Loads and sets the center view to the paginator scene.
@@ -102,6 +110,12 @@ public class MenuController implements Initializable {
         // Loads the paginator which generates the raw data tables.
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Adds the paginator to the center of the screen.
+        menuFrame.setCenter(dataView);
+
+        // Loads the first side menu screen.
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+        // Sets the menu to the main panel and hides it, so it starts closed.
+        menuFrame.setLeft(menuItems);
         menuFrame.setCenter(dataView);
     }
 
@@ -119,4 +133,15 @@ public class MenuController implements Initializable {
         menuFrame.setCenter(dataView);
 
     }
+
+    public void toGraph() throws IOException {
+        //Loads graph screen
+        GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+        //Adds the graph view to the center of the screen.
+        menuFrame.setCenter(graphView);
+        VBox graphMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
+        // Changes side menu to the filter menu.
+        menuFrame.setLeft(graphMenu);
+    }
+
 }

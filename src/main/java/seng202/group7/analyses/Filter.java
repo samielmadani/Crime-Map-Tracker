@@ -6,6 +6,11 @@ import seng202.group7.data.Report;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+/**
+ * @author Sam McMillan
+ * @author Sami
+ */
+
 public class Filter {
     // TODO This function repeats itself too much, all of the methods do the exact same thing
 
