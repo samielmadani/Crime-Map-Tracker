@@ -4,11 +4,11 @@ import seng202.group7.view.MainScreen;
 /**
  * The runnable application class used to initialization the Main Screen class and launch the GUI.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
- * @author Sam MCMillan
+ * @author Sam McMillan
  * @author Sami Elmadani
  * @author Shaylin Simadari
- * @author Jack McCorkindale
  */
 public class App {
     /**

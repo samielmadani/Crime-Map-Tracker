@@ -17,8 +17,8 @@ import javafx.util.Duration;
 /**
  * The controller, used by / linked to, the Start Screen FXML file.
  *
- * @author John Elliott
  * @author Jack McCorkindale
+ * @author John Elliott
  * @author Shaylin Simadari
  */
 public class StartScreenController {

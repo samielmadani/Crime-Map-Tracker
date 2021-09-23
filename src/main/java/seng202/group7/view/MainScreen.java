@@ -15,11 +15,11 @@ import java.util.Objects;
 /**
  * Initializes the GUI stage and loads the first FXML scene.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
- * @author Sam MCMillan
+ * @author Sam McMillan
  * @author Sami Elmadani
  * @author Shaylin Simadari
- * @author Jack McCorkindale
  */
 public class MainScreen extends Application {
 
