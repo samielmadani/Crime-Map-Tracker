@@ -107,16 +107,16 @@ public class MenuController implements Initializable {
 
     /**
      * Loads and sets the center view to the data view scene.
-     * @param event     The event action that was triggered.
-     * @throws IOException
+     *
+     * @throws IOException      Error when loading the FXML file.
      */
-    public void openHelpPage(ActionEvent event) throws IOException {
+    public void openHelpPage() throws IOException {
 
         // Loads the help screen.
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/helpScreen.fxml")));
 
         // Adds the help screen to the center of the screen.
-        mainPane.setCenter(dataView);
+        menuFrame.setCenter(dataView);
 
     }
 }

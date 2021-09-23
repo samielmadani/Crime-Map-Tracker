@@ -6,7 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
-//TODO Not all param's are given descriptions which are needed.
+
+
 public abstract class Report {
     private LocalDateTime date = null;
     private SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
@@ -71,16 +72,6 @@ public abstract class Report {
         setLongitude(longitude);
     }
 
-    /**
-     * 
-     * @return An ArrayList containing what types of attributes are in the report
-     */
-    public abstract ArrayList<String> getSchema();
-    
-    /**
-     * @return An ArrayList containing all of the report's attributes
-     */
-    public abstract ArrayList<String> getAttributes();
     
     /**
      * 

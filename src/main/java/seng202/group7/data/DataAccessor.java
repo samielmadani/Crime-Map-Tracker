@@ -19,6 +19,7 @@ import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -103,12 +104,16 @@ public final class DataAccessor {
     public ArrayList<Report> getPageSet() {
         ControllerData connData = ControllerData.getInstance();
         String condition = connData.getWhereQuery();
-
         int page = connData.getCurrentPage();
         // This only get 1000 reports per page of the paginator.
         int start = page * 1000;
         int end = 1000;
+
         String query = "SELECT * FROM crimedb "+condition+" ORDER BY id LIMIT "+end+" OFFSET "+start+";";
+        return selectReports(query);
+    }
+
+    private ArrayList<Report> selectReports(String query) {
         ArrayList<Report> reports = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
@@ -146,10 +151,10 @@ public final class DataAccessor {
         return reports;
     }
 
-    
+
     public Crime getCrime(String entry) {
         String query = "SELECT * FROM crimedb WHERE id = '" + entry + "';";
-        ArrayList<Report> reports = getReports(query);
+        ArrayList<Report> reports = selectReports(query);
         if (reports != null && reports.size() == 1) {
             return (Crime) reports.get(0);
         } else {
@@ -161,10 +166,8 @@ public final class DataAccessor {
     public void delete(String entryId){
         String crimeQuery = "DELETE FROM crimes WHERE case_number = '" + entryId + "'";
         String reportQuery = "DELETE FROM reports WHERE report_id = '" + entryId + "'";
-
         runStatement(crimeQuery);
         runStatement(reportQuery);
-
     }
 
     /**
@@ -266,22 +269,30 @@ public final class DataAccessor {
      * @param pathname      CSV file.
      */
     public void readToDB(File pathname) {
+        ArrayList<String> schemaDefault = new ArrayList<>(Arrays.asList("CASE#", "DATE  OF OCCURRENCE", "BLOCK", " IUCR", " PRIMARY DESCRIPTION", " SECONDARY DESCRIPTION",
+                " LOCATION DESCRIPTION", "ARREST", "DOMESTIC", "BEAT", "WARD", "FBI CD", "X COORDINATE", "Y COORDINATE",
+                "LATITUDE", "LONGITUDE", "LOCATION"));
         try {
             FileReader csvFile = new FileReader(pathname);
             CSVReader reader = new CSVReader(csvFile);
             ArrayList<String[]> rows = new ArrayList<>();
             String[] row;
-            String [] schema = reader.readNext(); // Will likely be used to determine crime vs incident
+            ArrayList<String> schema = new ArrayList<>(Arrays.asList(reader.readNext())); // Will likely be used to determine crime vs incident
             while ((row = reader.readNext()) != null) {
                 try {
                     rows.add(row);
                 } catch (Exception e) {
-                    System.out.println("test " + e.getMessage());
+                    System.out.println(e.getMessage());
                 }
             }
             reader.close();
-            // After getting all rows goes to write them into the database.
-            write(rows);
+            if (schemaDefault.equals(schema)) {
+                // After getting all rows goes to write them into the database.
+                write(rows);
+            } else {
+                System.out.println("Invalid Schema.");
+            }
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (SQLException e) {

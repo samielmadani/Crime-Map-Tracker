@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import javax.naming.directory.InvalidAttributeValueException;
-//TODO Not all param's are given descriptions which are needed.
+
 public class Crime extends Report {
     private SimpleStringProperty caseNumber = new SimpleStringProperty(null);
     private SimpleStringProperty block = new SimpleStringProperty(null);
@@ -225,66 +225,7 @@ public class Crime extends Report {
         setFbiCD(fbiCD);
     }
 
-    public ArrayList<String> getAttributes() {
-        ArrayList<String> attributes = new ArrayList<>();
-        attributes.add(caseNumber.getValue());
-        attributes.add(toString(getDate()));
-        attributes.add(block.getValue());
-        attributes.add(iucr.getValue());
-        attributes.add(getPrimaryDescription());
-        attributes.add(getSecondaryDescription());
-        attributes.add(getLocationDescription());
-        attributes.add(toString(arrest.getValue()));
-        attributes.add(toString(getDomestic()));
-        attributes.add(toString(beat.getValue()));
-        attributes.add(toString(ward.getValue()));
-        attributes.add(fbiCD.getValue());
-        attributes.add(toString(getXCoord()));
-        attributes.add(toString(getYCoord()));
-        attributes.add(toString(getLatitude()));
-        attributes.add(toString(getLongitude()));
-        return attributes;
-    }
 
-    public ArrayList<String> getSchema() {
-        ArrayList<String> schema = new ArrayList<>();
-        schema.add("CASE NUMBER");
-        schema.add("DATE");
-        schema.add("BLOCK");
-        schema.add("IUCR");
-        schema.add("PRIMARY DESCRIPTION");
-        schema.add("SECONDARY DESCRIPTION");
-        schema.add("LOCATION DESCRIPTION");
-        schema.add("ARREST");
-        schema.add("DOMESTIC");
-        schema.add("BEAT");
-        schema.add("WARD");
-        schema.add("FBI CD");
-        schema.add("X COORDINATE");
-        schema.add("Y COORDINATE");
-        schema.add("LATITUDE");
-        schema.add("LONGITUDE");
-        return schema;
-    }
-
-    /**
-     * Used to check if the object is null to prevent errors and format the date in the correct way.
-     * @param o The object that is to be converted to a string
-     * @return The string version of the input
-     */
-    private String toString(Object o) {
-        if (o != null) {
-            if (o.getClass() == LocalDateTime.class) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
-                return ((LocalDateTime) o).format(formatter);
-            }
-            return o.toString();
-        } else {
-            return "";
-        }
-    }
-
-    //TODO Remove when this method becomes unnecessary, move to tests.
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

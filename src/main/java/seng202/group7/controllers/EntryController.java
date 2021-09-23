@@ -1,5 +1,6 @@
 package seng202.group7.controllers;
 
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -14,6 +15,7 @@ import seng202.group7.data.Crime;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import seng202.group7.data.DataAccessor;
 
 import java.net.URL;
 import java.time.LocalDate;
