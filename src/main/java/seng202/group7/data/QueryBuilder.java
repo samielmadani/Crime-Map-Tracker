@@ -1,6 +1,16 @@
 package seng202.group7.data;
 
+import javax.swing.text.DateFormatter;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * builds queries based on parameters and returns them as Strings
@@ -21,7 +31,9 @@ public class QueryBuilder {
         String query = "WHERE ";
 
         if(date != null){
-            query += addAndCondition("date", date.toString());
+            //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a", Locale.US);
+            //query += "date BETWEEN '"+ Timestamp.valueOf(date.atTime(LocalTime.MIDNIGHT)) + "' AND '"+ Timestamp.valueOf(date.atTime(LocalTime.MAX)) +"' AND ";
+            //System.out.println("DATE(date) BETWEEN '"+ Timestamp.valueOf(date.atTime(LocalTime.MIDNIGHT)) + "' AND '"+ Timestamp.valueOf(date.atTime(LocalTime.MAX)) +"' AND ");
         }
         if(primaryDescription != null){
             query += addAndCondition("primary_description", primaryDescription);
@@ -75,6 +87,7 @@ public class QueryBuilder {
      * @return          A String to append to a where query
      */
     private static String addAndCondition(String field, String value) {
+        System.out.println(value);
         return field + "='" + value + "' AND ";
     }
 }

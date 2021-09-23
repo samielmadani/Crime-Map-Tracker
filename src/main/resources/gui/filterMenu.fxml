@@ -50,11 +50,11 @@
                      <VBox.margin>
                         <Insets top="15.0" />
                      </VBox.margin></TextField>
-                  <CheckBox fx:id="arrestBool" alignment="CENTER" mnemonicParsing="false" onAction="#toggleArrest" prefWidth="175.0" text="Arrest Made">
+                  <CheckBox fx:id="arrestBool" alignment="CENTER" mnemonicParsing="false" prefWidth="175.0" text="Arrest Made">
                      <VBox.margin>
                         <Insets top="15.0" />
                      </VBox.margin></CheckBox>
-                  <CheckBox fx:id="domesticBool" alignment="CENTER" layoutX="20.0" layoutY="252.0" mnemonicParsing="false" onAction="#toggleDomestic" text="Involves Domestic Violence" textAlignment="CENTER" wrapText="true">
+                  <CheckBox fx:id="domesticBool" alignment="CENTER" layoutX="20.0" layoutY="252.0" mnemonicParsing="false" text="Involves Domestic Violence" textAlignment="CENTER" wrapText="true">
                      <VBox.margin>
                         <Insets top="4.0" />
                      </VBox.margin></CheckBox>

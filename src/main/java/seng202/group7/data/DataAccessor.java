@@ -162,7 +162,6 @@ public final class DataAccessor {
         }
     }
 
-    //TODO add functionality and use this method.
     public void delete(String entryId){
         String crimeQuery = "DELETE FROM crimes WHERE case_number = '" + entryId + "'";
         String reportQuery = "DELETE FROM reports WHERE report_id = '" + entryId + "'";
@@ -237,7 +236,6 @@ public final class DataAccessor {
             runStatement("INSERT OR REPLACE INTO crimes SELECT * FROM newCrimeDB.crimes");
             runStatement("DETACH DATABASE " + "'newCrimeDB';");
         } else {
-            //TODO add error handling for when database and CSV can be used.
             System.out.println("Invalid Schema.");
         }
     }
