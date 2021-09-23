@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.animation.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -96,9 +97,26 @@ public class MenuController implements Initializable {
      * @throws IOException      Error when loading the FXML file.
      */
     public void toData() throws IOException {
+        // This removes the current search effect being applied to the table when the paginator is initialized.
+        ControllerData.getInstance().setWhereQuery("");
         // Loads the paginator which generates the raw data tables.
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Adds the paginator to the center of the screen.
         menuFrame.setCenter(dataView);
+    }
+
+    /**
+     * Loads and sets the center view to the data view scene.
+     * @param event     The event action that was triggered.
+     * @throws IOException
+     */
+    public void openHelpPage(ActionEvent event) throws IOException {
+
+        // Loads the help screen.
+        BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/helpScreen.fxml")));
+
+        // Adds the help screen to the center of the screen.
+        mainPane.setCenter(dataView);
+
     }
 }

@@ -98,4 +98,15 @@ public class GeneralMenuController {
 
         rootPane.setCenter(newFrame);
     }
+
+    /**
+     * Loads the search menu into the side menu view.
+     *
+     * @throws IOException      An error that occurs when loading the FXML file.
+     */
+    public void toSearch() throws IOException {
+        BorderPane rootPane = (BorderPane) frame.getParent();
+        VBox searchMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/searchMenu.fxml")));
+        rootPane.setLeft(searchMenu);
+    }
 }

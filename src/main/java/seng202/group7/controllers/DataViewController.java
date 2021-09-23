@@ -132,9 +132,8 @@ public class DataViewController implements Initializable {
      * Creates an observable list which is used to store the data that will be displayed in the table.
      */
     private void setTableContent() {
-        ControllerData controllerData = ControllerData.getInstance();
         // Gets the current set of reports based on the pagination's current page.
-        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(controllerData.getCurrentPage());
+        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet();
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
         for (Report report : reports) {

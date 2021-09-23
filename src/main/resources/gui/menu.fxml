@@ -10,8 +10,8 @@
           <Button fx:id="menuButton" mnemonicParsing="false" onAction="#menuAnimation" text="Menu" />
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toData" text="Raw Data" />
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" text="Graph View" />
-          <Button layoutX="131.0" layoutY="13.0" mnemonicParsing="false" text="Help" />
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toSearch" text="Google" />
+          <Button fx:id="helpButton" layoutX="131.0" layoutY="13.0" mnemonicParsing="false" onAction="#openHelpPage" text="Help" />
         </items>
       </ToolBar>
    </top>

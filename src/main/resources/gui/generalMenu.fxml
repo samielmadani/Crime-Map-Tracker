@@ -16,7 +16,7 @@
             </Label>
          </children>
       </HBox>
-      <Button fx:id="searchButton" layoutX="20.0" layoutY="125.0" mnemonicParsing="false" prefWidth="175.0" text="Search" />
+      <Button fx:id="searchButton" layoutX="20.0" layoutY="125.0" mnemonicParsing="false" onAction="#toSearch" prefWidth="175.0" text="Search" />
       <Button fx:id="filterButton" mnemonicParsing="false" onAction="#toFilter" prefWidth="175.0" text="Filter" />
       <Button fx:id="importButton" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#newImport" prefWidth="175.0" text="Import" />
       <Button fx:id="newEntryButton" layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#toNewEntry" prefWidth="175.0" text="New Entry" />
