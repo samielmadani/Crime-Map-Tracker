@@ -246,13 +246,24 @@ public class EntryController implements Initializable {
         fbiText.setText(data.getFbiCD());
         // Location Information:
         blockText.setText(data.getBlock());
-
-        beatText.setText(String.valueOf(data.getBeat()));
-        wardText.setText(String.valueOf(data.getWard()));
-        xCoordText.setText(String.valueOf(data.getXCoord()));
-        yCoordText.setText(String.valueOf(data.getYCoord()));
-        latText.setText(String.valueOf(data.getLatitude()));
-        longText.setText(String.valueOf(data.getLatitude()));
+        if (data.getBeat() != null) {
+            beatText.setText(String.valueOf(data.getBeat()));
+        }
+        if (data.getWard() != null) {
+            wardText.setText(String.valueOf(data.getWard()));
+        }
+        if (data.getXCoord() != null) {
+            xCoordText.setText(String.valueOf(data.getXCoord()));
+        }
+        if (data.getYCoord() != null) {
+            yCoordText.setText(String.valueOf(data.getYCoord()));
+        }
+        if (data.getLatitude() != null) {
+            latText.setText(String.valueOf(data.getLatitude()));
+        }
+        if (data.getLongitude() != null) {
+            longText.setText(String.valueOf(data.getLongitude()));
+        }
 
         // Case Description:
         priText.setText(data.getPrimaryDescription());

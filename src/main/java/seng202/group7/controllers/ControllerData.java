@@ -1,10 +1,8 @@
 package seng202.group7.controllers;
 
 
-import javafx.scene.control.Pagination;
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
-
 import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;

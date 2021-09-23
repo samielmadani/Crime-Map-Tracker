@@ -3,11 +3,13 @@ package seng202.group7.data;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Objects;
 import javax.naming.directory.InvalidAttributeValueException;
 
-
+/**
+ * Used to create and store report objects which is the super class of Crime.
+ * @author Jack McCorkindale
+ */
 public abstract class Report {
     private LocalDateTime date = null;
     private SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
@@ -38,7 +40,9 @@ public abstract class Report {
         this.date = date;
         this.primaryDescription = new SimpleStringProperty(primaryDescription);
         this.secondaryDescription = new SimpleStringProperty(secondaryDescription);
-        this.locationDescription.setValue(locationDescription);
+        if (locationDescription != null && !locationDescription.isEmpty()) {
+            this.locationDescription.setValue(locationDescription);
+        }
         this.domestic.setValue(domestic);
         this.xCoord.setValue(xCoord);
         this.yCoord.setValue(yCoord);

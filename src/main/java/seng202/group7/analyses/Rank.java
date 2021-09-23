@@ -1,9 +1,13 @@
 package seng202.group7.analyses;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import seng202.group7.data.Crime;
 import seng202.group7.data.Report;
 
-import java.util.*;
 
 /**
  * @author Sam
