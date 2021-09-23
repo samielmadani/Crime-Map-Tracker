@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
  * The controller, used by / linked to, the Data View FXML file.
  * Handles the generation of the table on initialization.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  */
 public class DataViewController implements Initializable {

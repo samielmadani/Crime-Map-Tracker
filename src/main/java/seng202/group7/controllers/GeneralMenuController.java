@@ -14,6 +14,7 @@ import java.util.Objects;
  * The controller, used by / linked to, the General Menu FXML file.
  * It links it buttons to the main menu screen and its controller.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  */
 public class GeneralMenuController {
@@ -34,7 +35,11 @@ public class GeneralMenuController {
         pane.setLeft(menuItems);
     }
 
-
+    /**
+     * Changes the menu bar to show the distance comparison menu
+     * @param event The event action that was triggered.
+     * @throws IOException An error that occurs when loading the FXML file.
+     */
     public void toDistance(ActionEvent event) throws IOException{
         BorderPane pane = (BorderPane) frame.getParent();
         
@@ -44,6 +49,11 @@ public class GeneralMenuController {
         pane.setLeft(menuItems);
     }
 
+    /**
+     * Changes the menu bar to show the time comparison menu
+     * @param event The event action that was triggered.
+     * @throws IOException An error that occurs when loading the FXML file.
+     */
     public void toTime(ActionEvent event) throws IOException{
         BorderPane pane = (BorderPane) frame.getParent();
         

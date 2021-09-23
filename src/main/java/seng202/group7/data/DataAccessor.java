@@ -25,6 +25,7 @@ import java.util.Objects;
  * This class works to link the SQLite database with our java application.
  * It gets key data from the database during the runtime of the application.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  * @author Shaylin Simadari
  */
@@ -288,50 +289,42 @@ public final class DataAccessor {
         }
     }
 
-    public void createCrime(Crime crime) {
-        runStatement(String.format("INSERT INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
-            getCrimeValues(crime) + ";" ));
-        runStatement(String.format("INSERT INTO reports(report_id, date, primary_description, secondary_description," +
-            "domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-            getReportValues(crime, crime.getCaseNumber()) + ";"));
-    }
-
     public void editCrime(Crime crime) {
-        runStatement(String.format("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
-            getCrimeValues(crime) + ";" ));
-        runStatement(String.format("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description," +
-            "domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-            getReportValues(crime, crime.getCaseNumber()) + ";"));
+        try {
+            PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?);");
+            PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+
+            PSTypes.setPSString(psCrime, 1, crime.getCaseNumber()); // Case Number
+            PSTypes.setPSString(psCrime, 2, crime.getBlock()); // Blockps.setString(2, row[2]);
+            PSTypes.setPSString(psCrime, 3, crime.getIucr()); // Iucr
+            PSTypes.setPSString(psCrime, 4, crime.getFbiCD()); // FbiCD
+            PSTypes.setPSBoolean(psCrime, 5, crime.getArrest()); // Arrest
+            PSTypes.setPSInteger(psCrime, 6, crime.getBeat()); // Beat
+            PSTypes.setPSInteger(psCrime, 7, crime.getWard()); // Ward
+
+            PSTypes.setPSString(psReport, 1, crime.getCaseNumber()); // Case Number
+            
+            Timestamp date = Timestamp.valueOf(crime.getDate());
+            psReport.setTimestamp(2, date); // Date
+            PSTypes.setPSString(psReport, 3, crime.getPrimaryDescription()); // Primary Description
+            PSTypes.setPSString(psReport, 4, crime.getSecondaryDescription()); // Secondary Description
+            PSTypes.setPSBoolean(psReport, 5, crime.getDomestic()); // Domestic
+            PSTypes.setPSInteger(psReport, 6, crime.getXCoord()); // X Coordinate
+            PSTypes.setPSInteger(psReport, 7, crime.getYCoord()); // Y Coordinate
+            PSTypes.setPSDouble(psReport, 8, crime.getLatitude()); // Latitude
+            PSTypes.setPSDouble(psReport, 9, crime.getLongitude()); // Longitude
+            PSTypes.setPSString(psReport, 10, crime.getLocationDescription()); // Location Description
+
+            psCrime.execute();
+            psReport.execute();
+
+        } catch (SQLException e) {
+            return;
+        }
     }
 
-    private String getCrimeValues(Crime crime) {
-        String values = String.format("VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-        crime.getCaseNumber(),
-        crime.getBlock(),
-        crime.getIucr(),
-        crime.getFbiCD(),
-        crime.getArrest(),
-        crime.getBeat(),
-        crime.getWard() );
-        return values;
-    }
-
-    private String getReportValues(Report report, String id) {
-        Timestamp date = Timestamp.valueOf(report.getDate());
-        String values = String.format("VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
-        id,
-        date,
-        report.getPrimaryDescription(),
-        report.getSecondaryDescription(),
-        report.getDomestic(),
-        report.getXCoord(),
-        report.getYCoord(),
-        report.getLatitude(),
-        report.getLongitude(),
-        report.getLocationDescription()
-         );
-         return values;
-    }
 
     /**
      * Adds a list of reports in the form of a string[] into the database.

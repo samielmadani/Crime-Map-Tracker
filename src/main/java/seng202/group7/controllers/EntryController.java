@@ -6,7 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -58,6 +57,10 @@ public class EntryController implements Initializable {
     private TextField dateText;
     private ArrayList<Node> allValues, editableValues;
 
+    /**
+     * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
+     * alert the validation class what validation is required
+     */
     private PseudoClass errorClass;
     private PseudoClass required;
     private PseudoClass doubleFormat;
@@ -68,7 +71,7 @@ public class EntryController implements Initializable {
 
     /**
      * This method is run during the loading of the crime edit fxml file.
-     * It initializes the ArrayLists for value validation before running methods to get
+     * It initializes the value validation classes before running methods to get
      * and store values in the text fields of the screen.
      *
      * @param location      A URL object.
@@ -77,14 +80,36 @@ public class EntryController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ControllerData master = ControllerData.getInstance();
-
         dateText = datePicker.getEditor();
+
+        prepareValidation();
+    
+        allValues = new ArrayList<>(Arrays.asList(cNoText, iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
+        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
+        editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
+        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
+
+        errorClass = PseudoClass.getPseudoClass("error");
+
+        data = master.getCurrentRow();
+        if (data != null) {
+            setData();
+        } else {
+            editEntry(new ActionEvent());
+        }
+    }
+
+    /**
+     * Sets the types of validation required on each input node
+     */
+    private void prepareValidation() {
         dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 activeValidate(event);
             }
         });
+
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
@@ -96,14 +121,8 @@ public class EntryController implements Initializable {
         integerFormat = PseudoClass.getPseudoClass("integer");
         dateFormat = PseudoClass.getPseudoClass("date");
         timeFormat = PseudoClass.getPseudoClass("time");
-    
-        allValues = new ArrayList<>(Arrays.asList(cNoText, iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
-        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
-        editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
-        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
-
+        
         // TODO get these assigned in FXML file
-
         cNoText.pseudoClassStateChanged(required, true);
         dateText.pseudoClassStateChanged(required, true);
         timeText.pseudoClassStateChanged(required, true);
@@ -120,16 +139,6 @@ public class EntryController implements Initializable {
 
         dateText.pseudoClassStateChanged(dateFormat, true);
         timeText.pseudoClassStateChanged(timeFormat, true);
-        
-        
-        errorClass = PseudoClass.getPseudoClass("error");
-
-        data = master.getCurrentRow();
-        if (data != null) {
-            setData();
-        } else {
-            editEntry(new ActionEvent());
-        }
     }
 
     /**

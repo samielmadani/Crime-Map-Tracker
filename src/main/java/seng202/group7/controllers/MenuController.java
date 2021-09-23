@@ -18,8 +18,8 @@ import javafx.util.Duration;
  * The controller, used by / linked to, the Menu FXML file.
  * This controller links the main screen menu system together with its components.
  *
- * @author John Elliott
  * @author Jack McCorkindale
+ * @author John Elliott
  * @author Sami Elmadani
  */
 public class MenuController implements Initializable {
@@ -60,21 +60,21 @@ public class MenuController implements Initializable {
      */
     public void menuAnimation() {
         VBox pane = (VBox) menuFrame.getLeft();
-        // Creates an animation for opening the menu.
-        TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
-        openMenu.setToX(0);
-        // Creates an animation for closing the menu.
-        TranslateTransition closeMenu = new TranslateTransition(new Duration(350), pane);
-        closeMenu.setOnFinished(action->{
-            menuFrame.getLeft().setVisible(false);
-            menuFrame.getLeft().setManaged(false);
-        });
         // Determines by the off set position of the VBox if the open or close animation needs to be played.
         if (pane.getTranslateX() != 0) {
+            // Creates an animation for opening the menu.
+            TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
+            openMenu.setToX(0);
             menuFrame.getLeft().setVisible(true);
             menuFrame.getLeft().setManaged(true);
             openMenu.play();
         } else {
+            // Creates an animation for closing the menu.
+            TranslateTransition closeMenu = new TranslateTransition(new Duration(350), pane);
+            closeMenu.setOnFinished(action->{
+                menuFrame.getLeft().setVisible(false);
+                menuFrame.getLeft().setManaged(false);
+            });
             closeMenu.setToX(-(pane.getWidth()));
             closeMenu.play();
         }

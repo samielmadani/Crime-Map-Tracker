@@ -12,16 +12,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
 
+/**
+ * The controller, used by / linked to, the comparers FXML file.
+ * Handles the comparisons of two crime objects.
+ *
+ * @author Jack McCorkindale
+ */
 public class CompareController implements Initializable {
 
     @FXML
@@ -52,6 +56,10 @@ public class CompareController implements Initializable {
         });
     }
 
+    /**
+     * Changes the name of the menu to the type of data that is being compared.
+     * @param pseudoClasses
+     */
     public void setType(ObservableSet<PseudoClass> pseudoClasses) {
         if (pseudoClasses.contains(PseudoClass.getPseudoClass("distance"))) {
             menuText.setText("Distance Compare");
@@ -75,6 +83,10 @@ public class CompareController implements Initializable {
         pane.setLeft(menuItems);
     }
 
+    /**
+     * Clears results and sends the two reports requested to the correct comparison types.
+     * @param event The event action that was triggered.
+     */
     public void compareReports(ActionEvent event) {
         DataAccessor data = DataAccessor.getInstance();
         resultText.setText("");
@@ -93,11 +105,21 @@ public class CompareController implements Initializable {
         }
     }
 
+    /**
+     * Compares the distance between the two reports and displays it for the user.
+     * @param reportOne The first report to be compared
+     * @param reportTwo The second report the be compared
+     */
     private void compareDistance(Report reportOne, Report reportTwo) {
         double distance = Comparer.locationDifference(reportOne, reportTwo);
         resultText.setText(String.format("Crime %s and %s occurred %.2fkm apart.", reportOneText.getText(), reportTwoText.getText(), distance));
     }
 
+    /**
+     * Compares the time difference between the two reports and displays it for the user.
+     * @param reportOne The first report to be compared
+     * @param reportTwo The second report the be compared
+     */
     private void compareTime(Report reportOne, Report reportTwo) {
         //TODO Have and between elements
         //TODO When value is 1 use singular

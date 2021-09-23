@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class creates the paginator that then itself generates the tables,
  * that are used to store selections of the database's information.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  */
 public class pageController implements Initializable {
