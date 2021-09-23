@@ -11,8 +11,9 @@ import java.time.LocalDate;
 public class QueryBuilder {
 
     /**
-     * builds a SQL query to retrieve data that meets the conditions of the parameters. null parameters are ommited.
-     * all conditions must be meet f
+     * builds a SQL query to retrieve data that meets the conditions of the parameters.
+     * null parameters are omitted.
+     * conditions are connected by AND keywords
      * @return a String representation of a SQL query
      */
     public static String where(LocalDate date, String primaryDescription, String locationDescription, Integer ward,
@@ -48,7 +49,7 @@ public class QueryBuilder {
      *
      * @param field the name of the column in the database
      * @param value the value that the filed must be to meet the condition
-     * @return
+     * @return a String to append to a where query
      */
     private static String addAndCondition(String field, boolean value) {
         return field + "=" + (value ? 1 : 0) + " AND ";
@@ -58,7 +59,7 @@ public class QueryBuilder {
      *
      * @param field the name of the column in the database
      * @param value the value that the filed must be to meet the condition
-     * @return
+     * @return a String to append to a where query
      */
     private static String addAndCondition(String field, int value) {
         return field + "=" + value + " AND ";
@@ -69,7 +70,7 @@ public class QueryBuilder {
      *
      * @param field the name of the column in the database
      * @param value the value that the filed must be to meet the condition
-     * @return
+     * @return a String to append to a where query
      */
     private static String addAndCondition(String field, String value) {
         return field + "=\'" + value + "\' AND ";
