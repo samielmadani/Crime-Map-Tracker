@@ -1,10 +1,10 @@
 package seng202.group7.controllers;
 
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Pagination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.util.Objects;
  * The controller, used by / linked to, the General Menu FXML file.
  * It links it buttons to the main menu screen and its controller.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  */
 public class GeneralMenuController {
@@ -28,9 +29,37 @@ public class GeneralMenuController {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toFilter(ActionEvent event) throws IOException {
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/filterMenu.fxml")));
+        // Changes side menu to the filter menu.
+        pane.setLeft(menuItems);
+    }
+
+    /**
+     * Changes the menu bar to show the distance comparison menu
+     * @param event The event action that was triggered.
+     * @throws IOException An error that occurs when loading the FXML file.
+     */
+    public void toDistance(ActionEvent event) throws IOException{
+        BorderPane pane = (BorderPane) frame.getParent();
+        
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
+        menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), true);
+        // Changes side menu to the filter menu.
+        pane.setLeft(menuItems);
+    }
+
+    /**
+     * Changes the menu bar to show the time comparison menu
+     * @param event The event action that was triggered.
+     * @throws IOException An error that occurs when loading the FXML file.
+     */
+    public void toTime(ActionEvent event) throws IOException{
+        BorderPane pane = (BorderPane) frame.getParent();
+        
+        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
+        menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
+        
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
     }
@@ -45,7 +74,7 @@ public class GeneralMenuController {
     public void newImport(ActionEvent event) throws IOException {
 
         if (ControllerData.getInstance().getFile(event)) {
-            BorderPane rootPane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+            BorderPane rootPane = (BorderPane) frame.getParent();
             // Loads the paginator screen.
             BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
 
@@ -62,7 +91,8 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         ControllerData.getInstance().setCurrentRow(null);
-        ControllerData.getInstance().setTableState((Pagination) rootPane.getCenter());
+        Node dataView = rootPane.getCenter();
+        ControllerData.getInstance().setTableState(dataView);
         Node newFrame;
         newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
 

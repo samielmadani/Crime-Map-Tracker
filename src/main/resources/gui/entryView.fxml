@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController">
+<BorderPane fx:id="frame" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController" stylesheets="@style.css">
    <center>
       <GridPane prefHeight="348.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -13,11 +13,7 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
          </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="111.0" minHeight="8.0" prefHeight="47.0" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="310.0" minHeight="10.0" prefHeight="269.0" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="254.0" minHeight="0.0" prefHeight="41.0" vgrow="SOMETIMES"/>
-         </rowConstraints>
+
          <HBox prefHeight="100.0" prefWidth="200.0">
             <Label text="General Information:">
                <font>
@@ -194,7 +190,7 @@
          <Button mnemonicParsing="false" onAction="#returnView" text="Back" GridPane.columnIndex="0">
          </Button>
          <HBox spacing="5" GridPane.columnIndex="1">
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#editEntry" text="Delete"/>
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteEntry" text="Delete"/>
             <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit"/>
             <Button fx:id="cancelButton" managed="false" mnemonicParsing="false" onAction="#finishEdit" text="Cancel"
                     visible="false"/>

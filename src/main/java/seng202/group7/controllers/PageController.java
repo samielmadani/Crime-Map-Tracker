@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
  * This class creates the paginator that then itself generates the tables,
  * that are used to store selections of the database's information.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  */
 public class PageController implements Initializable {
@@ -24,6 +25,9 @@ public class PageController implements Initializable {
      */
     @FXML
     private Pagination pages;
+
+    @FXML
+    private Node frame;
 
 
     /**
@@ -35,8 +39,17 @@ public class PageController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        int size = DataAccessor.getInstance().getSize();
-        pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
+
+        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+            if (newParent != null) {
+                int size = DataAccessor.getInstance().getSize();
+                
+                pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
+                pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());
+            }
+
+        });
+
         pages.setPageFactory(this::createPage); // When ever a page is swapped it calls this method.
     }
 

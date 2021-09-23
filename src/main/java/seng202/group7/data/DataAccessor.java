@@ -6,7 +6,16 @@ import seng202.group7.controllers.ControllerData;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,6 +26,7 @@ import java.util.Objects;
  * This class works to link the SQLite database with our java application.
  * It gets key data from the database during the runtime of the application.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  * @author Shaylin Simadari
  */
@@ -130,21 +140,31 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.select: " + e);
+            System.out.println(e);
+            return null;
         }
         return reports;
     }
 
-    //TODO add functionality and use this method.
-    public void delete(Connection connection, String table){
-        String query = "DELETE FROM " + table;
-        try {
-            Statement stmt = connection.createStatement();
-            stmt.executeQuery(query);
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.delete: " + e);
+    
+    public Crime getCrime(String entry) {
+        String query = "SELECT * FROM crimedb WHERE id = '" + entry + "';";
+        ArrayList<Report> reports = getReports(query);
+        if (reports != null && reports.size() == 1) {
+            return (Crime) reports.get(0);
+        } else {
+            return null;
         }
+    }
+
+    //TODO add functionality and use this method.
+    public void delete(String entryId){
+        String crimeQuery = "DELETE FROM crimes WHERE case_number = '" + entryId + "'";
+        String reportQuery = "DELETE FROM reports WHERE report_id = '" + entryId + "'";
+
+        runStatement(crimeQuery);
+        runStatement(reportQuery);
+
     }
 
     /**
@@ -219,6 +239,7 @@ public final class DataAccessor {
         }
     }
 
+
     /**
      * Runs a query with no result set and ensures that the statements are then closed.
      * @param query     The query being used.
@@ -267,6 +288,43 @@ public final class DataAccessor {
             e.printStackTrace();
         }
     }
+
+    public void editCrime(Crime crime) {
+        try {
+            PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?);");
+            PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+
+            PSTypes.setPSString(psCrime, 1, crime.getCaseNumber()); // Case Number
+            PSTypes.setPSString(psCrime, 2, crime.getBlock()); // Blockps.setString(2, row[2]);
+            PSTypes.setPSString(psCrime, 3, crime.getIucr()); // Iucr
+            PSTypes.setPSString(psCrime, 4, crime.getFbiCD()); // FbiCD
+            PSTypes.setPSBoolean(psCrime, 5, crime.getArrest()); // Arrest
+            PSTypes.setPSInteger(psCrime, 6, crime.getBeat()); // Beat
+            PSTypes.setPSInteger(psCrime, 7, crime.getWard()); // Ward
+
+            PSTypes.setPSString(psReport, 1, crime.getCaseNumber()); // Case Number
+            
+            Timestamp date = Timestamp.valueOf(crime.getDate());
+            psReport.setTimestamp(2, date); // Date
+            PSTypes.setPSString(psReport, 3, crime.getPrimaryDescription()); // Primary Description
+            PSTypes.setPSString(psReport, 4, crime.getSecondaryDescription()); // Secondary Description
+            PSTypes.setPSBoolean(psReport, 5, crime.getDomestic()); // Domestic
+            PSTypes.setPSInteger(psReport, 6, crime.getXCoord()); // X Coordinate
+            PSTypes.setPSInteger(psReport, 7, crime.getYCoord()); // Y Coordinate
+            PSTypes.setPSDouble(psReport, 8, crime.getLatitude()); // Latitude
+            PSTypes.setPSDouble(psReport, 9, crime.getLongitude()); // Longitude
+            PSTypes.setPSString(psReport, 10, crime.getLocationDescription()); // Location Description
+
+            psCrime.execute();
+            psReport.execute();
+
+        } catch (SQLException e) {
+            return;
+        }
+    }
+
 
     /**
      * Adds a list of reports in the form of a string[] into the database.

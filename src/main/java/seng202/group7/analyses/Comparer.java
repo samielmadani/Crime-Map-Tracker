@@ -4,7 +4,7 @@ import seng202.group7.data.Report;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
-
+import java.lang.Math;
 
 public class Comparer {
 
@@ -18,10 +18,10 @@ public class Comparer {
     public static ArrayList<Long> timeDifference(Report reportOne, Report reportTwo) {
         ArrayList<Long> timeDifferences = new ArrayList<>();
         Duration difference = Duration.between(reportOne.getDate(), reportTwo.getDate()); //Returns total time in seconds
-        timeDifferences.add(TimeUnit.SECONDS.toMinutes(difference.getSeconds()) % 60);
-        timeDifferences.add(TimeUnit.SECONDS.toHours(difference.getSeconds()) % 24);
-        timeDifferences.add(TimeUnit.SECONDS.toDays(difference.getSeconds()) % 365);
-        timeDifferences.add(TimeUnit.SECONDS.toDays(difference.getSeconds()) / 365);
+        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toMinutes(difference.getSeconds()) % 60));
+        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toHours(difference.getSeconds()) % 24));
+        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toDays(difference.getSeconds()) % 365));
+        timeDifferences.add(Math.abs(TimeUnit.SECONDS.toDays(difference.getSeconds()) / 365));
         return timeDifferences;
     }
 

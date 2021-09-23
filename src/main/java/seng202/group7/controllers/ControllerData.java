@@ -3,11 +3,9 @@ package seng202.group7.controllers;
 
 import javafx.scene.control.Pagination;
 import seng202.group7.data.Crime;
-import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;
 
 import java.io.File;
-import java.util.ArrayList;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.FileChooser;
@@ -19,6 +17,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * initialization it can get the relevant data it needs. It accomplishes this by being a singleton class so only one
  * instance of it can exist.
  *
+ * @author Jack McCorkindale
  * @author John Elliott
  */
 public final class ControllerData {
@@ -32,7 +31,7 @@ public final class ControllerData {
     /**
      * Stores the current table state so when the back button is pushed the position is the same.
      */
-    private Pagination tableState;
+    private Node tableState;
 
     /**
      * Stores the current page of the paginator.
@@ -83,7 +82,7 @@ public final class ControllerData {
      *
      * @param tableView       The table state.
      */
-    public void setTableState(Pagination tableView) {
+    public void setTableState(Node tableView) {
         tableState = tableView;
     }
 
@@ -92,10 +91,9 @@ public final class ControllerData {
      *
      * @return tableState       The current state of the table.
      */
-    public Pagination getTableState() {
+    public Node getTableState() {
         return tableState;
     }
-
 
 
     /**
@@ -115,7 +113,6 @@ public final class ControllerData {
         File selectedFile = fileChooser.showOpenDialog(stage);
         // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
         if (selectedFile != null) {
-            ArrayList<Report> reports;
             String fileName = selectedFile.getName();
             DataAccessor accessor = DataAccessor.getInstance();
             if (fileName.endsWith(".csv")) {

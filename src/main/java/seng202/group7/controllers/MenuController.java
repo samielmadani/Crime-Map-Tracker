@@ -19,8 +19,8 @@ import javafx.util.Duration;
  * The controller, used by / linked to, the Menu FXML file.
  * This controller links the main screen menu system together with its components.
  *
- * @author John Elliott
  * @author Jack McCorkindale
+ * @author John Elliott
  * @author Sami Elmadani
  */
 public class MenuController implements Initializable {
@@ -28,7 +28,7 @@ public class MenuController implements Initializable {
      * The main boarder panel used to hold the windows components.
      */
     @FXML
-    private BorderPane mainPane;
+    private BorderPane menuFrame;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -43,12 +43,12 @@ public class MenuController implements Initializable {
             // Loads the first side menu screen.
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
             // Sets the menu to the main panel and hides it, so it starts closed.
-            mainPane.setLeft(menuItems);
-            VBox pane = (VBox) mainPane.getLeft();
+            menuFrame.setLeft(menuItems);
+            VBox pane = (VBox) menuFrame.getLeft();
             // This is used to determine the direction the open and close animation will play.
             pane.setTranslateX(-(pane.getPrefWidth()));
-            mainPane.getLeft().setVisible(false);
-            mainPane.getLeft().setManaged(false);
+            menuFrame.getLeft().setVisible(false);
+            menuFrame.getLeft().setManaged(false);
             toData();
 
         } catch (IOException e) {
@@ -60,22 +60,22 @@ public class MenuController implements Initializable {
      * Runs the opening and closing animation for the side menu screen.
      */
     public void menuAnimation() {
-        VBox pane = (VBox) mainPane.getLeft();
-        // Creates an animation for opening the menu.
-        TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
-        openMenu.setToX(0);
-        // Creates an animation for closing the menu.
-        TranslateTransition closeMenu = new TranslateTransition(new Duration(350), pane);
-        closeMenu.setOnFinished(action->{
-            mainPane.getLeft().setVisible(false);
-            mainPane.getLeft().setManaged(false);
-        });
+        VBox pane = (VBox) menuFrame.getLeft();
         // Determines by the off set position of the VBox if the open or close animation needs to be played.
         if (pane.getTranslateX() != 0) {
-            mainPane.getLeft().setVisible(true);
-            mainPane.getLeft().setManaged(true);
+            // Creates an animation for opening the menu.
+            TranslateTransition openMenu = new TranslateTransition(new Duration(350), pane);
+            openMenu.setToX(0);
+            menuFrame.getLeft().setVisible(true);
+            menuFrame.getLeft().setManaged(true);
             openMenu.play();
         } else {
+            // Creates an animation for closing the menu.
+            TranslateTransition closeMenu = new TranslateTransition(new Duration(350), pane);
+            closeMenu.setOnFinished(action->{
+                menuFrame.getLeft().setVisible(false);
+                menuFrame.getLeft().setManaged(false);
+            });
             closeMenu.setToX(-(pane.getWidth()));
             closeMenu.play();
         }
@@ -87,7 +87,7 @@ public class MenuController implements Initializable {
     public void toSearch() {
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
-        mainPane.setCenter(externalSearch);
+        menuFrame.setCenter(externalSearch);
     }
 
     /**
@@ -102,7 +102,7 @@ public class MenuController implements Initializable {
         // Loads the paginator which generates the raw data tables.
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Adds the paginator to the center of the screen.
-        mainPane.setCenter(dataView);
+        menuFrame.setCenter(dataView);
     }
 
     /**

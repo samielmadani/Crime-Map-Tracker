@@ -29,7 +29,7 @@ import javafx.scene.layout.VBox;
  * @author John Elliott
  */
 //TODO remove large lists and add them to a default file we import in maybe.
-public class filterController implements Initializable {
+public class FilterController implements Initializable {
 
     @FXML
     public DatePicker dateRange;
@@ -45,6 +45,9 @@ public class filterController implements Initializable {
 
     @FXML
     private TextField beatInput;
+
+    @FXML
+    private Node frame;
 
     private String arrest = "N";
     private String domestic = "N";
@@ -201,8 +204,7 @@ public class filterController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu(ActionEvent event) throws IOException {
-        // As the side panels root is the main border panel we use .getRoot().
-        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
