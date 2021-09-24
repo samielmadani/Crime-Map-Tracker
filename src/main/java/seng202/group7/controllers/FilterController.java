@@ -2,19 +2,22 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import seng202.group7.data.QueryBuilder;
@@ -30,7 +33,7 @@ import seng202.group7.data.QueryBuilder;
 public class FilterController implements Initializable {
 
     @FXML
-    public DatePicker datePicker;
+    private DatePicker datePicker;
 
     @FXML
     private ComboBox<String> primaryBox;
@@ -49,6 +52,16 @@ public class FilterController implements Initializable {
 
     @FXML
     private ComboBox<String> domesticBox;
+
+    /**
+     * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
+     * alert the validation class what validation is required
+     */
+    private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
+    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
+    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
+    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
+    private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -97,8 +110,42 @@ public class FilterController implements Initializable {
         arrestBox.getItems().addAll(null, "Y", "N");
 
         domesticBox.getItems().addAll(null, "Y", "N");
+
+        prepareValidation();
     }
 
+
+    private void prepareValidation() {
+        TextField dateText = datePicker.getEditor();
+
+        dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                activeValidate(event);
+            }
+        });
+
+        datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
+            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+            dateText.setText(datePicker.getValue().format(dateTimeFormat));
+            ControllerData.getInstance().validate(dateText);
+        });
+
+        dateText.pseudoClassStateChanged(dateFormat, true);
+        dateText.pseudoClassStateChanged(dateEditor, true);
+    
+        wardField.pseudoClassStateChanged(integerFormat, true);
+        beatField.pseudoClassStateChanged(integerFormat, true);
+    }
+
+    /**
+     * When a key is pressed on a node with this set, send the node to validation
+     * @param event The keyboard event trigger.
+     */
+    public void activeValidate(KeyEvent event) {
+        Node inputBox = (Node) event.getSource();
+        ControllerData.getInstance().validate(inputBox);
+    }
 
     /**
      * Checks user input given is digits only.
