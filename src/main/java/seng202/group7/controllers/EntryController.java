@@ -1,6 +1,5 @@
 package seng202.group7.controllers;
 
-import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -106,10 +105,15 @@ public class EntryController implements Initializable {
         dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
-                datePicker.setValue(date);
-                activeValidate(event);
+                try {
+                    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                    LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+                    datePicker.setValue(date);
+                } catch (DateTimeParseException e) {
+                    return;
+                } finally {
+                    activeValidate(event);
+                }
             }
         });
 

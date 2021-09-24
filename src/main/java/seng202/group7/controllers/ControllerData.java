@@ -56,7 +56,6 @@ public final class ControllerData {
     private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
     private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
     private PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
-    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
     private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
     private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
 
