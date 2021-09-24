@@ -31,9 +31,7 @@ public class QueryBuilder {
         String query = "WHERE ";
 
         if(date != null){
-            //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a", Locale.US);
-            //query += "date BETWEEN '"+ Timestamp.valueOf(date.atTime(LocalTime.MIDNIGHT)) + "' AND '"+ Timestamp.valueOf(date.atTime(LocalTime.MAX)) +"' AND ";
-            //System.out.println("DATE(date) BETWEEN '"+ Timestamp.valueOf(date.atTime(LocalTime.MIDNIGHT)) + "' AND '"+ Timestamp.valueOf(date.atTime(LocalTime.MAX)) +"' AND ");
+            query += addAndCondition("date", date);
         }
         if(primaryDescription != null){
             query += addAndCondition("primary_description", primaryDescription);
@@ -57,7 +55,7 @@ public class QueryBuilder {
     }
 
     /**
-     * Is a builder that adds a and condition. For a boolean value.
+     * Is a builder that adds an and condition. For a boolean value.
      *
      * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
@@ -68,7 +66,7 @@ public class QueryBuilder {
     }
 
     /**
-     *  Is a builder that adds a and condition. For an integer value.
+     *  Is a builder that adds an and condition. For an integer value.
      *
      * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
@@ -80,14 +78,26 @@ public class QueryBuilder {
 
 
     /**
-     *  Is a builder that adds a and condition. For a string value.
+     *  Is a builder that adds an and condition. For a string value.
      *
      * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
      * @return          A String to append to a where query
      */
     private static String addAndCondition(String field, String value) {
-        System.out.println(value);
         return field + "='" + value + "' AND ";
+    }
+
+
+    /**
+     *  Is a builder that adds an and condition. For a string value.
+     *
+     * @param field     The name of the column in the database
+     * @param value     The value that the filed must be to meet the condition
+     * @return          A String to append to a where query
+     */
+    private static String addAndCondition(String field, LocalDate value) {
+        return "date >= " + Timestamp.valueOf(value.atStartOfDay()).getTime()
+                + " AND date < " + Timestamp.valueOf(value.plusDays(1).atStartOfDay()).getTime() + " AND ";
     }
 }
