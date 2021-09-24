@@ -2,16 +2,26 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import seng202.group7.data.QueryBuilder;
@@ -28,7 +38,7 @@ import seng202.group7.data.QueryBuilder;
 public class FilterController implements Initializable {
 
     @FXML
-    public DatePicker datePicker;
+    private DatePicker datePicker;
 
     @FXML
     private ComboBox<String> primaryBox;
@@ -47,6 +57,16 @@ public class FilterController implements Initializable {
 
     @FXML
     private ComboBox<String> domesticBox;
+
+    /**
+     * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
+     * alert the validation class what validation is required
+     */
+    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
+    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
+    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
+
+    private ArrayList<Node> allValues;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -95,57 +115,53 @@ public class FilterController implements Initializable {
         arrestBox.getItems().addAll(null, "Y", "N");
 
         domesticBox.getItems().addAll(null, "Y", "N");
+
+        prepareValidation();
     }
 
     /**
-     * Checks user input given is digits only.
-     *
-     * @param currentField      The text field being filled in by user.
-     * @return inputInt         A digit only user input
+     * Sets the types of validation required on each input node
      */
-    private Integer numberOnly(TextField currentField) {
-        String input = currentField.getText();
-        if (!input.matches("\\d*")) {
-            currentField.setText(input.replaceAll("[^\\d]", ""));
-        }
-
-        if (currentField.getText().length() != 0) {
-            return Integer.parseInt(currentField.getText());
-        }
-        return -1;
-    }
-
-
-    /**
-     * Checks ward input is given a value between 0 and 50.
-     */
-    public void wardCheck() {
-        int currentCaret = wardField.getCaretPosition();
-        Integer input = numberOnly(wardField);
-        if (input != -1) {
-            if (input < 0) {
-                wardField.setText("0");
-            } else if (input > 50) {
-                wardField.setText("50");
+    private void prepareValidation() {
+        TextField dateText = datePicker.getEditor();
+        dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                try {
+                    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                    LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+                    datePicker.setValue(date);
+                } catch (DateTimeParseException e) {
+                    return;
+                } finally {
+                    activeValidate(event);
+                }
             }
-        }
-        wardField.positionCaret(currentCaret - 1);
+        });
+
+        allValues = new ArrayList<>(Arrays.asList(datePicker, dateText, primaryBox, locationBox, wardField, beatField,
+            arrestBox, domesticBox));
+        
+        datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
+            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+            dateText.setText(datePicker.getValue().format(dateTimeFormat));
+            ControllerData.getInstance().validate(dateText);
+        });
+
+        dateText.pseudoClassStateChanged(dateFormat, true);
+        dateText.pseudoClassStateChanged(dateEditor, true);
+    
+        wardField.pseudoClassStateChanged(integerFormat, true);
+        beatField.pseudoClassStateChanged(integerFormat, true);
     }
 
     /**
-     * Checks beat is given a value between 0 and 2000.
+     * When a key is pressed on a node with this set, send the node to validation
+     * @param event The keyboard event trigger.
      */
-    public void beatCheck() {
-        int currentCaret = beatField.getCaretPosition();
-        Integer input = numberOnly(beatField);
-        if (input != -1) {
-            if (input < 0) {
-                beatField.setText("0");
-            } else if (input > 2000) {
-                beatField.setText("2000");
-            }
-        }
-        beatField.positionCaret(currentCaret - 1);
+    public void activeValidate(KeyEvent event) {
+        Node inputBox = (Node) event.getSource();
+        ControllerData.getInstance().validate(inputBox);
     }
 
     /**
@@ -154,6 +170,11 @@ public class FilterController implements Initializable {
      * @param event   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent event) throws IOException {
+        for (Node node : allValues) {
+            if (!ControllerData.getInstance().validate(node)) {
+                return;
+            }
+        }
         String query = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
                 getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
                 getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));

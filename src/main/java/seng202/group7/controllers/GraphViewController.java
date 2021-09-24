@@ -15,7 +15,6 @@ import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ResourceBundle;
 
 /**
