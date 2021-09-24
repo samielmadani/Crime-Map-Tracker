@@ -259,7 +259,7 @@ public final class ControllerData {
         if (inputBox.getPseudoClassStates().contains(required)) {
             valid &= validateRequired(input);
         }
-        if (valid && !input.equals("")) {
+        if (valid && !"".equals(input)) {
             valid &= validateText(input, inputBox.getPseudoClassStates());
         }
         if (valid && inputBox.getPseudoClassStates().contains(uniqueId)) {
