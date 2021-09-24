@@ -22,6 +22,7 @@ import seng202.group7.data.QueryBuilder;
  * Links GUI to filter class.
  *
  * @author Sami Elmadani
+ * @author Shaylin Simadari
  * @author John Elliott
  */
 public class FilterController implements Initializable {
@@ -166,6 +167,12 @@ public class FilterController implements Initializable {
         pane.setCenter(tableView);
     }
 
+    /**
+     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
+     *
+     * @param str       The choice selected.
+     * @return value    The integer result.
+     */
     private Integer getIntegerFromString(String str) {
         if(str.equals("")){
             return null;
@@ -173,13 +180,22 @@ public class FilterController implements Initializable {
         return Integer.parseInt(str);
     }
 
+    /**
+     * Determines if a value in the combobox corresponds to a true or false value.
+     *
+     * @param str       The choice selected.
+     * @return value    The boolean result.
+     */
     private Boolean getBooleanFromString(String str) {
         if(str == null){
             return null;
         }
-        return str.equals("Y") ? true : false;
+        return str.equals("Y");
     }
 
+    /**
+     * A method clears the date stored in the date picker.
+     */
     public void clearDate(){
         datePicker.setValue(null);
     }
