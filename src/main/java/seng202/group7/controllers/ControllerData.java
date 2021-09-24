@@ -4,8 +4,18 @@ package seng202.group7.controllers;
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import javafx.collections.ObservableSet;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -40,6 +50,15 @@ public final class ControllerData {
      * This is a condition that is used by the data accessor when searching the database.
      */
     private String whereQuery = "";
+
+    private PseudoClass errorClass = PseudoClass.getPseudoClass("error");
+    private PseudoClass required = PseudoClass.getPseudoClass("required");
+    private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
+    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
+    private PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
+    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
+    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
+    private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
 
 
     /**
@@ -160,5 +179,83 @@ public final class ControllerData {
      */
     public void setWhereQuery(String searchingQuery) {
         this.whereQuery = searchingQuery;
+    }
+
+    /**
+     * Checks if the input has a value and adds the error class if it is invalid.
+     * @param inputBox The input to be validated
+     * @return If the field has an entry
+     */
+    private boolean validateRequired(String input) {
+        boolean valid;
+        valid = !(input.isEmpty());
+        return valid;
+    }
+
+    /**
+     * Validates the value in each box. The validation is currently limited to Integer, Double, Date, and Time. <p>
+     * For a input box to be validated against a condition it must be added to the ArrayList during initialization.
+     * @param input The input to be validated
+     * @param observableSet
+     * @return If the input is valid
+     */
+    private boolean validateText(String input, ObservableSet<PseudoClass> classes) {
+        boolean valid = true;
+        if (classes.contains(integerFormat)) {
+            valid &=  input.matches("\\d*");
+        }
+        if (classes.contains(doubleFormat)) {
+            valid &= input.matches("(-?)\\d*(\\.\\d+)?");
+        }
+        if (classes.contains(timeFormat)) {
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("H:mm");
+                LocalTime.parse(input, dateTimeFormat);
+            } catch (DateTimeParseException e) {
+                valid = false;
+            }
+        }
+        if (classes.contains(uniqueId) && DataAccessor.getInstance().getCrime(input) != null) {
+            valid = false;
+        }
+        return valid;
+    }
+
+    /**
+     * Passes the value through the required validation methods
+     * @param inputBox The input to be validated
+     * @return If the input is valid
+     */
+    public boolean validate(Node inputBox) {
+        boolean valid = true;
+        String input = null;
+        if (inputBox.getClass() == TextField.class) {
+            input = ((TextField) inputBox).getText();
+        } else if (inputBox.getClass() == TextArea.class) {
+            input = ((TextArea) inputBox).getText();
+        } else if (inputBox.getClass() == DatePicker.class) {
+            input = ((DatePicker) inputBox).getEditor().getText();
+        }
+        if (inputBox.getPseudoClassStates().contains(dateEditor)) {
+            input = ((TextField) inputBox).getText();
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                LocalDate date = LocalDate.parse(input, dateTimeFormat);
+                ((DatePicker) inputBox.getParent()).setValue(date);
+            } catch (DateTimeParseException e) {
+                valid = false;
+            }
+        }
+        if (inputBox.getPseudoClassStates().contains(required)) {
+            valid &= validateRequired(input);
+        }
+        if (valid) {
+            valid &= validateText(input, inputBox.getPseudoClassStates());
+        }
+        if (valid && inputBox.getPseudoClassStates().contains(uniqueId)) {
+            valid &= validateText(input, inputBox.getPseudoClassStates());
+        }
+        inputBox.pseudoClassStateChanged(errorClass, !valid);
+        return valid;
     }
 }

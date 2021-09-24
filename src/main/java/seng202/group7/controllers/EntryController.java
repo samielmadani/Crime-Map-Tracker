@@ -61,12 +61,13 @@ public class EntryController implements Initializable {
      * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
      * alert the validation class what validation is required
      */
-    private PseudoClass errorClass;
-    private PseudoClass required;
-    private PseudoClass doubleFormat;
-    private PseudoClass integerFormat;
-    private PseudoClass dateFormat;
-    private PseudoClass timeFormat;
+    private PseudoClass required = PseudoClass.getPseudoClass("required");
+    private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
+    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
+    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
+    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
+    private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
+    private PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
 
 
     /**
@@ -89,12 +90,11 @@ public class EntryController implements Initializable {
         editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
         priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
 
-        errorClass = PseudoClass.getPseudoClass("error");
-
         data = master.getCurrentRow();
         if (data != null) {
             setData();
         } else {
+            cNoText.pseudoClassStateChanged(uniqueId, true);
             editEntry(new ActionEvent());
         }
     }
@@ -113,14 +113,8 @@ public class EntryController implements Initializable {
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
-            validate(dateText);
+            ControllerData.getInstance().validate(dateText);
         });
-
-        required = PseudoClass.getPseudoClass("required");
-        doubleFormat = PseudoClass.getPseudoClass("double");
-        integerFormat = PseudoClass.getPseudoClass("integer");
-        dateFormat = PseudoClass.getPseudoClass("date");
-        timeFormat = PseudoClass.getPseudoClass("time");
         
         // TODO get these assigned in FXML file
         cNoText.pseudoClassStateChanged(required, true);
@@ -139,78 +133,8 @@ public class EntryController implements Initializable {
 
         dateText.pseudoClassStateChanged(dateFormat, true);
         timeText.pseudoClassStateChanged(timeFormat, true);
-    }
 
-    /**
-     * Checks if the input has a value and adds the error class if it is invalid.
-     * @param inputBox The input to be validated
-     * @return If the field has an entry
-     */
-    private boolean validateRequired(String input) {
-        boolean valid;
-        valid = !(input.isEmpty());
-        return valid;
-    }
-
-    /**
-     * Validates the value in each box. The validation is currently limited to Integer, Double, Date, and Time. <p>
-     * For a input box to be validated against a condition it must be added to the ArrayList during initialization.
-     * @param input The input to be validated
-     * @param observableSet
-     * @return If the input is valid
-     */
-    private boolean validateText(String input, ObservableSet<PseudoClass> classes) {
-        boolean valid = true;
-        DateTimeFormatter dateTimeFormat;
-        if (classes.contains(integerFormat)) {
-            valid &=  input.matches("\\d*");
-        }
-        if (classes.contains(doubleFormat)) {
-            valid &= input.matches("(-?)\\d*(\\.\\d+)?");
-        }
-        if (classes.contains(dateFormat)) {
-            try {
-                dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-                LocalDate date = LocalDate.parse(input, dateTimeFormat);
-                datePicker.setValue(date);
-            } catch (DateTimeParseException e) {
-                valid = false;
-            }
-        }
-        if (classes.contains(timeFormat)) {
-            try {
-                dateTimeFormat = DateTimeFormatter.ofPattern("H:mm");
-                LocalTime.parse(input, dateTimeFormat);
-            } catch (DateTimeParseException e) {
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
-    /**
-     * Passes the value through the required validation methods
-     * @param inputBox The input to be validated
-     * @return If the input is valid
-     */
-    private boolean validate(Node inputBox) {
-        boolean valid = true;
-        String input = null;
-        if (inputBox.getClass() == TextField.class || inputBox == dateText) {
-            input = ((TextField) inputBox).getText();
-        } else if (inputBox.getClass() == TextArea.class) {
-            input = ((TextArea) inputBox).getText();
-        } else if (inputBox.getClass() == DatePicker.class) {
-            input = dateText.getText();
-        }
-        if (inputBox.getPseudoClassStates().contains(required)) {
-            valid &= validateRequired(input);
-        }
-        if (valid) {
-            valid &= validateText(input, inputBox.getPseudoClassStates());
-        }
-        inputBox.pseudoClassStateChanged(errorClass, !valid);
-        return valid;
+        dateText.pseudoClassStateChanged(dateEditor, true);
 
     }
 
@@ -220,7 +144,7 @@ public class EntryController implements Initializable {
      */
     public void activeValidate(KeyEvent event) {
         Node inputBox = (Node) event.getSource();
-        validate(inputBox);
+        ControllerData.getInstance().validate(inputBox);
     }
 
     /**
@@ -337,7 +261,7 @@ public class EntryController implements Initializable {
         boolean valid = true;
         ArrayList<String> invalidAttributes = new ArrayList<>();
         for (Node node : allValues) {
-            if (!validate(node)) {
+            if (!ControllerData.getInstance().validate(node)) {
                 valid = false;
                 invalidAttributes.add(node.getId());
             }
@@ -374,12 +298,8 @@ public class EntryController implements Initializable {
         String locationDescription = locAreaText.getText();
 
         DataAccessor dataAccessor = DataAccessor.getInstance();
-        // Prevent overwriting an existing entry with a new one
-        if (data == null && dataAccessor.getCrime(caseNumber) != null) {
-            cNoText.pseudoClassStateChanged(errorClass, true);
-            //errorText.setText("There is already an entry with the id " + caseNumber + ".")
-            return;
-        }
+        
+        cNoText.pseudoClassStateChanged(uniqueId, true);
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
         dataAccessor.editCrime(data);
 
