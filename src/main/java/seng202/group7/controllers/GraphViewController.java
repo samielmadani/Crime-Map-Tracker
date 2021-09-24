@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
- * Graph View Controller controls displays three different bar graphs based on user input from Graph Menu Controller
+ * Graph View Controller controls displays three different bar graphs based on user input from Graph Menu Controller.
+ *
  * @author Jack McCorkindale
  * @author Sam McMillan
  */
 public class GraphViewController implements Initializable {
-
 
     @FXML
     private BarChart<String, Integer> crimeChart;
@@ -37,9 +37,14 @@ public class GraphViewController implements Initializable {
     @FXML
     private Node frame;
 
-
+    /**
+     * This method is run during the loading of the graph menu fxml file.
+     *
+     * @param location      A URL object.
+     * @param resources     A ResourceBundle object.
+     */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL location, ResourceBundle resources) {
 
         frame.parentProperty().addListener((obs, oldParent, newParent) -> {
 
@@ -52,8 +57,9 @@ public class GraphViewController implements Initializable {
 
     /**
      * Called from the Graph View controller when the scene is initialized, checks what input is currently
-     * in the combo box from graph menu class with pseudo classes and loads the correct graph accordingly
-     * @param pseudoClassStates Has three different States which determines what graph is loaded.
+     * in the combo box from graph menu class with pseudo classes and loads the correct graph accordingly.
+     *
+     * @param pseudoClassStates     Has three different States which determines what graph is loaded.
      */
     public void prepareGraph(ObservableSet<PseudoClass> pseudoClassStates) {
         ArrayList<Report> data = DataAccessor.getInstance().getAll();
@@ -71,11 +77,12 @@ public class GraphViewController implements Initializable {
     }
 
     /**
-     *Create the graph by inputing the values into the bar chart object
-     * @param data The arraylist of String integer tuples from Rank class
-     * @param title The String title of the graph
-     * @param xLabel The x axis label of the graph
-     * @param yLabel The y axis label of the graph
+     *Create the graph by inputting the values into the bar chart object.
+     *
+     * @param data      The arraylist of String integer tuples from Rank class
+     * @param title     The String title of the graph
+     * @param xLabel    The x axis label of the graph
+     * @param yLabel    The y axis label of the graph
      */
     public void generateGraph(ArrayList<Tuple<String, Integer>> data, String title, String xLabel, String yLabel) {
 

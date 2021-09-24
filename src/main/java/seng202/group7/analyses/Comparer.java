@@ -6,18 +6,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.lang.Math;
 
-/**
- * @author Sam McMillan
- */
 
-public class Comparer {
+/**
+ * This class adds a set of static methods that allow reports to be compared to each other.
+ *
+ *  @author Sam McMillan
+ */
+public final class Comparer {
 
     /**
      * Compares two reports and returns the time difference.
-     * @param reportOne data to be compared with "reportTwo"
-     * @param reportTwo data to be compared with "reportOne"
-     * @return A list of long values [Minutes, Hours, Days, Years]
-     * TODO potentially add months
+     *
+     * @param reportOne     Data to be compared with "reportTwo"
+     * @param reportTwo     Data to be compared with "reportOne"
+     * @return              A list of long values [Minutes, Hours, Days, Years]
      */
     public static ArrayList<Long> timeDifference(Report reportOne, Report reportTwo) {
         ArrayList<Long> timeDifferences = new ArrayList<>();
@@ -30,12 +32,11 @@ public class Comparer {
     }
 
     /**
+     * Returns the displacement between the two reports in km.
      *
-     * Returns the displacement between the two reports in km
      * @param reportOne data to be compared with "reportTwo"
      * @param reportTwo data to be compared with "reportOne"
      * @return A double value corresponding the displacement between the two reports in km
-     * TODO remove some decimal places ?
      */
 
     public static double locationDifference(Report reportOne, Report reportTwo) {

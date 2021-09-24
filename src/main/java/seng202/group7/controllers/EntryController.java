@@ -12,8 +12,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
 import javafx.css.PseudoClass;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import seng202.group7.data.DataAccessor;
 
 import java.net.URL;
@@ -39,9 +37,10 @@ public class EntryController implements Initializable {
      * The current selected rows crime object.
      */
     Crime data;
+
     @FXML
     private TextField cNoText, iucrText, fbiText, blockText, beatText,
-            wardText, xCoordText, yCoordText, latText, longText, priText, timeText;
+                      wardText, xCoordText, yCoordText, latText, longText, priText, timeText;
     @FXML
     private TextArea secText, locAreaText;
     @FXML
@@ -54,19 +53,20 @@ public class EntryController implements Initializable {
     private Node frame;
 
     private TextField dateText;
+
     private ArrayList<Node> allValues, editableValues;
 
     /**
      * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
      * alert the validation class what validation is required
      */
-    private PseudoClass required = PseudoClass.getPseudoClass("required");
-    private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
-    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
-    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
-    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
-    private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
-    private PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
+    private final PseudoClass required = PseudoClass.getPseudoClass("required");
+    private final PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
+    private final PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
+    private final PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
+    private final PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
+    private final PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
+    private final PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
 
 
     /**
@@ -94,7 +94,7 @@ public class EntryController implements Initializable {
             setData();
         } else {
             cNoText.pseudoClassStateChanged(uniqueId, true);
-            editEntry(new ActionEvent());
+            editEntry();
         }
     }
 
@@ -102,18 +102,14 @@ public class EntryController implements Initializable {
      * Sets the types of validation required on each input node
      */
     private void prepareValidation() {
-        dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                try {
-                    DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-                    LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
-                    datePicker.setValue(date);
-                } catch (DateTimeParseException e) {
-                    return;
-                } finally {
-                    activeValidate(event);
-                }
+        dateText.setOnKeyTyped(event -> {
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+                datePicker.setValue(date);
+            } catch (DateTimeParseException ignored) {
+            } finally {
+                activeValidate(event);
             }
         });
 
@@ -122,8 +118,7 @@ public class EntryController implements Initializable {
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
             ControllerData.getInstance().validate(dateText);
         });
-        
-        // TODO get these assigned in FXML file
+
         cNoText.pseudoClassStateChanged(required, true);
         dateText.pseudoClassStateChanged(required, true);
         timeText.pseudoClassStateChanged(required, true);
@@ -209,9 +204,8 @@ public class EntryController implements Initializable {
 
     /**
      * Returns to the stored table state by retrieving it from the ControllerData object and setting it on the root pane.
-     * @param event The action event that was triggered.
      */
-    public void returnView(ActionEvent event) {
+    public void returnView() {
         BorderPane pane = (BorderPane) frame.getParent();
         ControllerData controllerData = ControllerData.getInstance();
         Node table = controllerData.getTableState();
@@ -220,9 +214,8 @@ public class EntryController implements Initializable {
 
     /**
      * Allows the user to edit the values in value boxes by enabling them all. Also changes to save/cancel buttons.
-     * @param event The action event that was triggered.
      */
-    public void editEntry(ActionEvent event) {
+    public void editEntry() {
         editButton.setVisible(false);
         editButton.setManaged(false);
         deleteButton.setVisible(false);
@@ -240,12 +233,11 @@ public class EntryController implements Initializable {
 
     /**
      * Checks if there is valid data, if there is, modifies the visible buttons and calls the method
-     * to fill all fields with the data. Otherwise returns to previous view.
-     * @param event The action event that was triggered.
+     * to fill all fields with the data. Otherwise, returns to previous view.
      */
-    public void finishEdit(ActionEvent event) {
+    public void finishEdit() {
         if (data == null) {
-            returnView(event);
+            returnView();
             return;
         }
         editButton.setVisible(true);
@@ -262,19 +254,15 @@ public class EntryController implements Initializable {
 
     /**
      * Checks if all the data is valid, then modifies the existing data object to reflect the changes the user made.
-     * @param event The action event that was triggered.
      */
-    public void saveEdit(ActionEvent event) {
+    public void saveEdit() {
         boolean valid = true;
-        ArrayList<String> invalidAttributes = new ArrayList<>();
         for (Node node : allValues) {
             if (!ControllerData.getInstance().validate(node)) {
                 valid = false;
-                invalidAttributes.add(node.getId());
             }
         }
         if (!valid) {
-            // TODO add error messages
             return;
         } 
 
@@ -305,16 +293,17 @@ public class EntryController implements Initializable {
         String locationDescription = locAreaText.getText();
 
         DataAccessor dataAccessor = DataAccessor.getInstance();
-        
+
         cNoText.pseudoClassStateChanged(uniqueId, true);
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
         dataAccessor.editCrime(data);
 
-        finishEdit(event);
+        finishEdit();
     }
 
     /**
-     * Converts the LocalDate and LocalTime values from datePicker and timeText into a LocalDateTime object
+     * Converts the LocalDate and LocalTime values from datePicker and timeText into a LocalDateTime object.
+     *
      * @return LocalDateTime combination of datePicker and timeText
      */
     private LocalDateTime getDateTime() {
@@ -328,8 +317,9 @@ public class EntryController implements Initializable {
 
     /**
      * Turns a TextField node into an integer value.
-     * @param node A TextField to convert to an Integer
-     * @return
+     *
+     * @param node      A TextField to convert to an Integer
+     * @return          The integer value.
      */
     private Integer getInt(TextField node) {
         if (!node.getText().isEmpty()) {
@@ -340,8 +330,9 @@ public class EntryController implements Initializable {
 
     /**
      * Turns a TextField node into a Double value.
-     * @param node A TextField to convert to a Double
-     * @return 
+     *
+     * @param node      A TextField to convert to a Double
+     * @return          The double value.
      */
     private Double getDouble(TextField node) {
         if (!node.getText().isEmpty()) {
@@ -352,13 +343,12 @@ public class EntryController implements Initializable {
 
     /**
      * Deletes the entry that is currently being viewed.
-     * @param event The action event that was triggered.
      */
-    public void deleteEntry(ActionEvent event) {
+    public void deleteEntry() {
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
         dataAccessor.delete(cNoText.getText());
-        returnView(event);
+        returnView();
     }
 
 }

@@ -13,40 +13,39 @@ import javax.naming.directory.InvalidAttributeValueException;
  * @author Jack McCorkindale
  */
 public class Crime extends Report {
-    private SimpleStringProperty caseNumber = new SimpleStringProperty(null);
-    private SimpleStringProperty block = new SimpleStringProperty(null);
-    private SimpleStringProperty iucr = new SimpleStringProperty(null);
-    private SimpleStringProperty fbiCD = new SimpleStringProperty(null);
-    private SimpleObjectProperty<Boolean> arrest = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Integer> beat = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Integer> ward = new SimpleObjectProperty<>(null);
+    private final SimpleStringProperty caseNumber = new SimpleStringProperty(null);
+    private final SimpleStringProperty block = new SimpleStringProperty(null);
+    private final SimpleStringProperty iucr = new SimpleStringProperty(null);
+    private final SimpleStringProperty fbiCD = new SimpleStringProperty(null);
+    private final SimpleObjectProperty<Boolean> arrest = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Integer> beat = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Integer> ward = new SimpleObjectProperty<>(null);
 
 
     /**
      * Initializes a crime object.
-     * Note: Can currently only create complete classes
-     * @param caseNumber A required field which must be unique and cannot be null
-     * @param date A required field which contains the year, month, day and time of the crime
-     * @param block An optional field which contains what block the crime occurred in
-     * @param iucr An optional field which contains the Illinois Uniform Crime Reporting number
-     * @param primaryDescription A required field which contains the primary description of the crime
-     * @param secondaryDescription A required field which contains the more descriptive secondary description of the crime
-     * @param locationDescription An optional field which contains the description of the location where the crime occurred
-     * @param arrest An optional field which contains whether the crime resulted in an arrest
-     * @param domestic An optional field which contains if the crime was domestic
-     * @param beat An optional field which contains TODO what is this
-     * @param ward An optional field which contains TODO what is this
-     * @param fbiCD An optional field which contains TODO what is this
-     * @param xCoord An optional field which is has the x-coordinate of where the crime occurred
-     * @param yCoord An optional field which is has the y-coordinate of where the crime occurred
-     * @param latitude An optional field which is has the latitude of where the crime occurred
-     * @param longitude An optional field which is has the longitude of where the crime occurred
+     * @param caseNumber            A required field which must be unique and cannot be null
+     * @param date                  A required field which contains the year, month, day and time of the crime
+     * @param block                 An optional field which contains what block the crime occurred in
+     * @param iucr                  An optional field which contains the Illinois Uniform Crime Reporting number
+     * @param primaryDescription    A required field which contains the primary description of the crime
+     * @param secondaryDescription  A required field which contains the more descriptive secondary description of the crime
+     * @param locationDescription   An optional field which contains the description of the location where the crime occurred
+     * @param arrest                An optional field which contains whether the crime resulted in an arrest
+     * @param domestic              An optional field which contains if the crime was domestic
+     * @param beat                  An optional field which contains the beat.
+     * @param ward                  An optional field which contains the ward.
+     * @param fbiCD                 An optional field which contains FBI crime code.
+     * @param xCoord                An optional field which is has the x-coordinate of where the crime occurred
+     * @param yCoord                An optional field which is has the y-coordinate of where the crime occurred
+     * @param latitude              An optional field which is has the latitude of where the crime occurred
+     * @param longitude             An optional field which is has the longitude of where the crime occurred
      */
     public Crime(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
     String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
     Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         super(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
-        this.caseNumber = new SimpleStringProperty(caseNumber);
+        this.caseNumber.setValue(caseNumber);
 
         if (block != null && !block.isEmpty()) {
             this.block.setValue(block);
@@ -63,7 +62,8 @@ public class Crime extends Report {
     }
 
     /**
-     * 
+     * Gets the current case number of a report.
+     *
      * @return The crime's case number
      */
     public String getCaseNumber() {
@@ -72,9 +72,10 @@ public class Crime extends Report {
 
 
     /**
-     * Sets the crimes case number, handles an empty string as null
-     * @param caseNumber A required string attribute which must be unique
-     * @throws InvalidAttributeValueException
+     * Sets the crimes case number, handles an empty string as null.
+     *
+     * @param caseNumber                        A required string attribute which must be unique
+     * @throws InvalidAttributeValueException   Value doesn't match type
      */
     public void setCaseNumber(String caseNumber) throws InvalidAttributeValueException {
         if (Objects.equals(caseNumber, "") || (caseNumber == null)) {
@@ -85,7 +86,8 @@ public class Crime extends Report {
     }
 
     /**
-     * 
+     * Gets the block of the report.
+     *
      * @return The block the crime occurred in
      */
     public String getBlock() {
@@ -93,8 +95,9 @@ public class Crime extends Report {
     }
 
     /**
-     * Sets the block the crime occurred in, handles an empty string as null
-     * @param block
+     * Sets the block the crime occurred in, handles an empty string as null.
+     *
+     * @param block     The new block value
      */
     public void setBlock(String block) {
         if (Objects.equals(block, "")) {
@@ -106,7 +109,8 @@ public class Crime extends Report {
 
 
     /**
-     * 
+     * Gets the current Iucr value.
+     *
      * @return The crime's Illinois Uniform Crime Reporting number
      */
     public String getIucr() {
@@ -115,8 +119,9 @@ public class Crime extends Report {
 
 
     /**
-     * Sets the crime's Illinois Uniform Crime Reporting number, handles an empty string as null
-     * @param iucr
+     * Sets the crime's Illinois Uniform Crime Reporting number, handles an empty string as null.
+     *
+     * @param iucr  The new iucr value.
      */
     public void setIucr(String iucr) {
         if (Objects.equals(iucr, "")) {
@@ -127,7 +132,8 @@ public class Crime extends Report {
     }
 
     /**
-     * 
+     * Gets the current arrest value.
+     *
      * @return Whether the crime resulted in an arrest
      */
     public Boolean getArrest() {
@@ -135,8 +141,9 @@ public class Crime extends Report {
     }
 
     /**
-     * Sets whether the crime resulted in an arrest
-     * @param arrest
+     * Sets whether the crime resulted in an arrest.
+     *
+     * @param arrest    The new arrest value.
      */
     public void setArrest(Boolean arrest) {
         if (!Objects.equals(getArrest(), arrest)) {
@@ -145,7 +152,8 @@ public class Crime extends Report {
     }
 
     /**
-     * 
+     * Gets the current beat value.
+     *
      * @return What beat the crime was in
      */
     public Integer getBeat() {
@@ -153,8 +161,9 @@ public class Crime extends Report {
     }
 
     /**
-     * Sets what beat the crime was in
-     * @param beat
+     * Sets what beat the crime was in.
+     *
+     * @param beat      The new beat value.
      */
     public void setBeat(Integer beat) {
         if (!Objects.equals(getBeat(), beat)) {
@@ -163,7 +172,8 @@ public class Crime extends Report {
     }
 
     /**
-     * 
+     * Gets the current ward value.
+     *
      * @return What ward the crime was in
      */
     public Integer getWard() {
@@ -171,8 +181,9 @@ public class Crime extends Report {
     }
 
     /**
-     * Sets what ward the crime was in
-     * @param ward
+     * Sets what ward the crime was in.
+     *
+     * @param ward      The new ward value.
      */
     public void setWard(Integer ward) {
         if (!Objects.equals(getWard(), ward)) {
@@ -181,7 +192,8 @@ public class Crime extends Report {
     }
 
     /**
-     * 
+     * Gets the current fbi code value.
+     *
      * @return The crimes FBI CD number
      */
     public String getFbiCD() {
@@ -189,8 +201,9 @@ public class Crime extends Report {
     }
 
     /**
-     * Sets the crime's FIB CD number, handles an empty string as null
-     * @param fbiCD
+     * Sets the crime's FIB CD number, handles an empty string as null.
+     *
+     * @param fbiCD     The new fbi code value
      */
     public void setFbiCD(String fbiCD) {
         if (Objects.equals(fbiCD, "")) {
@@ -198,39 +211,6 @@ public class Crime extends Report {
         } else if (!Objects.equals(getFbiCD(), fbiCD)){
             this.fbiCD.setValue(fbiCD);
         }
-    }
-
-    /**
-     * Updates the values found in the crime record.
-     * @param caseNumber
-     * @param date
-     * @param block
-     * @param iucr
-     * @param primaryDescription
-     * @param secondaryDescription
-     * @param locationDescription
-     * @param arrest
-     * @param domestic
-     * @param beat
-     * @param ward
-     * @param fbiCD
-     * @param xCoord
-     * @param yCoord
-     * @param latitude
-     * @param longitude
-     * @throws InvalidAttributeValueException
-     */
-    public void update(String caseNumber, LocalDateTime date, String block, String iucr, String primaryDescription,
-    String secondaryDescription, String locationDescription, Boolean arrest, Boolean domestic, Integer beat,
-    Integer ward, String fbiCD, Integer xCoord, Integer yCoord, Double latitude, Double longitude) throws InvalidAttributeValueException {
-        super.update(date, primaryDescription, secondaryDescription, locationDescription, domestic, xCoord, yCoord, latitude, longitude);
-        setCaseNumber(caseNumber);
-        setBlock(block);
-        setIucr(iucr);
-        setArrest(arrest);
-        setBeat(beat);
-        setWard(ward);
-        setFbiCD(fbiCD);
     }
 
 

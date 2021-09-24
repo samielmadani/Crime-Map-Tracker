@@ -1,16 +1,7 @@
 package seng202.group7.data;
 
-import javax.swing.text.DateFormatter;
 import java.sql.Timestamp;
-import java.sql.Types;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-import java.util.Objects;
 
 /**
  * builds queries based on parameters and returns them as Strings
@@ -31,7 +22,7 @@ public class QueryBuilder {
         String query = "WHERE ";
 
         if(date != null){
-            query += addAndCondition("date", date);
+            query += addAndCondition(date);
         }
         if(primaryDescription != null){
             query += addAndCondition("primary_description", primaryDescription);
@@ -92,11 +83,10 @@ public class QueryBuilder {
     /**
      *  Is a builder that adds an and condition. For a string value.
      *
-     * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
      * @return          A String to append to a where query
      */
-    private static String addAndCondition(String field, LocalDate value) {
+    private static String addAndCondition(LocalDate value) {
         return "date >= " + Timestamp.valueOf(value.atStartOfDay()).getTime()
                 + " AND date < " + Timestamp.valueOf(value.plusDays(1).atStartOfDay()).getTime() + " AND ";
     }

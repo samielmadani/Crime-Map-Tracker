@@ -25,10 +25,9 @@ public class GeneralMenuController {
     /**
      * Gets the current side panel and replace it with the filter menu panel.
      *
-     * @param event             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void toFilter(ActionEvent event) throws IOException {
+    public void toFilter() throws IOException {
         BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/filterMenu.fxml")));
         // Changes side menu to the filter menu.
@@ -36,11 +35,11 @@ public class GeneralMenuController {
     }
 
     /**
-     * Changes the menu bar to show the distance comparison menu
-     * @param event The event action that was triggered.
+     * Changes the menu bar to show the distance comparison menu.
+     *
      * @throws IOException An error that occurs when loading the FXML file.
      */
-    public void toDistance(ActionEvent event) throws IOException{
+    public void toDistance() throws IOException{
         BorderPane pane = (BorderPane) frame.getParent();
         
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
@@ -50,11 +49,11 @@ public class GeneralMenuController {
     }
 
     /**
-     * Changes the menu bar to show the time comparison menu
-     * @param event The event action that was triggered.
+     * Changes the menu bar to show the time comparison menu.
+     *
      * @throws IOException An error that occurs when loading the FXML file.
      */
-    public void toTime(ActionEvent event) throws IOException{
+    public void toTime() throws IOException{
         BorderPane pane = (BorderPane) frame.getParent();
         
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));

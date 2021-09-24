@@ -99,7 +99,6 @@ public final class DataAccessor {
      * Using the current page of the paginator this method returns the relevant section
      * of reports to be used from the database in the tableview.
      *
-     * @param page          The current page.
      * @return reports      The list of reports to display.
      */
     public ArrayList<Report> getPageSet() {
@@ -114,11 +113,22 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
+    /**
+     * Gets all the reports from the database.
+     *
+     * @return  All reports from the database.
+     */
     public ArrayList<Report> getAll() {
         String query = "SELECT * FROM crimedb";
         return selectReports(query);
     }
 
+    /**
+     * Uses a query for the crimedb view to get a selection of reports.
+     *
+     * @param query     The query for the crimedb view.
+     * @return          A list of reports.
+     */
     private ArrayList<Report> selectReports(String query) {
         ArrayList<Report> reports = new ArrayList<>();
         try {
@@ -151,13 +161,18 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             return null;
         }
         return reports;
     }
 
-
+    /**
+     * Gets a single crime entry from the database.
+     *
+     * @param entry     The case number of a crime object.
+     * @return          A single report.
+     */
     public Crime getCrime(String entry) {
         String query = "SELECT * FROM crimedb WHERE id = '" + entry + "';";
         ArrayList<Report> reports = selectReports(query);
@@ -168,6 +183,11 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * Deletes an entry from the database.
+     *
+     * @param entryId       The case number of the crime object.
+     */
     public void delete(String entryId){
         String crimeQuery = "DELETE FROM crimes WHERE case_number = '" + entryId + "'";
         String reportQuery = "DELETE FROM reports WHERE report_id = '" + entryId + "'";
@@ -304,6 +324,11 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * Adds the ability to edit or add data into the database from a crime object.
+     *
+     * @param crime     A crime object.
+     */
     public void editCrime(Crime crime) {
         try {
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
@@ -334,9 +359,11 @@ public final class DataAccessor {
 
             psCrime.execute();
             psReport.execute();
+            psCrime.close();
+            psReport.close();
 
         } catch (SQLException e) {
-            return;
+            System.out.println(e.getMessage());
         }
     }
 

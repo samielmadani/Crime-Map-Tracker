@@ -14,13 +14,12 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
+ * Graph Menu Controller is the class which controls which graph is displayed by the program.
+ *
  * @author Jack McCorkindale
  * @author Sam McMillan
- *
- * Graph Menu Controller is the class which controls which graph is displayed by the program
  */
 public class GraphMenuController implements Initializable {
-
 
     @FXML
     private ComboBox<String> graphType;
@@ -32,8 +31,14 @@ public class GraphMenuController implements Initializable {
     private PseudoClass wardDanger;
     private PseudoClass streetDanger;
 
+    /**
+     * This method is run during the loading of the graph menu fxml file.
+     *
+     * @param location      A URL object.
+     * @param resources     A ResourceBundle object.
+     */
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void initialize(URL location, ResourceBundle resources) {
         frequentCrime = PseudoClass.getPseudoClass("frequentCrime");
         graphType.getItems().add("Most Frequent Crime Types");
         graphType.setValue("Most Frequent Crime Types");
@@ -48,8 +53,9 @@ public class GraphMenuController implements Initializable {
 
     /**
      * Method triggered when the user clicks on the generate graph button, Checks what selection is made by the user in
-     * the combo box and reloads the graphView
-     * @throws IOException The exception that is thrown when the FXML Loader can't laod the fxml file
+     * the combo box and reloads the graphView.
+     *
+     * @throws IOException      The exception that is thrown when the FXML Loader can't load the fxml file
      */
     public void selectGraph() throws IOException {
         String graphSelection = graphType.getValue();

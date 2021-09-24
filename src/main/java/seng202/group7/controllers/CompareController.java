@@ -21,7 +21,7 @@ import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
 
 /**
- * The controller, used by / linked to, the comparers FXML file.
+ * The controller, used by / linked to, the compares FXML file.
  * Handles the comparisons of two crime objects.
  *
  * @author Jack McCorkindale
@@ -30,18 +30,22 @@ public class CompareController implements Initializable {
 
     @FXML
     private TextField reportOneText, reportTwoText;
-
     @FXML
-    private Label resultText;
-
-    @FXML
-    private Label menuText;
-
+    private Label resultText, menuText;
     @FXML
     private VBox frame;
 
+    /**
+     * A style class that can be added to a node to add error formatting.
+     */
     private PseudoClass errorClass;
 
+    /**
+     * This method is run during the loading of the compare menu fxml.
+     *
+     * @param location      A URL object.
+     * @param resources     A ResourceBundle object.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -58,7 +62,7 @@ public class CompareController implements Initializable {
 
     /**
      * Changes the name of the menu to the type of data that is being compared.
-     * @param pseudoClasses
+     * @param pseudoClasses     A style class.
      */
     public void setType(ObservableSet<PseudoClass> pseudoClasses) {
         if (pseudoClasses.contains(PseudoClass.getPseudoClass("distance"))) {
@@ -73,10 +77,9 @@ public class CompareController implements Initializable {
     /**
      * Gets the current side panel and replaces it with the general menu panel.
      *
-     * @param event             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void toMenu(ActionEvent event) throws IOException {
+    public void toMenu() throws IOException {
         BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Changes side menu to the filter menu.
@@ -85,9 +88,8 @@ public class CompareController implements Initializable {
 
     /**
      * Clears results and sends the two reports requested to the correct comparison types.
-     * @param event The event action that was triggered.
      */
-    public void compareReports(ActionEvent event) {
+    public void compareReports() {
         DataAccessor data = DataAccessor.getInstance();
         resultText.setText("");
 
@@ -107,8 +109,9 @@ public class CompareController implements Initializable {
 
     /**
      * Compares the distance between the two reports and displays it for the user.
-     * @param reportOne The first report to be compared
-     * @param reportTwo The second report the be compared
+     *
+     * @param reportOne     The first report to be compared
+     * @param reportTwo     The second report to be compared
      */
     private void compareDistance(Report reportOne, Report reportTwo) {
         double distance = Comparer.locationDifference(reportOne, reportTwo);
@@ -117,12 +120,11 @@ public class CompareController implements Initializable {
 
     /**
      * Compares the time difference between the two reports and displays it for the user.
-     * @param reportOne The first report to be compared
-     * @param reportTwo The second report the be compared
+     *
+     * @param reportOne     The first report to be compared
+     * @param reportTwo     The second report to be compared
      */
     private void compareTime(Report reportOne, Report reportTwo) {
-        //TODO Have and between elements
-        //TODO When value is 1 use singular
         ArrayList<Long> time = Comparer.timeDifference(reportOne, reportTwo);
         String timeString = "";
         if (time.get(3) > 0) {
@@ -137,8 +139,8 @@ public class CompareController implements Initializable {
         if (time.get(0) > 0) {
             timeString += String.format("%d minutes ", time.get(0));
         }
-        if (timeString == "") {
-            resultText.setText(String.format("Crime %s and %s occurred at the same time.", reportOneText.getText(), reportTwoText.getText(), timeString));
+        if (timeString.equals("")) {
+            resultText.setText(String.format("Crime %s and %s occurred at the same time.", reportOneText.getText(), reportTwoText.getText()));
         } else {
             resultText.setText(String.format("Crime %s and %s occurred %sapart.", reportOneText.getText(), reportTwoText.getText(), timeString));
         }

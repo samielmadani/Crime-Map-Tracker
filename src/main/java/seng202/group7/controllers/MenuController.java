@@ -138,6 +138,11 @@ public class MenuController implements Initializable {
 
     }
 
+    /**
+     * Loads and sets the menu and centre screen to the graph view.
+     *
+     * @throws IOException      Error when loading the FXML file.
+     */
     public void toGraph() throws IOException {
         //Loads graph screen
         GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));

@@ -7,20 +7,24 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 /**
+ * Adds a set of static methods that allow a set of reports to be filtered based on certain conditions.
+ *
+ * [CURRENT LEGACY CODE]
+ *
  * @author Sam McMillan
- * @author Sami
+ * @author Sami Elmadani
  */
-
-public class Filter {
-    // TODO This function repeats itself too much, all of the methods do the exact same thing
+public final class Filter {
 
     /**
      * Searches the data and returns a new list with only the conforming data
-     * @param currentData The ArrayList of reports to search
-     * @param start The time to start the search from
-     * @param end The time to stop the search from
-     * @return Reports that are within the times provided
-     * @throws IllegalArgumentException If the start time is after the end time
+     *
+     * @param currentData                   The ArrayList of reports to search
+     * @param start                         The time to start the search from
+     * @param end                           The time to stop the search from
+     *
+     * @return filteredData                 Reports that are within the times provided
+     * @throws IllegalArgumentException     If the start time is after the end time
      */
     public static ArrayList<Report> timeFilter(ArrayList<Report> currentData, LocalDateTime start, LocalDateTime end) throws IllegalArgumentException{
         ArrayList<Report> filteredData = new ArrayList<>();
@@ -36,58 +40,32 @@ public class Filter {
         return filteredData;
     }
 
+
     /**
-     * Searchs the data and returns a new ArrayList of data within the area
-     * @param currentData The ArrayList of reports to search
-     * @param xcord1 
-     * @param xcord2
-     * @param ycord1
-     * @param ycord2
-     * @return
+     * Determines which attribute is to be searched and goes to relevant method
+     * @param currentData           The data to filter
+     * @param attribute             The attribute to filter by
+     * @param filterSelection       What is to be filtered
+     * @return filteredData         An arraylist with the filtered results
      */
-    public static ArrayList<Report> geoFilter(ArrayList<Report> currentData, Integer xcord1, Integer xcord2, Integer ycord1, Integer ycord2) {
+    public static ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<>();
-        for (Report data: currentData) {
-            if (data.getXCoord() != null && data.getYCoord() != null &&
-                    ((data.getXCoord() >= xcord1) && (data.getXCoord() <= xcord2)) &&
-                    ((data.getYCoord() >= ycord1) && (data.getYCoord() <= ycord2))) {
-                filteredData.add(data);
+        switch (attribute) {
+            case "BLOCK" -> blockFilter(currentData, filteredData, filterSelection);
+            case "PRIMARY" -> primaryFilter(currentData, filteredData, filterSelection);
+            case "LOCATION" -> locationFilter(currentData, filteredData, filterSelection);
+            default -> {
             }
         }
         return filteredData;
     }
 
-    // Is this required? It seems pointless as we could just call the relevant one to start with
     /**
-     * Determines which attribute is to be searched and goes to relevant method
-     * @param currentData The data to filter
-     * @param attribute The attribute to filter by
-     * @param filterSelection What is to be filtered
-     * @return An arraylist with the filtered results
-     */
-    public static ArrayList<Report> stringFilter(ArrayList<Report> currentData, String attribute, String filterSelection) {
-        ArrayList<Report> filteredData = new ArrayList<>();
-        switch(attribute) {
-            case "BLOCK": 
-                blockFilter(currentData, filteredData, filterSelection);
-                break;
-            case "PRIMARY": 
-                primaryFilter(currentData, filteredData, filterSelection);
-                break;
-            case "LOCATION": 
-                locationFilter(currentData, filteredData, filterSelection);
-                break;
-            default:
-                break;
-        }
-        return filteredData;
-    }
-
-    /**
-     * Filters the block attribute and returns an ArrayList of reports that match the selection
-     * @param currentData The data to filter
-     * @param filteredData The filtered data
-     * @param filterSelection What is to be filtered
+     * Filters the block attribute and returns an ArrayList of reports that match the selection.
+     *
+     * @param currentData       The data to filter
+     * @param filteredData      The filtered data
+     * @param filterSelection   What is to be filtered
      */
     private static void blockFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
@@ -99,10 +77,11 @@ public class Filter {
     }
 
     /**
-     * Filters the primary description attribute and returns an ArrayList of reports that match the selection
-     * @param currentData The data to filter
-     * @param filteredData The filtered data
-     * @param filterSelection What is to be filtered
+     * Filters the primary description attribute and returns an ArrayList of reports that match the selection.
+     *
+     * @param currentData       The data to filter
+     * @param filteredData      The filtered data
+     * @param filterSelection   What is to be filtered
      */
     private static void primaryFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
@@ -113,10 +92,11 @@ public class Filter {
     }
 
     /**
-     * Filters the location attribute and returns an ArrayList of reports that match the selection
-     * @param currentData The data to filter
-     * @param filteredData The filtered data
-     * @param filterSelection What is to be filtered
+     * Filters the location attribute and returns an ArrayList of reports that match the selection.
+     *
+     * @param currentData       The data to filter
+     * @param filteredData      The filtered data
+     * @param filterSelection   What is to be filtered
      */
     private static void locationFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, String filterSelection) {
         for (Report data: currentData) {
@@ -127,32 +107,30 @@ public class Filter {
     }
 
     /**
-     * Determines which attribute is to be searched and goes to relevant method
-     * @param currentData The data to filter
-     * @param attribute The attribute to filter by
-     * @param filterSelection What is to be filtered
-     * @return An arraylist with the filtered results
+     * Determines which attribute is to be searched and goes to relevant method.
+     *
+     * @param currentData       The data to filter
+     * @param attribute         The attribute to filter by
+     * @param filterSelection   What is to be filtered
+     * @return filteredData     An arraylist with the filtered results
      */
     public static ArrayList<Report> boolFilter(ArrayList<Report> currentData, String attribute, boolean filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<>();
-        switch(attribute) {
-            case "ARREST": 
-                arrestFilter(currentData, filteredData,filterSelection);
-                break;
-            case "DOMESTIC": 
-                domesticFilter(currentData, filteredData, filterSelection);
-                break;
-            default:
-                break;
+        switch (attribute) {
+            case "ARREST" -> arrestFilter(currentData, filteredData, filterSelection);
+            case "DOMESTIC" -> domesticFilter(currentData, filteredData, filterSelection);
+            default -> {
+            }
         }
         return filteredData;
     }
 
     /**
-     * Filters the arrest attribute and returns an ArrayList of reports that match the selection
-     * @param currentData The data to filter
-     * @param filteredData The filtered data
-     * @param filterSelection What is to be filtered
+     * Filters the arrest attribute and returns an ArrayList of reports that match the selection.
+     *
+     * @param currentData       The data to filter
+     * @param filteredData      The filtered data
+     * @param filterSelection   What is to be filtered
      */
     public static void arrestFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
         for(Report data: currentData) {
@@ -164,10 +142,11 @@ public class Filter {
     }
 
     /**
-     * Filters the domestic attribute and returns an ArrayList of reports that match the selection
-     * @param currentData The data to filter
-     * @param filteredData The filtered data
-     * @param filterSelection What is to be filtered
+     * Filters the domestic attribute and returns an ArrayList of reports that match the selection.
+     *
+     * @param currentData       The data to filter
+     * @param filteredData      The filtered data
+     * @param filterSelection   What is to be filtered
      */
     public static void domesticFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, boolean filterSelection) {
         for(Report data: currentData) {
@@ -178,27 +157,27 @@ public class Filter {
     }
 
     /**
-     * Determines which attribute is to be searched and goes to relevant method
-     * @param currentData The data to filter
-     * @param attribute The attribute to filter by
-     * @param filterSelection What is to be filtered
-     * @return An arraylist with the filtered results
+     * Determines which attribute is to be searched and goes to relevant method.
+     *
+     * @param currentData       The data to filter
+     * @param attribute         The attribute to filter by
+     * @param filterSelection   What is to be filtered
+     * @return filteredData     An arraylist with the filtered results.
      */
     public static ArrayList<Report>  intFilter(ArrayList<Report> currentData, String attribute, int filterSelection) {
         ArrayList<Report> filteredData = new ArrayList<>();
-        switch(attribute) {
-            case "WARD":
-                wardFilter(currentData, filteredData, filterSelection);
-                break;
+        if ("WARD".equals(attribute)) {
+            wardFilter(currentData, filteredData, filterSelection);
         }
         return filteredData;
     }
 
     /**
-     * Filters the ward attribute and returns an ArrayList of reports that match the selection
-     * @param currentData The data to filter
-     * @param filteredData The filtered data
-     * @param filterSelection What is to be filtered
+     * Filters the ward attribute and returns an ArrayList of reports that match the selection.
+     *
+     * @param currentData       The data to filter
+     * @param filteredData      The filtered data
+     * @param filterSelection   What is to be filtered
      */
     private static void wardFilter(ArrayList<Report> currentData, ArrayList<Report> filteredData, int filterSelection) {
         for (Report data: currentData) {

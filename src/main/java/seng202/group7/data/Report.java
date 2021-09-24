@@ -8,38 +8,41 @@ import javax.naming.directory.InvalidAttributeValueException;
 
 /**
  * Used to create and store report objects which is the super class of Crime.
+ *
  * @author Jack McCorkindale
+ * @author John Elliott
+ * @author Shaylin Simadari
  */
 public abstract class Report {
-    private LocalDateTime date = null;
-    private SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
-    private SimpleStringProperty secondaryDescription = new SimpleStringProperty(null);
-    private SimpleStringProperty locationDescription = new SimpleStringProperty(null);
-    private SimpleObjectProperty<Boolean> domestic = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Integer> xCoord = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Integer> yCoord = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Double> latitude = new SimpleObjectProperty<>(null);
-    private SimpleObjectProperty<Double> longitude = new SimpleObjectProperty<>(null);
+    private LocalDateTime date;
+    private final SimpleStringProperty primaryDescription = new SimpleStringProperty(null);
+    private final SimpleStringProperty secondaryDescription = new SimpleStringProperty(null);
+    private final SimpleStringProperty locationDescription = new SimpleStringProperty(null);
+    private final SimpleObjectProperty<Boolean> domestic = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Integer> xCoord = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Integer> yCoord = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Double> latitude = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Double> longitude = new SimpleObjectProperty<>(null);
 
 
 
     /**
-     * Sets the data for all attributes in the report
-     * @param date
-     * @param primaryDescription
-     * @param secondaryDescription
-     * @param locationDescription
-     * @param domestic
-     * @param xCoord
-     * @param yCoord
-     * @param latitude
-     * @param longitude
+     * Initializes a Report object.
+     * @param date                  A required field which contains the year, month, day and time of the crime
+     * @param primaryDescription    A required field which contains the primary description of the crime
+     * @param secondaryDescription  A required field which contains the more descriptive secondary description of the crime
+     * @param locationDescription   An optional field which contains the description of the location where the crime occurred
+     * @param domestic              An optional field which contains if the crime was domestic
+     * @param xCoord                An optional field which is has the x-coordinate of where the crime occurred
+     * @param yCoord                An optional field which is has the y-coordinate of where the crime occurred
+     * @param latitude              An optional field which is has the latitude of where the crime occurred
+     * @param longitude             An optional field which is has the longitude of where the crime occurred
      */
     public Report(LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
             Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         this.date = date;
-        this.primaryDescription = new SimpleStringProperty(primaryDescription);
-        this.secondaryDescription = new SimpleStringProperty(secondaryDescription);
+        this.primaryDescription.setValue(primaryDescription);
+        this.secondaryDescription.setValue(secondaryDescription);
         if (locationDescription != null && !locationDescription.isEmpty()) {
             this.locationDescription.setValue(locationDescription);
         }
@@ -50,35 +53,10 @@ public abstract class Report {
         this.longitude.setValue(longitude);
     }
 
-    /**
-     * Updates the values found in the report object.
-     * @param date
-     * @param primaryDescription
-     * @param secondaryDescription
-     * @param locationDescription
-     * @param domestic
-     * @param xCoord
-     * @param yCoord
-     * @param latitude
-     * @param longitude
-     * @throws InvalidAttributeValueException
-     */
-    public void update(LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
-            Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) throws InvalidAttributeValueException {
-        setDate(date);
-        setPrimaryDescription(primaryDescription);
-        setSecondaryDescription(secondaryDescription);
-        setLocationDescription(locationDescription);
-        setDomestic(domestic);
-        setXCoord(xCoord);
-        setYCoord(yCoord);
-        setLatitude(latitude);
-        setLongitude(longitude);
-    }
-
     
     /**
-     * 
+     * Gets the current date value.
+     *
      * @return The date the report was submitted
      */
     public LocalDateTime getDate() {
@@ -86,9 +64,10 @@ public abstract class Report {
     }
 
     /**
-     * Sets the date the report was submitted
-     * @param date A required LocalDateTime attribute which must be unique
-     * @throws InvalidAttributeValueException If the attribute is null
+     * Sets the date the report was submitted.
+     *
+     * @param date      A required LocalDateTime attribute which must be unique
+     * @throws InvalidAttributeValueException   If the attribute is null
      */
     public void setDate(LocalDateTime date) throws InvalidAttributeValueException {
         if (date == null) {
@@ -99,7 +78,8 @@ public abstract class Report {
     }
 
     /**
-     * 
+     * Gets the primary description value.
+     *
      * @return The primary description of the report
      */
     public String getPrimaryDescription() {
@@ -108,7 +88,8 @@ public abstract class Report {
 
 
     /**
-     * Sets the primary description of the report
+     * Sets the primary description of the report.
+     *
      * @param primaryDescription A required String attribute which must be unique
      * @throws InvalidAttributeValueException If the attribute is null
      */
@@ -121,7 +102,8 @@ public abstract class Report {
     }
 
     /**
-     * 
+     * Gets the secondary description value.
+     *
      * @return The secondary description of the report
      */
     public String getSecondaryDescription() {
@@ -130,9 +112,10 @@ public abstract class Report {
     
 
     /**
-     * Sets the secondary description of the report
-     * @param secondaryDescription A required String attribute which must be unique
-     * @throws InvalidAttributeValueException If the attribute is null
+     * Sets the secondary description of the report.
+     *
+     * @param secondaryDescription      A required String attribute which must be unique
+     * @throws InvalidAttributeValueException   If the attribute is null
      */
     public void setSecondaryDescription(String secondaryDescription) throws InvalidAttributeValueException {
         if (Objects.equals(secondaryDescription, "") || (secondaryDescription == null)) {
@@ -143,7 +126,8 @@ public abstract class Report {
     }
 
     /**
-     * 
+     * Gets the current location description.
+     *
      * @return The description of the location for the report
      */
     public String getLocationDescription() {
@@ -151,8 +135,8 @@ public abstract class Report {
     }
 
     /**
-     * Set the locations description for the report
-     * @param locationDescription
+     * Set the location description for the report
+     * @param locationDescription       The location description value.
      */
     public void setLocationDescription(String locationDescription) {
         if (Objects.equals(locationDescription, "")) {
@@ -163,7 +147,8 @@ public abstract class Report {
     }
 
     /**
-     * 
+     * Gets the current value for the domestic condition.
+     *
      * @return If the report was domestic
      */
     public Boolean getDomestic() {
@@ -172,7 +157,7 @@ public abstract class Report {
 
     /**
      * Sets if the report was domestic
-     * @param domestic
+     * @param domestic      The new domestic value.
      */
     public void setDomestic(Boolean domestic) {
         if (!Objects.equals(getDomestic(), domestic)) {
@@ -181,7 +166,8 @@ public abstract class Report {
     }
 
     /**
-     * 
+     * Gets the x cord value.
+     *
      * @return The x-coordinate for the location the report took place
      */
     public Integer getXCoord() {
@@ -189,8 +175,9 @@ public abstract class Report {
     }
 
     /**
-     * Set the x-coordinate of where the report took place
-     * @param xCoord
+     * Set the x-coordinate of where the report took place.
+     *
+     * @param xCoord    New x cord value.
      */
     public void setXCoord(Integer xCoord) {
         if (!Objects.equals(getXCoord(), xCoord)) {
@@ -199,7 +186,8 @@ public abstract class Report {
     }
 
     /**
-     * 
+     * Gets the current y cord value.
+     *
      * @return The y-coordinate for the location the report took place
      */
     public Integer getYCoord() {
@@ -208,8 +196,9 @@ public abstract class Report {
 
 
     /**
-     * Set the y-coordinate of where the report took place
-     * @param yCoord
+     * Set the y-coordinate of where the report took place.
+     *
+     * @param yCoord    New y cord value.
      */
     public void setYCoord(Integer yCoord) {
         if (!Objects.equals(getYCoord(), yCoord)) {
@@ -218,7 +207,8 @@ public abstract class Report {
     }
 
     /**
-     *  
+     *  Gets the current latitude value.
+     *
      * @return The geographical latitude of where the report took place
      */
     public Double getLatitude() {
@@ -227,8 +217,9 @@ public abstract class Report {
 
 
     /**
-     * Set the geographical latitude of where the report took place
-     * @param latitude
+     * Set the geographical latitude of where the report took place.
+     *
+     * @param latitude      New latitude value.
      */
     public void setLatitude(Double latitude) {
         if (!Objects.equals(getLatitude(), latitude)) {
@@ -237,7 +228,8 @@ public abstract class Report {
     }
 
     /**
-     *  
+     * Gets the current longitude value.
+     *
      * @return The geographical longitude of where the report took place
      */
     public Double getLongitude() {
@@ -246,8 +238,9 @@ public abstract class Report {
 
 
     /**
-     * Set the geographical longitude of where the report took place
-     * @param Longitude
+     * Set the geographical longitude of where the report took place.
+     *
+     * @param longitude     New longitude value.
      */
     public void setLongitude(Double longitude) {
         if (!Objects.equals(getLongitude(), longitude))

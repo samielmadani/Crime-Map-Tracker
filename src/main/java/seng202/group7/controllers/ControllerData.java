@@ -25,8 +25,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
  * initialization it can get the relevant data it needs. It accomplishes this by being a singleton class so only one
  * instance of it can exist.
  *
- * @author Jack McCorkindale
  * @author John Elliott
+ * @author Jack McCorkindale
  */
 public final class ControllerData {
     /**
@@ -34,6 +34,9 @@ public final class ControllerData {
      */
     private final static ControllerData INSTANCE = new ControllerData();
 
+    /**
+     * This holds the current row selected when going to the edit menu screen.
+     */
     private Crime currentRow;
 
     /**
@@ -182,7 +185,6 @@ public final class ControllerData {
 
     /**
      * Checks if the input has a value and adds the error class if it is invalid.
-     * @param inputBox The input to be validated
      * @return If the field has an entry
      */
     private boolean validateRequired(String input) {
@@ -193,10 +195,10 @@ public final class ControllerData {
 
     /**
      * Validates the value in each box. The validation is currently limited to Integer, Double, Date, and Time. <p>
-     * For a input box to be validated against a condition it must be added to the ArrayList during initialization.
-     * @param input The input to be validated
-     * @param observableSet
-     * @return If the input is valid
+     * For an input box to be validated against a condition it must be added to the ArrayList during initialization.
+     * @param input             The input to be validated
+     * @param classes           The pseudo classes.
+     * @return                  If the input is valid
      */
     private boolean validateText(String input, ObservableSet<PseudoClass> classes) {
         boolean valid = true;
