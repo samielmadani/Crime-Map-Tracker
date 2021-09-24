@@ -2,7 +2,10 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -57,11 +60,11 @@ public class FilterController implements Initializable {
      * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
      * alert the validation class what validation is required
      */
-    private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
     private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
     private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
     private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
-    private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
+
+    private ArrayList<Node> allValues;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -117,14 +120,19 @@ public class FilterController implements Initializable {
 
     private void prepareValidation() {
         TextField dateText = datePicker.getEditor();
-
         dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+                datePicker.setValue(date);
                 activeValidate(event);
             }
         });
 
+        allValues = new ArrayList<>(Arrays.asList(datePicker, dateText, primaryBox, locationBox, wardField, beatField,
+            arrestBox, domesticBox));
+        
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
@@ -148,62 +156,16 @@ public class FilterController implements Initializable {
     }
 
     /**
-     * Checks user input given is digits only.
-     *
-     * @param currentField      The text field being filled in by user.
-     * @return inputInt         A digit only user input
-     */
-    private Integer numberOnly(TextField currentField) {
-        String input = currentField.getText();
-        if (!input.matches("\\d*")) {
-            currentField.setText(input.replaceAll("[^\\d]", ""));
-        }
-
-        if (currentField.getText().length() != 0) {
-            return Integer.parseInt(currentField.getText());
-        }
-        return -1;
-    }
-
-
-    /**
-     * Checks ward input is given a value between 0 and 50.
-     */
-    public void wardCheck() {
-        int currentCaret = wardField.getCaretPosition();
-        Integer input = numberOnly(wardField);
-        if (input != -1) {
-            if (input < 0) {
-                wardField.setText("0");
-            } else if (input > 50) {
-                wardField.setText("50");
-            }
-        }
-        wardField.positionCaret(currentCaret - 1);
-    }
-
-    /**
-     * Checks beat is given a value between 0 and 2000.
-     */
-    public void beatCheck() {
-        int currentCaret = beatField.getCaretPosition();
-        Integer input = numberOnly(beatField);
-        if (input != -1) {
-            if (input < 0) {
-                beatField.setText("0");
-            } else if (input > 2000) {
-                beatField.setText("2000");
-            }
-        }
-        beatField.positionCaret(currentCaret - 1);
-    }
-
-    /**
      * Makes an array list with all the user input conditions given to filter with.
      *
      * @param event   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent event) throws IOException {
+        for (Node node : allValues) {
+            if (!ControllerData.getInstance().validate(node)) {
+                return;
+            }
+        }
         String query = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
                 getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
                 getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));

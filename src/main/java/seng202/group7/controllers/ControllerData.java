@@ -240,10 +240,11 @@ public final class ControllerData {
             input = ((TextField) inputBox).getText();
             try {
                 DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-                LocalDate date = LocalDate.parse(input, dateTimeFormat);
-                ((DatePicker) inputBox.getParent()).setValue(date);
+                LocalDate.parse(input, dateTimeFormat);
             } catch (DateTimeParseException e) {
-                valid = false;
+                if (!input.equals("")) {
+                    valid = false;
+                }
             }
         }
         if (inputBox.getPseudoClassStates().contains(required)) {
