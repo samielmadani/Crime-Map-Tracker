@@ -30,25 +30,25 @@ import seng202.group7.data.QueryBuilder;
 public class FilterController implements Initializable {
 
     @FXML
-    public DatePicker dateRange;
+    public DatePicker datePicker;
 
     @FXML
-    private ComboBox<String> crimeType;
+    private ComboBox<String> primaryBox;
 
     @FXML
-    private ComboBox<String> locationType;
+    private ComboBox<String> locationBox;
 
     @FXML
-    private TextField wardInput;
+    private TextField wardField;
 
     @FXML
-    private TextField beatInput;
+    private TextField beatField;
 
     @FXML
-    private CheckBox arrestBool;
+    private ComboBox<String> arrestBox;
 
     @FXML
-    private CheckBox domesticBool;
+    private ComboBox<String> domesticBox;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -59,16 +59,16 @@ public class FilterController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        crimeType.setItems(FXCollections.observableArrayList(
-                "THEFT", "ASSAULT", "DECEPTIVE PRACTICE", "BATTERY", "HOMICIDE", "OTHER OFFENSE",
+        primaryBox.setItems(FXCollections.observableArrayList(
+                null, "THEFT", "ASSAULT", "DECEPTIVE PRACTICE", "BATTERY", "HOMICIDE", "OTHER OFFENSE",
                 "CRIMINAL DAMAGE", "WEAPONS VIOLATION", "CRIMINAL TRESPASS", "ARSON", "MOTOR VEHICLE THEFT",
                 "ROBBERY", "STALKING", "BURGLARY", "OFFENSE INVOLVING CHILDREN", "SEX OFFENSE", "CRIMINAL SEXUAL ASSAULT",
                 "NARCOTICS", "PUBLIC PEACE VIOLATION", "PROSTITUTION", "INTERFERENCE WITH PUBLIC OFFICER",
                 "INTIMIDATION", "CONCEALED CARRY LICENSE VIOLATION", "KIDNAPPING", "LIQUOR LAW VIOLATION",
                 "OTHER NARCOTIC VIOLATION").sorted());
 
-        locationType.setItems(FXCollections.observableArrayList(
-                "APARTMENT", "STREET", "SIDEWALK", "PARK PROPERTY", "RESIDENCE", "DRUG STORE",
+        locationBox.setItems(FXCollections.observableArrayList(
+                null, "APARTMENT", "STREET", "SIDEWALK", "PARK PROPERTY", "RESIDENCE", "DRUG STORE",
                 "DEPARTMENT STORE", "PARKING LOT / GARAGE (NON RESIDENTIAL)", "ALLEY", "RESIDENCE - PORCH / HALLWAY",
                 "SMALL RETAIL STORE", "AUTO", "RESTAURANT", "GROCERY FOOD STORE", "CTA PLATFORM", "GAS STATION",
                 "POLICE FACILITY / VEHICLE PARKING LOT", "TAXICAB", "RESIDENCE - YARD (FRONT / BACK)",
@@ -93,6 +93,10 @@ public class FilterController implements Initializable {
                 "AIRPORT BUILDING NON-TERMINAL - SECURE AREA", "AIRCRAFT", "WAREHOUSE",
                 "AIRPORT TERMINAL UPPER LEVEL - NON-SECURE AREA", "BOAT / WATERCRAFT", "PORCH", "SCHOOL - PUBLIC GROUNDS",
                 "HOUSE", "DAY CARE CENTER", "AIRPORT VENDING ESTABLISHMENT", "SPORTS ARENA / STADIUM").sorted());
+
+        arrestBox.getItems().addAll(null, "Y", "N");
+
+        domesticBox.getItems().addAll(null, "Y", "N");
     }
 
 
@@ -119,32 +123,32 @@ public class FilterController implements Initializable {
      * Checks ward input is given a value between 0 and 50.
      */
     public void wardCheck() {
-        int currentCaret = wardInput.getCaretPosition();
-        Integer input = numberOnly(wardInput);
+        int currentCaret = wardField.getCaretPosition();
+        Integer input = numberOnly(wardField);
         if (input != -1) {
             if (input < 0) {
-                wardInput.setText("0");
+                wardField.setText("0");
             } else if (input > 50) {
-                wardInput.setText("50");
+                wardField.setText("50");
             }
         }
-        wardInput.positionCaret(currentCaret - 1);
+        wardField.positionCaret(currentCaret - 1);
     }
 
     /**
      * Checks beat is given a value between 0 and 2000.
      */
     public void beatCheck() {
-        int currentCaret = beatInput.getCaretPosition();
-        Integer input = numberOnly(beatInput);
+        int currentCaret = beatField.getCaretPosition();
+        Integer input = numberOnly(beatField);
         if (input != -1) {
             if (input < 0) {
-                beatInput.setText("0");
+                beatField.setText("0");
             } else if (input > 2000) {
-                beatInput.setText("2000");
+                beatField.setText("2000");
             }
         }
-        beatInput.positionCaret(currentCaret - 1);
+        beatField.positionCaret(currentCaret - 1);
     }
 
     /**
@@ -153,9 +157,9 @@ public class FilterController implements Initializable {
      * @param event   The event action that was triggered.
      */
     public void viewFilteredResults(ActionEvent event) throws IOException {
-        String query = QueryBuilder.where(dateRange.getValue(), crimeType.getValue(), locationType.getValue(),
-                getIntegerFromString(wardInput.getText()), getIntegerFromString(beatInput.getText()),
-                arrestBool.isSelected(), domesticBool.isSelected());
+        String query = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
+                getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
+                getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
 
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
         ControllerData.getInstance().setWhereQuery(query);
@@ -171,6 +175,17 @@ public class FilterController implements Initializable {
             return null;
         }
         return Integer.parseInt(str);
+    }
+
+    private Boolean getBooleanFromString(String str) {
+        if(str == null){
+            return null;
+        }
+        return str.equals("Y") ? true : false;
+    }
+
+    public void clearDate(){
+        datePicker.setValue(null);
     }
 
     /**
