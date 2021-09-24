@@ -93,12 +93,8 @@ public class FilterController implements Initializable {
                 "AIRPORT BUILDING NON-TERMINAL - SECURE AREA", "AIRCRAFT", "WAREHOUSE",
                 "AIRPORT TERMINAL UPPER LEVEL - NON-SECURE AREA", "BOAT / WATERCRAFT", "PORCH", "SCHOOL - PUBLIC GROUNDS",
                 "HOUSE", "DAY CARE CENTER", "AIRPORT VENDING ESTABLISHMENT", "SPORTS ARENA / STADIUM").sorted());
-        prepareValidation();
     }
 
-    private void prepareValidation() {
-        
-    }
 
     /**
      * Checks user input given is digits only.
