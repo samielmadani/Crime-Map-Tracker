@@ -203,10 +203,18 @@ public final class ControllerData {
     private boolean validateText(String input, ObservableSet<PseudoClass> classes) {
         boolean valid = true;
         if (classes.contains(integerFormat)) {
-            valid &=  input.matches("\\d*");
+            try {
+                Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                valid = false;
+            }
         }
         if (classes.contains(doubleFormat)) {
-            valid &= input.matches("(-?)\\d*(\\.\\d+)?");
+            try {
+                Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                valid = false;
+            }
         }
         if (classes.contains(timeFormat)) {
             try {
@@ -251,7 +259,7 @@ public final class ControllerData {
         if (inputBox.getPseudoClassStates().contains(required)) {
             valid &= validateRequired(input);
         }
-        if (valid) {
+        if (valid && !input.equals("")) {
             valid &= validateText(input, inputBox.getPseudoClassStates());
         }
         if (valid && inputBox.getPseudoClassStates().contains(uniqueId)) {
