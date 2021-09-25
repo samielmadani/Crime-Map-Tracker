@@ -58,6 +58,9 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * Creates a new database if one doesn't exist
+     */
     private void createDatabase() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
