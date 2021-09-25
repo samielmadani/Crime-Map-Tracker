@@ -123,7 +123,7 @@ public final class ControllerData {
      */
     public boolean getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("src/test/files"));
+        fileChooser.setInitialDirectory(new File("./"));
         fileChooser.setTitle("Select file");
         fileChooser.getExtensionFilters().add(new ExtensionFilter(".csv, .db files", "*.csv", "*.db"));
 

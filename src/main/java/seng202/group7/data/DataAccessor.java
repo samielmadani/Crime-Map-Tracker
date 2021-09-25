@@ -46,11 +46,49 @@ public final class DataAccessor {
      * The constructor which is made private so that it can not be initialized from other classes.
      */
     private DataAccessor() {
+        File database = new File("MainDatabase.db");
+        if (!database.exists()) {
+            createDatabase();
+            return;
+        }
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/testing/MainDatabase.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.connect: " + e);
         }
+    }
+
+    private void createDatabase() {
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
+            runStatement("CREATE TABLE crimes (\n" + 
+                    "case_number VARCHAR(8) PRIMARY KEY NOT NULL, " + 
+                    "block VARCHAR(50), " +
+                    "iucr VARCHAR(4), " +
+                    "fbicd VARCHAR(3), " + 
+                    "arrest BOOLEAN, " +
+                    "beat INT, " +
+                    "ward INT)");
+            runStatement("CREATE TABLE reports (\n" + 
+                    "report_id VARCHAR(8) PRIMARY KEY NOT NULL, " + 
+                    "date TIMESTAMP NOT NULL, " +
+                    "primary_description VARCHAR(50) NOT NULL, " +
+                    "secondary_description VARCHAR(50) NOT NULL, " + 
+                    "domestic BOOLEAN, " +
+                    "x_coord INT, " +
+                    "y_coord INT, " +
+                    "latitude FLOAT, " +
+                    "longitude FLOAT, " +
+                    "location_description VARCHAR(50))");
+            runStatement("CREATE VIEW crimedb AS " +
+                    "SELECT report_id AS 'id', c.block, c.iucr, c.fbicd, c.arrest, " +
+                    "c.beat, c.ward, date, primary_description, secondary_description, " +
+                    "location_description, domestic, x_coord, y_coord, latitude, longitude " + 
+                    "FROM reports JOIN crimes c ON report_id=c.case_number");
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.create: " + e);
+        }
+
     }
 
     /**
