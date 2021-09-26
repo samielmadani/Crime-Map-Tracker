@@ -143,6 +143,9 @@ public class FilterController implements Initializable {
             arrestBox, domesticBox));
         
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
+            if(datePicker.getValue() == null){
+                return;
+            }
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
             ControllerData.getInstance().validate(dateText);
