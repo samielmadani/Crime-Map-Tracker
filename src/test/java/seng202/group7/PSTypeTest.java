@@ -1,11 +1,15 @@
 package seng202.group7;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seng202.group7.data.Crime;
+import seng202.group7.data.DataAccessor;
 import seng202.group7.data.PSTypes;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,15 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class PSTypeTest {
 
-    private static Connection connection;
+    public static Connection connection;
+
 
     /**
-     * Sets up a connection to the test database.
+     * Creates an empty database before running the tests.
      */
     @BeforeAll
     public static void connectDatabase() {
+        DataAccessor.getInstance().changeConnection("src/test/files/TestDatabase.db");
+        connection = DataAccessor.getInstance().getConnection();
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:src/test/files/TestDatabase.db");
+            Statement stmt = DataAccessor.getInstance().getConnection().createStatement();
+            stmt.execute("DELETE FROM crimes");
+            stmt.execute("DELETE FROM reports");
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -310,6 +310,7 @@ public final class DataAccessor {
         if (validateSchema(selectedFile)) {
             runStatement("ATTACH '" + selectedFile + "' AS " + "newCrimeDB;");
             runStatement("INSERT OR REPLACE INTO crimes SELECT * FROM newCrimeDB.crimes");
+            runStatement("INSERT OR REPLACE INTO reports SELECT * FROM newCrimeDB.reports");
             runStatement("DETACH DATABASE " + "'newCrimeDB';");
         } else {
             System.out.println("Invalid Schema.");
