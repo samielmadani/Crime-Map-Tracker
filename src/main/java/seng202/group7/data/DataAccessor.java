@@ -58,6 +58,14 @@ public final class DataAccessor {
         }
     }
 
+    public void changeConnection(String path){
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:"+path);
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.connect: " + e);
+        }
+    }
+
     /**
      * Creates a new database if one doesn't exist
      */
@@ -93,6 +101,7 @@ public final class DataAccessor {
         }
 
     }
+
 
     /**
      * Getter for the connected to the database.

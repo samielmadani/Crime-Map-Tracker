@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 /**
  * Adds a set of static methods that allow a set of reports to be filtered based on certain conditions.
  *
- * [CURRENT LEGACY CODE]
- *
  * @author Sam McMillan
  * @author Sami Elmadani
  */

@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * builds queries based on parameters and returns them as Strings
  * @author Shaylin Simadari
  */
-public class QueryBuilder {
+public final class QueryBuilder {
 
     /**
      * builds an SQL query to retrieve data that meets the conditions of the parameters.
@@ -21,28 +21,33 @@ public class QueryBuilder {
 
         String query = "WHERE ";
 
-        if(date != null){
+        if (date != null){
             query += addAndCondition(date);
         }
-        if(primaryDescription != null){
+        if (primaryDescription != null){
             query += addAndCondition("primary_description", primaryDescription);
         }
-        if(locationDescription != null){
+        if (locationDescription != null){
             query += addAndCondition("location_description", locationDescription);
         }
-        if(ward != null){
+        if (ward != null){
             query += addAndCondition("ward", ward);
         }
-        if(beat != null){
+        if (beat != null){
             query += addAndCondition("beat", beat);
         }
-        if(arrest != null){
+        if (arrest != null){
             query += addAndCondition("arrest", arrest);
         }
-        if(domestic != null){
+        if (domestic != null){
             query += addAndCondition("domestic", domestic);
         }
-        return query.substring(0, query.length()-5);
+
+        if (query.equals("WHERE ")) {
+            return "";
+        } else {
+            return query.substring(0, query.length()-5);
+        }
     }
 
     /**

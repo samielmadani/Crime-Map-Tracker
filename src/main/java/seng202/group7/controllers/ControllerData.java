@@ -185,6 +185,7 @@ public final class ControllerData {
 
     /**
      * Checks if the input has a value and adds the error class if it is invalid.
+     *
      * @return If the field has an entry
      */
     private boolean validateRequired(String input) {
@@ -196,6 +197,7 @@ public final class ControllerData {
     /**
      * Validates the value in each box. The validation is currently limited to Integer, Double, Date, and Time. <p>
      * For an input box to be validated against a condition it must be added to the ArrayList during initialization.
+     *
      * @param input             The input to be validated
      * @param classes           The pseudo classes.
      * @return                  If the input is valid
@@ -231,7 +233,8 @@ public final class ControllerData {
     }
 
     /**
-     * Passes the value through the required validation methods
+     * Passes the value through the required validation methods.
+     *
      * @param inputBox The input to be validated
      * @return If the input is valid
      */
@@ -256,6 +259,7 @@ public final class ControllerData {
                 }
             }
         }
+        // Checks to see if the text field is empty.
         if (inputBox.getPseudoClassStates().contains(required)) {
             valid &= validateRequired(input);
         }
