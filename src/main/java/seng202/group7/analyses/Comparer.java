@@ -23,7 +23,7 @@ public final class Comparer {
      */
     public static ArrayList<Long> timeDifference(Report reportOne, Report reportTwo) {
         ArrayList<Long> timeDifferences = new ArrayList<>();
-        Duration difference = Duration.between(reportOne.getDate(), reportTwo.getDate()); //Returns total time in seconds
+        Duration difference = Duration.between(reportTwo.getDate(), reportOne.getDate()); //Returns total time in seconds
         timeDifferences.add(Math.abs(TimeUnit.SECONDS.toMinutes(difference.getSeconds()) % 60));
         timeDifferences.add(Math.abs(TimeUnit.SECONDS.toHours(difference.getSeconds()) % 24));
         timeDifferences.add(Math.abs(TimeUnit.SECONDS.toDays(difference.getSeconds()) % 365));

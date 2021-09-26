@@ -19,7 +19,6 @@ import javafx.util.Duration;
  * The controller, used by / linked to, the Menu FXML file.
  * This controller links the main screen menu system together with its components.
  *
- * @author John Elliott
  * @author Jack McCorkindale
  * @author John Elliott
  * @author Sami Elmadani
