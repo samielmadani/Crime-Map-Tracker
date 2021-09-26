@@ -39,32 +39,6 @@ public class FilterTest {
     }
 
     /**
-     * Checks that there are no matches for the coordinates (0,0) (1,1)
-     *//*
-    @Test
-    public void geoFilter_noMatches() {
-        Integer xcord1 = 0;
-        Integer xcord2 = 1;
-        Integer ycord1 = 0;
-        Integer ycord2 = 1;
-        ArrayList<Report> filteredData = Filter.geoFilter(unfilteredData, xcord1, xcord2, ycord1, ycord2);
-        assertEquals(0, filteredData.size());
-    }
-
-    /**
-     * Checks that there are 8 matches in the region (0,0) (10000000, 10000000)
-     *//*
-    @Test
-    public void geoFilter_8Matches() {
-        Integer xcord1 = 0;
-        Integer xcord2 = 10000000;
-        Integer ycord1 = 0;
-        Integer ycord2 = 10000000;
-        ArrayList<Report> filteredData = Filter.geoFilter(unfilteredData, xcord1, xcord2, ycord1, ycord2);
-        assertEquals(8, filteredData.size());
-    }
-
-    /**
      * Checks that there is 1 match in the region (1183633, 1851786) (1183633, 1851786)
      *//*
     @Test

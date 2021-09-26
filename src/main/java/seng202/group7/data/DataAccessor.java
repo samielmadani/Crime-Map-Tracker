@@ -99,7 +99,6 @@ public final class DataAccessor {
      * Using the current page of the paginator this method returns the relevant section
      * of reports to be used from the database in the tableview.
      *
-     * @param page          The current page.
      * @return reports      The list of reports to display.
      */
     public ArrayList<Report> getPageSet() {
