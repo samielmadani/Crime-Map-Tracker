@@ -90,9 +90,14 @@ public class Rank {
         HashMap<String, Integer> map = new HashMap<>();
 
         for(Report report : data){
-            Crime c = (Crime) report;
-            String ward = String.valueOf(c.getWard());
-            map.put(ward, map.getOrDefault(ward, 0) + 1);
+            try {
+                Crime c = (Crime) report;
+                String ward = String.valueOf(c.getWard());
+                map.put(ward, map.getOrDefault(ward, 0) + 1);
+            } catch (NullPointerException e) {
+                Crime c = (Crime) report;
+                System.out.println("Ward value for crime " + String.valueOf(c.getCaseNumber()) + " is null.");
+            }
         }
         return hashToList(map);
     }
@@ -108,11 +113,15 @@ public class Rank {
         HashMap<String, Integer> map = new HashMap<>();
 
         for(Report report : data){
-            Crime c = (Crime)report;
-            String address = c.getBlock().substring(6);
-            map.put(address, map.getOrDefault(address, 0) + 1);
+            try {
+                Crime c = (Crime) report;
+                String address = c.getBlock().substring(6);
+                map.put(address, map.getOrDefault(address, 0) + 1);
+            } catch (NullPointerException e) {
+                Crime c = (Crime) report;
+                System.out.println("Street value for crime " + String.valueOf((c.getCaseNumber()) + " is null"));
+            }
         }
-
         return hashToList(map);
     }
 

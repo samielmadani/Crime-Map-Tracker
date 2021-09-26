@@ -95,6 +95,7 @@ public class GraphViewController implements Initializable {
             }
             dataSet.getData().add(new XYChart.Data<> (tuple.x, tuple.y));
         }
+        this.crimeChart.setLegendVisible(false);
         this.crimeChart.getData().addAll(dataSet);
         this.crimeChart.setTitle(title);
         this.xAxis.setLabel(xLabel);
