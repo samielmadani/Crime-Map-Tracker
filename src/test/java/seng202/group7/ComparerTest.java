@@ -1,83 +1,84 @@
 package seng202.group7;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.io.File;
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import seng202.group7.analyses.*;
-import seng202.group7.data.DataAccessor;
+import seng202.group7.analyses.Comparer;
+import seng202.group7.data.Crime;
 import seng202.group7.data.Report;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * Testing that the comparer class correctly is able to compare two reports and return valid result.
+ *
+ * @author Sam McMillan
+ * @author John Elliott
+ */
 public class ComparerTest {
-    //TODO Create tests to ensure the correct values are returned, speed test methods with large data files
 
-    private static ArrayList<Report> data;
-    private static final File smallFile = new File("src/test/files/smallCrimeData.csv");
-    private static final File mediumFile = new File("src/test/files/crimeData.csv");
-    private static final File commaFile = new File("src/test/files/commaInFieldTestData.csv");
-    private static final File blankFieldFile = new File("src/test/files/blankFieldTestData.csv");
-    private static final File blankRowFile = new File("src/test/files/blankRowTestData.csv");
-    private static final File testFile = new File("src/test/files/testData.csv");
-
-    /*
-
-    @BeforeAll
-    public static void setup() {
-        DataAccessor dataAccessor = DataAccessor.getInstance();
-        // Ensures the reports are the same.
-        dataAccessor.readToDB(smallFile);
-        data = dataAccessor.getPageSet(0);
-    }
-
-    public static void setData(ArrayList<Report> data) {
-        ComparerTest.data = data;
-    }
+    public static Report reportOne;
+    public static Report reportTwo;
+    public static Report reportThree;
+    public static Duration dateDifference;
 
     /**
-     * Tests timeDifference with a specific case to check if returns the correct value
+     * Sets up and creates all the reports that will be used for testing.
      */
-    /*
+    @BeforeAll
+    public static void makeReports() {
+        LocalDate testDate = LocalDate.now();
+        LocalDateTime dateStart = testDate.atStartOfDay();
+        LocalDateTime dateEnd = testDate.atTime(LocalTime.MIDNIGHT);
+        dateDifference = Duration.between(dateStart, dateEnd);
+
+        reportOne = new Crime("TestNumber1", dateStart, null, null, null, null, null, true, false, null, null, null, null, null, -43.540919, 172.585284);
+        reportTwo = new Crime("TestNumber2", dateEnd, null, null, null, null, null, true, false, null, null, null, null, null, -43.508434, 172.630126);
+        reportThree = new Crime("TestNumber3", dateEnd, null, null, null, null, null, true, false, null, null, null, null, null, -43.508434, 172.630126);
+    }
+
+
+    /**
+     * Tests timeDifference with a specific case to check if returns the correct value for minutes.
+     */
     @Test
     public void timeDifferenceTest_specificCase() {
-        ArrayList<Long> list = Comparer.timeDifference(data.get(0), data.get(1));
-        assertEquals(-40, list.get(0)); //Minutes
-        assertEquals(-1, list.get(1)); //Hours
-        assertEquals(0, list.get(2)); // Days
-        assertEquals(0, list.get(3)); //Years
+        ArrayList<Long> differences = Comparer.timeDifference(reportOne, reportTwo);
+        Long diffMins = Math.abs(TimeUnit.SECONDS.toMinutes(dateDifference.getSeconds()) % 60);
+        assertEquals(differences.get(0), diffMins);
     }
 
     /**
-     * Test timeDifference function with the same time value to ensure it returns 0
-     *//*
+     * Test timeDifference function with the same time value to ensure it returns 0 for hours.
+     */
     @Test
     public void timeDifferenceTest_boundaryCase() {
-        ArrayList<Long> list = Comparer.timeDifference(data.get(0), data.get(0));
-        assertEquals(0, list.get(0));
+        ArrayList<Long> list = Comparer.timeDifference(reportTwo, reportThree);
         assertEquals(0, list.get(1));
-        assertEquals(0, list.get(2));
-        assertEquals(0, list.get(3));
     }
 
     /**
      * Tests locationDifference with a specific case to check if it returns the correct value
-     *//*
+     */
     @Test
     public void locationDifference_specificCase() {
-        double difference  = Comparer.locationDifference(data.get(1), data.get(2));
-        assertTrue(difference >= 18.4 || difference <= 18.6);
+        double difference = Comparer.locationDifference(reportOne, reportTwo);
+        assertEquals(5.110405795660774, difference);
     }
 
     /**
      * Test the locationDifference with the same value to ensure it returns 0
-     *//*
+     */
     @Test
     public void locationDifference_boundaryCase() {
-        Double difference = Comparer.locationDifference(data.get(1), data.get(1));
+        Double difference = Comparer.locationDifference(reportTwo, reportThree);
         assertEquals(0, difference);
     }
-    */
+
 }
