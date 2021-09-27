@@ -294,7 +294,7 @@ public class EntryController implements Initializable {
 
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
-        cNoText.pseudoClassStateChanged(uniqueId, true);
+        cNoText.pseudoClassStateChanged(uniqueId, false);
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
         dataAccessor.editCrime(data);
 
