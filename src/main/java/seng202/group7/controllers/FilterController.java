@@ -1,6 +1,6 @@
 package seng202.group7.controllers;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import seng202.group7.data.FilterConditions;
 import seng202.group7.data.QueryBuilder;
 
 /**
@@ -57,6 +60,8 @@ public class FilterController implements Initializable {
 
     @FXML
     private ComboBox<String> domesticBox;
+
+    private static FilterConditions filterConditions;
 
     /**
      * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
@@ -117,6 +122,8 @@ public class FilterController implements Initializable {
         domesticBox.getItems().addAll(null, "Y", "N");
 
         prepareValidation();
+
+        setFilterConditions(filterConditions);
     }
 
     /**
@@ -168,19 +175,60 @@ public class FilterController implements Initializable {
     }
 
     /**
-     * Makes an array list with all the user input conditions given to filter with.
-     *
+     * Loads a filter from a file
      * @param event   The event action that was triggered.
      */
-    public void viewFilteredResults(ActionEvent event) throws IOException {
+    public void loadFilter(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("./filters"));
+        fileChooser.setTitle("Select filter");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("filters", "*.ser"));
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+        if(file != null) {
+            deserializeFilter(file);
+            setFilterConditions(filterConditions);
+        }
+    }
+
+    /**
+     * clears the current filter fields and clears filter from table
+     * @param event   The event action that was triggered.
+     */
+    public void clearFilter(ActionEvent event) throws IOException {
+        setFilterConditions(null);
+        applyFilter(event);
+    }
+
+    /**
+     * Saves the current filter to a file
+     * @param event   The event action that was triggered.
+     */
+    public void saveFilter(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("./filters"));
+        fileChooser.setTitle("Save filter");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("filters", "*.ser"));
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            getFilterConditions();
+            serializeFilter(file);
+        }
+    }
+
+    /**
+     * Applies the current filter values to the table
+     * @param event   The event action that was triggered.
+     */
+    public void applyFilter(ActionEvent event) throws IOException {
         for (Node node : allValues) {
             if (!ControllerData.getInstance().validate(node)) {
                 return;
             }
         }
-        String query = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
-                getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
-                getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
+        getFilterConditions();
+        String query = QueryBuilder.where(filterConditions);
 
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
         ControllerData.getInstance().setWhereQuery(query);
@@ -192,55 +240,106 @@ public class FilterController implements Initializable {
     }
 
     /**
-     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
-     *
-     * @param str       The choice selected.
-     * @return value    The integer result.
-     */
-    private Integer getIntegerFromString(String str) {
-        if(str.equals("")){
-            return null;
-        }
-        return Integer.parseInt(str);
-    }
-
-    /**
-     * Determines if a value in the combobox corresponds to a true or false value.
-     *
-     * @param str       The choice selected.
-     * @return value    The boolean result.
-     */
-    private Boolean getBooleanFromString(String str) {
-        if(str == null){
-            return null;
-        }
-        return str.equals("Y");
-    }
-
-    /**
-     * A method clears the date stored in the date picker.
+     * Clears the date stored in the date picker.
      */
     public void clearDate(){
         datePicker.setValue(null);
     }
 
     /**
+     * Returns the user to the general menu
      * Gets the current side panel and replaces it with the general menu panel.
-     *
      * @param event             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu(ActionEvent event) throws IOException {
+        getFilterConditions();
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
+    }
 
-        // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().setWhereQuery("");
-        BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setCenter(tableView);
+
+    /**
+     * Saves all the fields in the filter menu to a static variable
+     */
+    private void getFilterConditions(){
+        filterConditions = new FilterConditions(datePicker.getValue(), null, primaryBox.getValue(), locationBox.getValue(),
+                getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
+                getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
+    }
+
+    /**
+     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
+     */
+    private Integer getIntegerFromString(String str) {
+        return str.equals("") ? null : Integer.parseInt(str);
+    }
+
+    /**
+     * Determines if a value in the combobox corresponds to a true or false value.
+     */
+    private Boolean getBooleanFromString(String str) {
+        return str == null ? null : str.equals("Y");
+    }
+
+    /**
+     * Sets all the fields in the filter menu to those from filterConditions
+     * @param filterConditions The filter conditions to populate the gui with
+     */
+    private void setFilterConditions(FilterConditions filterConditions){
+        if(filterConditions == null){
+            datePicker.setValue(null);
+
+            primaryBox.setValue(null);
+            locationBox.setValue(null);
+            wardField.setText("");
+            beatField.setText("");
+            arrestBox.setValue(null);
+            domesticBox.setValue(null);
+        } else {
+            datePicker.setValue(filterConditions.getDateFrom());
+
+            primaryBox.setValue(filterConditions.getPrimaryDescription());
+            locationBox.setValue(filterConditions.getLocationDescription());
+            wardField.setText(filterConditions.getWard() == null ? "" : filterConditions.getWard().toString());
+            beatField.setText(filterConditions.getBeat() == null ? "" : filterConditions.getBeat().toString());
+            arrestBox.setValue(filterConditions.getArrest() == null ? null : filterConditions.getArrest() ? "Y" : "N");
+            domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? "Y" : "N");
+        }
+    }
+
+    /**
+     * Serializes a FilterConditions object into a file
+     * @param file The file to write the FilterConditions object to
+     */
+    private void serializeFilter(File file){
+        try {
+            FileOutputStream fileOut = new FileOutputStream(file);
+            ObjectOutputStream outputStream = new ObjectOutputStream(fileOut);
+            outputStream.writeObject(filterConditions);
+            outputStream.close();
+            fileOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deserializes a FilterConditions object from a file
+     * @param file The file from which to get the FilterConditions object
+     */
+    private void deserializeFilter(File file){
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream inputStream = new ObjectInputStream(fileIn);
+            filterConditions = (FilterConditions) inputStream.readObject();
+            inputStream.close();
+            fileIn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
