@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -57,14 +56,6 @@ public class FilterController implements Initializable {
 
     @FXML
     private ComboBox<String> domesticBox;
-
-    /**
-     * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
-     * alert the validation class what validation is required
-     */
-    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
-    private PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
-    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
 
     private ArrayList<Node> allValues;
 
@@ -148,14 +139,12 @@ public class FilterController implements Initializable {
             }
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
-            ControllerData.getInstance().validate(dateText);
+            InputValidator.validate(dateText);
         });
 
-        dateText.pseudoClassStateChanged(dateFormat, true);
-        dateText.pseudoClassStateChanged(dateEditor, true);
-    
-        wardField.pseudoClassStateChanged(integerFormat, true);
-        beatField.pseudoClassStateChanged(integerFormat, true);
+        InputValidator.addValidation(dateText, InputType.DATE);
+        InputValidator.addValidation(wardField, InputType.INTEGER);
+        InputValidator.addValidation(beatField, InputType.INTEGER);
     }
 
     /**
@@ -164,7 +153,7 @@ public class FilterController implements Initializable {
      */
     public void activeValidate(KeyEvent event) {
         Node inputBox = (Node) event.getSource();
-        ControllerData.getInstance().validate(inputBox);
+        InputValidator.validate(inputBox);
     }
 
     /**
@@ -174,7 +163,7 @@ public class FilterController implements Initializable {
      */
     public void viewFilteredResults(ActionEvent event) throws IOException {
         for (Node node : allValues) {
-            if (!ControllerData.getInstance().validate(node)) {
+            if (!InputValidator.validate(node)) {
                 return;
             }
         }
