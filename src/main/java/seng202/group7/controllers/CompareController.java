@@ -35,6 +35,9 @@ public class CompareController implements Initializable {
     @FXML
     private VBox frame;
 
+    private static String report1;
+    private static String report2;
+
     /**
      * A style class that can be added to a node to add error formatting.
      */
@@ -58,6 +61,7 @@ public class CompareController implements Initializable {
             }
 
         });
+        setReports();
     }
 
     /**
@@ -80,6 +84,7 @@ public class CompareController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu() throws IOException {
+        getReports();
         BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Changes side menu to the filter menu.
@@ -143,6 +148,24 @@ public class CompareController implements Initializable {
             resultText.setText(String.format("Crime %s and %s occurred at the same time.", reportOneText.getText(), reportTwoText.getText()));
         } else {
             resultText.setText(String.format("Crime %s and %s occurred %sapart.", reportOneText.getText(), reportTwoText.getText(), timeString));
+        }
+    }
+
+    private void getReports(){
+        if(!reportOneText.getText().equals("")) {
+            report1 = reportOneText.getText();
+        }
+        if(!reportTwoText.getText().equals("")) {
+            report2 = reportTwoText.getText();
+        }
+    }
+
+    private void setReports(){
+        if(report1 != null) {
+            reportOneText.setText(report1);
+        }
+        if(report2 != null) {
+            reportTwoText.setText(report2);
         }
     }
 }
