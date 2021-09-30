@@ -16,31 +16,30 @@ public final class QueryBuilder {
      *
      * @return      A String representation of am SQL query
      */
-    public static String where(LocalDate date, String primaryDescription, String locationDescription, Integer ward,
-                               Integer beat, Boolean arrest, Boolean domestic){
+    public static String where(FilterConditions fc){
 
         String query = "WHERE ";
 
-        if (date != null){
-            query += addAndCondition(date);
+        if (fc.getDateFrom() != null){
+            query += addAndCondition(fc.getDateFrom());
         }
-        if (primaryDescription != null){
-            query += addAndCondition("primary_description", primaryDescription);
+        if (fc.getPrimaryDescription() != null){
+            query += addAndCondition("primary_description", fc.getPrimaryDescription());
         }
-        if (locationDescription != null){
-            query += addAndCondition("location_description", locationDescription);
+        if (fc.getLocationDescription() != null){
+            query += addAndCondition("location_description", fc.getLocationDescription());
         }
-        if (ward != null){
-            query += addAndCondition("ward", ward);
+        if (fc.getWard() != null){
+            query += addAndCondition("ward", fc.getWard());
         }
-        if (beat != null){
-            query += addAndCondition("beat", beat);
+        if (fc.getBeat() != null){
+            query += addAndCondition("beat", fc.getBeat());
         }
-        if (arrest != null){
-            query += addAndCondition("arrest", arrest);
+        if (fc.getArrest() != null){
+            query += addAndCondition("arrest", fc.getArrest());
         }
-        if (domestic != null){
-            query += addAndCondition("domestic", domestic);
+        if (fc.getDomestic() != null){
+            query += addAndCondition("domestic", fc.getDomestic());
         }
 
         if (query.equals("WHERE ")) {
