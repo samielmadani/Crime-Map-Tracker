@@ -105,18 +105,7 @@ public class PageController implements Initializable {
         String input = pageField.getText();
         if (isValid(input)) {
             pages.setCurrentPageIndex(Integer.parseInt(input) - 1); // Is valid and changes the page.
-        } else {
-            String currentInput = pageField.getText();
-            // We loop, as a user can paste in a large value, until either we have an empty or valid string.
-            while((!Objects.equals(currentInput, "")) && (!isValid(currentInput))) {
-                currentInput = currentInput.substring(0, (currentInput.length()-1));
-            }
-            if (!Objects.equals(currentInput, "")){
-                pages.setCurrentPageIndex(Integer.parseInt(currentInput) - 1); // If the string is not empty the page is updated.
-            }
-            pageField.setText(currentInput); // Displayed text is updated.
         }
-        pageField.positionCaret(pageField.getText().length()); // Caret position is set to the end.
     }
 
     /**
@@ -126,6 +115,7 @@ public class PageController implements Initializable {
      * @return  The result of if the text input is valid.
      */
     private boolean isValid(String input) {
+        // TODO change to new validation method
         boolean valid;
         int numOfDig = String.valueOf(pages.getPageCount()).length();
         if (numOfDig == 0) {
