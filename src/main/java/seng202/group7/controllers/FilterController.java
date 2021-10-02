@@ -180,7 +180,7 @@ public class FilterController implements Initializable {
      */
     public void loadFilter(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("./filters"));
+        fileChooser.setInitialDirectory(new File("./"));
         fileChooser.setTitle("Select filter");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("filters", "*.ser"));
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -206,7 +206,7 @@ public class FilterController implements Initializable {
      */
     public void saveFilter(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("./filters"));
+        fileChooser.setInitialDirectory(new File("./"));
         fileChooser.setTitle("Save filter");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("filters", "*.ser"));
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
