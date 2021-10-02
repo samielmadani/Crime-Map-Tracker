@@ -10,89 +10,95 @@ import java.time.LocalDate;
 public final class QueryBuilder {
 
     /**
-     * builds an SQL query to retrieve data that meets the conditions of the parameters.
-     * null parameters are omitted.
-     * conditions are connected by AND keywords
-     *
-     * @return      A String representation of am SQL query
+     * builds an SQL where statement for data that meets the conditions of the supplied parameters.
+     * null parameters are ignored.
+     * conditions are connected by the AND connective
+     * @return      A String representation of an SQL where statement
      */
     public static String where(FilterConditions fc){
-
-        String query = "WHERE ";
+        String query = "";
 
         if (fc.getDateFrom() != null && fc.getDateTo() != null){
-            query += addAndCondition(fc.getDateFrom(), fc.getDateTo());
+            query += dateRangeCondition("date", fc.getDateFrom(), fc.getDateTo());
         }
         if (fc.getPrimaryDescription() != null){
-            query += addAndCondition("primary_description", fc.getPrimaryDescription());
+            query += equalityCondition("primary_description", fc.getPrimaryDescription());
         }
         if (fc.getLocationDescription() != null){
-            query += addAndCondition("location_description", fc.getLocationDescription());
+            query += equalityCondition("location_description", fc.getLocationDescription());
         }
         if (fc.getWard() != null){
-            query += addAndCondition("ward", fc.getWard());
+            query += equalityCondition("ward", fc.getWard());
         }
         if (fc.getBeat() != null){
-            query += addAndCondition("beat", fc.getBeat());
+            query += equalityCondition("beat", fc.getBeat());
         }
         if (fc.getArrest() != null){
-            query += addAndCondition("arrest", fc.getArrest());
+            query += equalityCondition("arrest", fc.getArrest());
         }
         if (fc.getDomestic() != null){
-            query += addAndCondition("domestic", fc.getDomestic());
+            query += equalityCondition("domestic", fc.getDomestic());
         }
 
-        if (query.equals("WHERE ")) {
+        if (query.equals("")) {
             return "";
-        } else {
-            return query.substring(0, query.length()-5);
         }
+        return "WHERE " + query.substring(0, query.length()-5);
     }
 
     /**
      * Is a builder that adds an and condition. For a boolean value.
-     *
      * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
      * @return          A String to append to a where query
      */
-    private static String addAndCondition(String field, boolean value) {
-        return field + "=" + (value ? 1 : 0) + " AND ";
+    private static String equalityCondition(String field, boolean value) {
+        return equalityCondition(field, (value ? "1" : "0"));
     }
 
     /**
      *  Is a builder that adds an and condition. For an integer value.
-     *
      * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
      * @return          A String to append to a where query
      */
-    private static String addAndCondition(String field, int value) {
-        return field + "=" + value + " AND ";
+    private static String equalityCondition(String field, int value) {
+        return equalityCondition(field, value + "");
     }
-
 
     /**
      *  Is a builder that adds an and condition. For a string value.
-     *
      * @param field     The name of the column in the database
      * @param value     The value that the filed must be to meet the condition
      * @return          A String to append to a where query
      */
-    private static String addAndCondition(String field, String value) {
+    private static String equalityCondition(String field, String value) {
         return field + "='" + value + "' AND ";
     }
 
-
     /**
      *  Is a builder that adds an and condition. For a string value.
-     *
+     * @param field     The name of the column in the database
      * @param dateFrom  The beginning date value for date range
      * @param dateTo    The ending date value for date range
      * @return          A String to append to a where query
      */
-    private static String addAndCondition(LocalDate dateFrom, LocalDate dateTo) {
-        return "date >= " + Timestamp.valueOf(dateFrom.atStartOfDay()).getTime()
-                + " AND date < " + Timestamp.valueOf(dateTo.plusDays(1).atStartOfDay()).getTime() + " AND ";
+    private static String dateRangeCondition(String field, LocalDate dateFrom, LocalDate dateTo) {
+        return field + " >= " + Timestamp.valueOf(dateFrom.atStartOfDay()).getTime() + " AND "
+                + field + " < " + Timestamp.valueOf(dateTo.plusDays(1).atStartOfDay()).getTime() + " AND ";
+    }
+
+    /**
+     * builds an SQL where statement for rows that contain the keyword.
+     * @return      A String representation of an SQL where statement
+     */
+    public static String search(String keyword){
+        String query = "WHERE id LIKE '%" + keyword + "%' OR "
+        + "primary_description LIKE '%" + keyword + "%' OR "
+        + "secondary_description LIKE '%" + keyword + "%' OR "
+        + "location_description LIKE '%" + keyword + "%' OR "
+        + "fbicd LIKE '%" + keyword + "%' OR "
+        + "iucr LIKE '%" + keyword + "%'";
+        return query;
     }
 }

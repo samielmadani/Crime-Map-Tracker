@@ -1,17 +1,15 @@
 package seng202.group7.controllers;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import seng202.group7.data.QueryBuilder;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,16 +21,15 @@ import java.util.ResourceBundle;
  * text entered by the user to that in the database.
  *
  * @author John Elliott
+ * @author Shaylin Simadari
  */
 public class SearchController implements Initializable {
     @FXML
-    private ComboBox<String> fieldBox;
-    @FXML
-    private Label errorLabel;
-    @FXML
     private TextField inputField;
     @FXML
-    private Button searchButton;
+    private Label errorLabel;
+
+    private static String searchInput;
 
     /**
      * This method is run during the loading of the search menu fxml file.
@@ -43,8 +40,7 @@ public class SearchController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fieldBox.setItems(FXCollections.observableArrayList(
-                "Case Number", "Primary Description", "Secondary Description", "Location Description", "FBI Code", "Illinois Number"));
+//        setSearchParameters();
     }
 
     /**
@@ -54,6 +50,7 @@ public class SearchController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu(ActionEvent event) throws IOException {
+//        getSearchParameters();
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
@@ -70,24 +67,13 @@ public class SearchController implements Initializable {
     /**
      * This method ensures that the user has typed in something before the search is allowed.
      */
-    public void validateText() {
-        String input = inputField.getText();
-        if (Objects.equals(input, "")) {
-            searchButton.setDisable(true);
+    public boolean validateText() {
+        if (inputField.getText() == null) {
             errorLabel.setText("No Input Given");
+            return false;
         } else {
             errorLabel.setText("");
-            searchButton.setDisable(false);
-        }
-    }
-
-    /**
-     * This method allows the user to enter information and there search once they have selected a field.
-     */
-    public void enableMenu() {
-        inputField.setDisable(false);
-        if (Objects.equals(inputField.getText(), "")) {
-            errorLabel.setText("No Input Given");
+            return true;
         }
     }
 
@@ -98,19 +84,12 @@ public class SearchController implements Initializable {
      * @param event             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void searchInput(ActionEvent event) throws IOException {
-        String field = fieldBox.getValue();
-        String input = inputField.getText();
+    public void search(ActionEvent event) throws IOException {
+        if(!validateText()){
+            return;
+        }
         // Determines the condition that will be used.
-        String query = switch (field) {
-            case "Case Number" -> "WHERE id LIKE '" + input + "%'";
-            case "Primary Description" -> "WHERE primary_description LIKE '" + input + "%'";
-            case "Secondary Description" -> "WHERE secondary_description LIKE '" + input + "%'";
-            case "Location Description" -> "WHERE location_description LIKE '" + input + "%'";
-            case "FBI Code" -> "WHERE fbicd LIKE '" + input + "%'";
-            case "Illinois Number" -> "WHERE iucr LIKE '" + input + "%'";
-            default -> "";
-        };
+        String query = QueryBuilder.search(inputField.getText());
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
         ControllerData.getInstance().setWhereQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
@@ -118,5 +97,13 @@ public class SearchController implements Initializable {
         BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Changes side menu to the filter menu.
         pane.setCenter(tableView);
+    }
+
+    private void setSearchParameters(){
+        inputField.setText(searchInput);
+    }
+
+    private void getSearchParameters(){
+        searchInput = inputField.getText();
     }
 }

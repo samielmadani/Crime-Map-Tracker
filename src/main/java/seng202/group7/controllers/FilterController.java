@@ -28,6 +28,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng202.group7.data.FilterConditions;
 import seng202.group7.data.QueryBuilder;
+import seng202.group7.data.Serializer;
 
 /**
  * Controller class. Linked to filter menu FXML.
@@ -126,7 +127,7 @@ public class FilterController implements Initializable {
 
         prepareValidation();
 
-        setFilterConditions(filterConditions);
+        setFilterConditions();
     }
 
     /**
@@ -189,8 +190,8 @@ public class FilterController implements Initializable {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if(file != null) {
-            deserializeFilter(file);
-            setFilterConditions(filterConditions);
+            filterConditions = Serializer.deserialize(file);
+            setFilterConditions();
         }
     }
 
@@ -199,7 +200,14 @@ public class FilterController implements Initializable {
      * @param event   The event action that was triggered.
      */
     public void clearFilter(ActionEvent event) throws IOException {
-        setFilterConditions(null);
+        datePicker.setValue(null);
+        datePicker2.setValue(null);
+        primaryBox.setValue(null);
+        locationBox.setValue(null);
+        wardField.setText("");
+        beatField.setText("");
+        arrestBox.setValue(null);
+        domesticBox.setValue(null);
         applyFilter(event);
     }
 
@@ -216,7 +224,7 @@ public class FilterController implements Initializable {
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             getFilterConditions();
-            serializeFilter(file);
+            Serializer.serialize(file, filterConditions);
         }
     }
 
@@ -271,14 +279,37 @@ public class FilterController implements Initializable {
         pane.setLeft(menuItems);
     }
 
+    /**
+     * Sets all the fields in the filter menu to those from filterConditions
+    */
+    private void setFilterConditions(){
+        if(filterConditions == null){
+            return;
+        }
+        datePicker.setValue(filterConditions.getDateFrom());
+        datePicker2.setValue(filterConditions.getDateTo());
+        primaryBox.setValue(filterConditions.getPrimaryDescription());
+        locationBox.setValue(filterConditions.getLocationDescription());
+        wardField.setText(filterConditions.getWard() == null ? "" : filterConditions.getWard().toString());
+        beatField.setText(filterConditions.getBeat() == null ? "" : filterConditions.getBeat().toString());
+        arrestBox.setValue(filterConditions.getArrest() == null ? null : filterConditions.getArrest() ? "Y" : "N");
+        domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? "Y" : "N");
+    }
 
     /**
      * Saves all the fields in the filter menu to a static variable
      */
     private void getFilterConditions(){
-        filterConditions = new FilterConditions(datePicker.getValue(), datePicker2.getValue(), primaryBox.getValue(), locationBox.getValue(),
-                getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
-                getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
+        filterConditions = new FilterConditions(
+                datePicker.getValue(),
+                datePicker2.getValue(),
+                primaryBox.getValue(),
+                locationBox.getValue(),
+                getIntegerFromString(wardField.getText()),
+                getIntegerFromString(beatField.getText()),
+                getBooleanFromString(arrestBox.getValue()),
+                getBooleanFromString(domesticBox.getValue())
+        );
     }
 
     /**
@@ -293,63 +324,5 @@ public class FilterController implements Initializable {
      */
     private Boolean getBooleanFromString(String str) {
         return str == null ? null : str.equals("Y");
-    }
-
-    /**
-     * Sets all the fields in the filter menu to those from filterConditions
-     * @param filterConditions The filter conditions to populate the gui with
-     */
-    private void setFilterConditions(FilterConditions filterConditions){
-        if(filterConditions == null){
-            datePicker.setValue(null);
-            datePicker2.setValue(null);
-            primaryBox.setValue(null);
-            locationBox.setValue(null);
-            wardField.setText("");
-            beatField.setText("");
-            arrestBox.setValue(null);
-            domesticBox.setValue(null);
-        } else {
-            datePicker.setValue(filterConditions.getDateFrom());
-            datePicker2.setValue(filterConditions.getDateTo());
-            primaryBox.setValue(filterConditions.getPrimaryDescription());
-            locationBox.setValue(filterConditions.getLocationDescription());
-            wardField.setText(filterConditions.getWard() == null ? "" : filterConditions.getWard().toString());
-            beatField.setText(filterConditions.getBeat() == null ? "" : filterConditions.getBeat().toString());
-            arrestBox.setValue(filterConditions.getArrest() == null ? null : filterConditions.getArrest() ? "Y" : "N");
-            domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? "Y" : "N");
-        }
-    }
-
-    /**
-     * Serializes a FilterConditions object into a file
-     * @param file The file to write the FilterConditions object to
-     */
-    private void serializeFilter(File file){
-        try {
-            FileOutputStream fileOut = new FileOutputStream(file);
-            ObjectOutputStream outputStream = new ObjectOutputStream(fileOut);
-            outputStream.writeObject(filterConditions);
-            outputStream.close();
-            fileOut.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Deserializes a FilterConditions object from a file
-     * @param file The file from which to get the FilterConditions object
-     */
-    private void deserializeFilter(File file){
-        try {
-            FileInputStream fileIn = new FileInputStream(file);
-            ObjectInputStream inputStream = new ObjectInputStream(fileIn);
-            filterConditions = (FilterConditions) inputStream.readObject();
-            inputStream.close();
-            fileIn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
