@@ -208,26 +208,19 @@ public class CompareController implements Initializable {
 
     /**
      * Gets given a node which corresponding to a GridPane which holds a set of VBoxes with TextFields inside them.
-     * It then loops through the GridPanes children until it finds the right VBox and TextField. It then gets the case
-     * number from the TextField and returns it.
+     * It uses the lookup method on first the GridPane to get the VBox needed and then the VBox to find the TextField.
+     * It then returns the string within the textField.
      *
      * @param centreNode    The GridPane node.
      * @return  The case number.
      */
     private String getFromEntry(Node centreNode) {
-        String selectedCrime = null;
         GridPane gridEntry = (GridPane) centreNode;
-        OuterLoop:  // Used to break out of both loops when value is found.
-        for (Node paneNode : gridEntry.getChildren()) {
-            if (Objects.equals(paneNode.getId(), "generalInformation")) {   // Finds the VBox to holds the field.
-                for (Node innerNode : ((VBox) paneNode).getChildren()) {
-                    if (Objects.equals(innerNode.getId(), "cNoText")) {     // Finds the TextField for case number.
-                        selectedCrime = ((TextField) innerNode).getText();
-                        break OuterLoop;
-                    }
-                }
-            }
+        String selectedCrime = ((TextField) gridEntry.lookup("#generalInformation").lookup("#cNoText")).getText();
+        if (Objects.equals(selectedCrime, "")) {
+            return null;
+        } else {
+            return selectedCrime;
         }
-        return selectedCrime;
     }
 }
