@@ -20,8 +20,8 @@ public final class QueryBuilder {
 
         String query = "WHERE ";
 
-        if (fc.getDateFrom() != null){
-            query += addAndCondition(fc.getDateFrom());
+        if (fc.getDateFrom() != null && fc.getDateTo() != null){
+            query += addAndCondition(fc.getDateFrom(), fc.getDateTo());
         }
         if (fc.getPrimaryDescription() != null){
             query += addAndCondition("primary_description", fc.getPrimaryDescription());
@@ -87,11 +87,12 @@ public final class QueryBuilder {
     /**
      *  Is a builder that adds an and condition. For a string value.
      *
-     * @param value     The value that the filed must be to meet the condition
+     * @param dateFrom  The beginning date value for date range
+     * @param dateTo    The ending date value for date range
      * @return          A String to append to a where query
      */
-    private static String addAndCondition(LocalDate value) {
-        return "date >= " + Timestamp.valueOf(value.atStartOfDay()).getTime()
-                + " AND date < " + Timestamp.valueOf(value.plusDays(1).atStartOfDay()).getTime() + " AND ";
+    private static String addAndCondition(LocalDate dateFrom, LocalDate dateTo) {
+        return "date >= " + Timestamp.valueOf(dateFrom.atStartOfDay()).getTime()
+                + " AND date < " + Timestamp.valueOf(dateTo.plusDays(1).atStartOfDay()).getTime() + " AND ";
     }
 }

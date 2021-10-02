@@ -44,6 +44,9 @@ public class FilterController implements Initializable {
     private DatePicker datePicker;
 
     @FXML
+    private DatePicker datePicker2;
+
+    @FXML
     private ComboBox<String> primaryBox;
 
     @FXML
@@ -128,7 +131,7 @@ public class FilterController implements Initializable {
 
     /**
      * Sets the types of validation required on each input node
-     */
+     */ // TODO add validation for datepicker2
     private void prepareValidation() {
         TextField dateText = datePicker.getEditor();
         dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
@@ -247,6 +250,13 @@ public class FilterController implements Initializable {
     }
 
     /**
+     * Clears the date stored in the date picker 2.
+     */
+    public void clearDate2(){
+        datePicker2.setValue(null);
+    }
+
+    /**
      * Returns the user to the general menu
      * Gets the current side panel and replaces it with the general menu panel.
      * @param event             The event action that was triggered.
@@ -266,7 +276,7 @@ public class FilterController implements Initializable {
      * Saves all the fields in the filter menu to a static variable
      */
     private void getFilterConditions(){
-        filterConditions = new FilterConditions(datePicker.getValue(), null, primaryBox.getValue(), locationBox.getValue(),
+        filterConditions = new FilterConditions(datePicker.getValue(), datePicker2.getValue(), primaryBox.getValue(), locationBox.getValue(),
                 getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
                 getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));
     }
@@ -292,7 +302,7 @@ public class FilterController implements Initializable {
     private void setFilterConditions(FilterConditions filterConditions){
         if(filterConditions == null){
             datePicker.setValue(null);
-
+            datePicker2.setValue(null);
             primaryBox.setValue(null);
             locationBox.setValue(null);
             wardField.setText("");
@@ -301,7 +311,7 @@ public class FilterController implements Initializable {
             domesticBox.setValue(null);
         } else {
             datePicker.setValue(filterConditions.getDateFrom());
-
+            datePicker2.setValue(filterConditions.getDateTo());
             primaryBox.setValue(filterConditions.getPrimaryDescription());
             locationBox.setValue(filterConditions.getLocationDescription());
             wardField.setText(filterConditions.getWard() == null ? "" : filterConditions.getWard().toString());

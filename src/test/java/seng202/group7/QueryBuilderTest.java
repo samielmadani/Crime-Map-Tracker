@@ -15,24 +15,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class QueryBuilderTest {
 
-//    /**
-//     * Tests the creation of a where query using the query builder.
-//     */
-//    @Test
-//    public void whereQueryTest() {
-//        LocalDate testDate = LocalDate.now();
-//        String query = QueryBuilder.where(testDate, "test", null, 30, null, true, null);
-//        assertEquals(query, "WHERE date >= "+ Timestamp.valueOf(testDate.atStartOfDay()).getTime() +
-//                " AND date < "+ Timestamp.valueOf(testDate.plusDays(1).atStartOfDay()).getTime() +
-//                " AND primary_description='test' AND ward=30 AND arrest=1");
-//    }
-//
-//    /**
-//     * Tests that the WHERE query returns an empty string if the inputs are all null.
-//     */
-//    @Test
-//    public void whereQueryEmptyTest() {
-//        String query = QueryBuilder.where(null, null, null, null, null, null, null);
-//        assertEquals(query, "");
-//    }
+    // /**
+    //  * Tests the creation of a where query using the query builder.
+    //  */
+    // @Test
+    // public void whereQueryTest() {
+    //     LocalDate testDate = LocalDate.now();
+    //     String query = QueryBuilder.where(testDate, "test", null, 30, null, true, null);
+    //     assertEquals(query, "WHERE date >= "+ Timestamp.valueOf(testDate.atStartOfDay()).getTime() +
+    //             " AND date < "+ Timestamp.valueOf(testDate.plusDays(1).atStartOfDay()).getTime() +
+    //             " AND primary_description='test' AND ward=30 AND arrest=1");
+    // }
+
+    // /**
+    //  * Tests that the WHERE query returns an empty string if the inputs are all null.
+    //  */
+    // @Test
+    // public void whereQueryEmptyTest() {
+    //     String query = QueryBuilder.where(null, null, null, null, null, null, null);
+    //     assertEquals(query, "");
+    // }
 }
