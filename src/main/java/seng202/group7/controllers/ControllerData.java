@@ -50,6 +50,11 @@ public final class ControllerData {
     private int currentPage = 0;
 
     /**
+     * Stores the list that is currently in use.
+     */
+    private int currentList = 1;
+
+    /**
      * This is a condition that is used by the data accessor when searching the database.
      */
     private String whereQuery = "";
@@ -136,7 +141,7 @@ public final class ControllerData {
             DataAccessor accessor = DataAccessor.getInstance();
             if (fileName.endsWith(".csv")) {
                 // Reads a CSV into the database.
-                accessor.readToDB(selectedFile);
+                accessor.readToDB(selectedFile, currentList);
             } else {
                 // Reads a outside database into the main database.
                 accessor.importInDB(selectedFile);
@@ -271,5 +276,13 @@ public final class ControllerData {
         }
         inputBox.pseudoClassStateChanged(errorClass, !valid);
         return valid;
+    }
+
+    public void setCurrentList(int listId) {
+        currentList = listId;
+    }
+
+    public int getCurrentList() {
+        return currentList;
     }
 }

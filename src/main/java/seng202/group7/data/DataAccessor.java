@@ -72,16 +72,16 @@ public final class DataAccessor {
     private void createDatabase() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
-            runStatement("CREATE TABLE crimes (\n" + 
-                    "case_number VARCHAR(8) PRIMARY KEY NOT NULL, " + 
-                    "block VARCHAR(50), " +
-                    "iucr VARCHAR(4), " +
-                    "fbicd VARCHAR(3), " + 
-                    "arrest BOOLEAN, " +
-                    "beat INT, " +
-                    "ward INT)");
-            runStatement("CREATE TABLE reports (\n" + 
-                    "report_id VARCHAR(8) PRIMARY KEY NOT NULL, " + 
+
+            runStatement("PRAGMA foreign_keys = ON;");
+
+            runStatement("CREATE TABLE lists (" + 
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "name VARCHAR(32) NOT NULL" +
+                    ")");
+            runStatement("CREATE TABLE reports (" + 
+                    "id VARCHAR(8) NOT NULL, " + 
+                    "list_id INTEGER NOT NULL, " +
                     "date TIMESTAMP NOT NULL, " +
                     "primary_description VARCHAR(50) NOT NULL, " +
                     "secondary_description VARCHAR(50) NOT NULL, " + 
@@ -90,16 +90,28 @@ public final class DataAccessor {
                     "y_coord INT, " +
                     "latitude FLOAT, " +
                     "longitude FLOAT, " +
-                    "location_description VARCHAR(50))");
+                    "location_description VARCHAR(50), " +
+                    "PRIMARY KEY(id, list_id), " +
+                    "FOREIGN KEY(list_id) REFERENCES lists(id) ON UPDATE CASCADE " +
+                    ")");
+            runStatement("CREATE TABLE crimes (" + 
+                    "report_id VARCHAR(8) NOT NULL, " +
+                    "list_id INTEGER NOT NULL, " +
+                    "block VARCHAR(50), " +
+                    "iucr VARCHAR(4), " +
+                    "fbicd VARCHAR(3), " + 
+                    "arrest BOOLEAN, " +
+                    "beat INT, " +
+                    "ward INT, " +
+                    "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id), " +
+                    "PRIMARY KEY(report_id, list_id)" +
+                    ")");
             runStatement("CREATE VIEW crimedb AS " +
-                    "SELECT report_id AS 'id', c.block, c.iucr, c.fbicd, c.arrest, " +
-                    "c.beat, c.ward, date, primary_description, secondary_description, " +
-                    "location_description, domestic, x_coord, y_coord, latitude, longitude " + 
-                    "FROM reports JOIN crimes c ON report_id=c.case_number");
-        } catch (SQLException e) {
+                    "SELECT *" + 
+                    "FROM reports JOIN crimes c ON id=c.report_id AND reports.list_id=c.list_id");
+                } catch (SQLException e) {
             System.out.println("SQLiteAccessor.create: " + e);
         }
-
     }
 
 
@@ -127,10 +139,14 @@ public final class DataAccessor {
      *
      * @return Size     The number of entries.
      */
-    public int getSize() {
+    public int getSize(int listId) {
         String condition = ControllerData.getInstance().getWhereQuery();
         // See how many entries are in the view crimedb.
-        String query = "SELECT COUNT(*) FROM crimedb "+condition+";";
+        String query = "SELECT COUNT(*) FROM crimedb WHERE "+ condition;
+        if (!condition.isEmpty()) {
+            query += " AND";
+        }
+        query += " list_id=" + listId +";";
         int size = 0;
         try {
             Statement stmt = connection.createStatement();
@@ -151,7 +167,7 @@ public final class DataAccessor {
      *
      * @return reports      The list of reports to display.
      */
-    public ArrayList<Report> getPageSet() {
+    public ArrayList<Report> getPageSet(int listId) {
         ControllerData connData = ControllerData.getInstance();
         String condition = connData.getWhereQuery();
         int page = connData.getCurrentPage();
@@ -159,7 +175,11 @@ public final class DataAccessor {
         int start = page * 1000;
         int end = 1000;
 
-        String query = "SELECT * FROM crimedb "+condition+" ORDER BY id LIMIT "+end+" OFFSET "+start+";";
+        String query = "SELECT * FROM crimedb WHERE " + condition;
+        if (!condition.isEmpty()) {
+            query += " AND ";
+        }
+        query +=" list_id=" + listId + " ORDER BY id LIMIT "+end+" OFFSET "+start+";";
         return selectReports(query);
     }
 
@@ -168,8 +188,8 @@ public final class DataAccessor {
      *
      * @return  All reports from the database.
      */
-    public ArrayList<Report> getAll() {
-        String query = "SELECT * FROM crimedb";
+    public ArrayList<Report> getAll(int listId) {
+        String query = "SELECT * FROM crimedb WHERE list_id=" + listId;
         return selectReports(query);
     }
 
@@ -211,7 +231,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLiteAccessor.selectReports: " + e);
             return null;
         }
         return reports;
@@ -224,7 +244,7 @@ public final class DataAccessor {
      * @return          A single report.
      */
     public Crime getCrime(String entry) {
-        String query = "SELECT * FROM crimedb WHERE id = '" + entry + "';";
+        String query = "SELECT * FROM crimedb WHERE id='" + entry + "';";
         ArrayList<Report> reports = selectReports(query);
         if (reports != null && reports.size() == 1) {
             return (Crime) reports.get(0);
@@ -238,10 +258,8 @@ public final class DataAccessor {
      *
      * @param entryId       The case number of the crime object.
      */
-    public void delete(String entryId){
-        String crimeQuery = "DELETE FROM crimes WHERE case_number = '" + entryId + "'";
-        String reportQuery = "DELETE FROM reports WHERE report_id = '" + entryId + "'";
-        runStatement(crimeQuery);
+    public void delete(String entryId, int listId){
+        String reportQuery = "DELETE FROM reports WHERE id = '" + entryId + "' AND list_id=" + listId;
         runStatement(reportQuery);
     }
 
@@ -309,8 +327,8 @@ public final class DataAccessor {
         // Checks if schema is valid then attaches the database and inserts the data from the table and then detaches the database.
         if (validateSchema(selectedFile)) {
             runStatement("ATTACH '" + selectedFile + "' AS " + "newCrimeDB;");
-            runStatement("INSERT OR REPLACE INTO crimes SELECT * FROM newCrimeDB.crimes");
             runStatement("INSERT OR REPLACE INTO reports SELECT * FROM newCrimeDB.reports");
+            runStatement("INSERT OR REPLACE INTO crimes SELECT * FROM newCrimeDB.crimes");
             runStatement("DETACH DATABASE " + "'newCrimeDB';");
         } else {
             System.out.println("Invalid Schema.");
@@ -343,7 +361,7 @@ public final class DataAccessor {
      *
      * @param pathname      CSV file.
      */
-    public void readToDB(File pathname) {
+    public void readToDB(File pathname, int listId) {
         ArrayList<String> schemaDefault = new ArrayList<>(Arrays.asList("CASE#", "DATE  OF OCCURRENCE", "BLOCK", " IUCR", " PRIMARY DESCRIPTION", " SECONDARY DESCRIPTION",
                 " LOCATION DESCRIPTION", "ARREST", "DOMESTIC", "BEAT", "WARD", "FBI CD", "X COORDINATE", "Y COORDINATE",
                 "LATITUDE", "LONGITUDE", "LOCATION"));
@@ -363,7 +381,7 @@ public final class DataAccessor {
             reader.close();
             if (schemaDefault.equals(schema)) {
                 // After getting all rows goes to write them into the database.
-                write(rows);
+                write(rows, listId);
             } else {
                 System.out.println("Invalid Schema.");
             }
@@ -383,7 +401,7 @@ public final class DataAccessor {
     public void editCrime(Crime crime) {
         try {
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?);");
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
             PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
@@ -425,47 +443,49 @@ public final class DataAccessor {
      * @param rows                  All rows from the CSV file.
      * @throws SQLException         An error during the insertion.
      */
-    private void write(ArrayList<String[]> rows) throws SQLException {
+    private void write(ArrayList<String[]> rows, int listId) throws SQLException {
         // Turn off autocommit to increase speed.
         connection.setAutoCommit(false);
         PreparedStatement psCrime = null;
         PreparedStatement psReport = null;
         try {
-            psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?);");
-            psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
             // Uses batchs to chain all the individual insertions into a single query to the database. This is also to increase speed.
             for (String[] row : rows) {
-                PSTypes.setPSString(psCrime, 1, row[0]); // Case Number
-                PSTypes.setPSString(psCrime, 2, row[2]); // Blockps.setString(2, row[2]);
-                PSTypes.setPSString(psCrime, 3, row[3]); // Iucr
-                PSTypes.setPSString(psCrime, 4, row[11]); // FbiCD
-                PSTypes.setPSBoolean(psCrime, 5, row[7]); // Arrest
-                PSTypes.setPSInteger(psCrime, 6, row[9]); // Beat
-                PSTypes.setPSInteger(psCrime, 7, row[10]); // Ward
-                psCrime.addBatch();
-
                 PSTypes.setPSString(psReport, 1, row[0]); // Case Number
+                PSTypes.setPSInteger(psReport, 2, listId); // List
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
                 if (Objects.equals(row[1], "")) {
-                    psReport.setNull(2, Types.TIME);
+                    psReport.setNull(3, Types.TIME);
                 } else {
-                    psReport.setTimestamp(2, Timestamp.valueOf(LocalDateTime.parse(row[1], formatter)));
+                    psReport.setTimestamp(3, Timestamp.valueOf(LocalDateTime.parse(row[1], formatter)));
                 } // Date
-                PSTypes.setPSString(psReport, 3, row[4]); // Primary Description
-                PSTypes.setPSString(psReport, 4, row[5]); // Secondary Description
-                PSTypes.setPSBoolean(psReport, 5, row[8]); // Domestic
-                PSTypes.setPSInteger(psReport, 6, row[12]); // X Coordinate
-                PSTypes.setPSInteger(psReport, 7, row[13]); // Y Coordinate
-                PSTypes.setPSDouble(psReport, 8, row[14]); // Latitude
-                PSTypes.setPSDouble(psReport, 9, row[15]); // Longitude
-                PSTypes.setPSString(psReport, 10, row[6]); // Location Description
+                PSTypes.setPSString(psReport, 4, row[4]); // Primary Description
+                PSTypes.setPSString(psReport, 5, row[5]); // Secondary Description
+                PSTypes.setPSBoolean(psReport, 6, row[8]); // Domestic
+                PSTypes.setPSInteger(psReport, 7, row[12]); // X Coordinate
+                PSTypes.setPSInteger(psReport, 8, row[13]); // Y Coordinate
+                PSTypes.setPSDouble(psReport, 9, row[14]); // Latitude
+                PSTypes.setPSDouble(psReport, 10, row[15]); // Longitude
+                PSTypes.setPSString(psReport, 11, row[6]); // Location Description
                 psReport.addBatch();
+                
+                PSTypes.setPSString(psCrime, 1, row[0]); // Case Number
+                PSTypes.setPSInteger(psCrime, 2, listId); // List
+                PSTypes.setPSString(psCrime, 3, row[2]); // Blockps.setString(2, row[2]);
+                PSTypes.setPSString(psCrime, 4, row[3]); // Iucr
+                PSTypes.setPSString(psCrime, 5, row[11]); // FbiCD
+                PSTypes.setPSBoolean(psCrime, 6, row[7]); // Arrest
+                PSTypes.setPSInteger(psCrime, 7, row[9]); // Beat
+                PSTypes.setPSInteger(psCrime, 8, row[10]); // Ward
+                psCrime.addBatch();
             }
             // Executes all the insertions.
-            psCrime.executeBatch();
             psReport.executeBatch();
+            psCrime.executeBatch();
             // Commits the changes and re-enables the auto commit.
             connection.commit();
             connection.setAutoCommit(true);
@@ -481,6 +501,18 @@ public final class DataAccessor {
             }
         }
 
+    }
+
+    public void createList(String name) {
+        runStatement("INSERT INTO lists(name) VALUES('')");
+        try {
+            PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES('')" +
+                        "VALUES (?);");
+            PSTypes.setPSString(psList, 1, name);
+        } catch (SQLException e) {
+            //TODO: handle exception
+            System.out.println("SQLiteAccessor.createList: " + e);
+        }
     }
 
 }

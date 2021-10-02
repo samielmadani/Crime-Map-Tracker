@@ -62,7 +62,7 @@ public class GraphViewController implements Initializable {
      * @param pseudoClassStates     Has three different States which determines what graph is loaded.
      */
     public void prepareGraph(ObservableSet<PseudoClass> pseudoClassStates) {
-        ArrayList<Report> data = DataAccessor.getInstance().getAll();
+        ArrayList<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
         ArrayList<Tuple<String, Integer>> dataSet;
         if (pseudoClassStates.contains(PseudoClass.getPseudoClass("frequentCrime")) || (pseudoClassStates.size() == 0)) {
             dataSet = Rank.primaryFrequencyRank(data);

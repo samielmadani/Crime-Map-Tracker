@@ -152,4 +152,13 @@ public class MenuController implements Initializable {
         menuFrame.setLeft(graphMenu);
     }
 
+
+    public void switchList() {
+        int list =ControllerData.getInstance().getCurrentList();
+        if (list == 1) {
+            ControllerData.getInstance().setCurrentList(2);
+        } else {
+            ControllerData.getInstance().setCurrentList(1);
+        }
+    }
 }

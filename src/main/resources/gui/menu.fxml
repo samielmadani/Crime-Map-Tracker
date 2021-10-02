@@ -12,6 +12,7 @@
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toGraph"  text="Graph View" />
           <Button layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#toSearch" text="Google" />
           <Button fx:id="helpButton" layoutX="131.0" layoutY="13.0" mnemonicParsing="false" onAction="#openHelpPage" text="Help" />
+          <Button fx:id="switch" onAction="#switchList" text="List switch" />
         </items>
       </ToolBar>
    </top>

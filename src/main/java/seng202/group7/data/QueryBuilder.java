@@ -19,7 +19,7 @@ public final class QueryBuilder {
     public static String where(LocalDate date, String primaryDescription, String locationDescription, Integer ward,
                                Integer beat, Boolean arrest, Boolean domestic){
 
-        String query = "WHERE ";
+        String query = "";
 
         if (date != null){
             query += addAndCondition(date);
@@ -43,7 +43,7 @@ public final class QueryBuilder {
             query += addAndCondition("domestic", domestic);
         }
 
-        if (query.equals("WHERE ")) {
+        if (query.equals("")) {
             return "";
         } else {
             return query.substring(0, query.length()-5);

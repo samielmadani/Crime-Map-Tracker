@@ -42,7 +42,7 @@ public class PageController implements Initializable {
 
         frame.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent != null) {
-                int size = DataAccessor.getInstance().getSize();
+                int size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
                 
                 pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
                 pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());

@@ -60,7 +60,7 @@ public class DataAccessorTest {
      */
     @Test
     public void checkSize() {
-        assertEquals(accessor.getSize(), 1);
+        assertEquals(accessor.getSize(1), 1);
     }
 
     /**
@@ -70,7 +70,7 @@ public class DataAccessorTest {
     public void deleteTest() {
         Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
         accessor.editCrime(crimeTwo);
-        accessor.delete("TestToDelete");
+        accessor.delete("TestToDelete", 1);
         Crime crime = accessor.getCrime("TestToDelete");
         assertNull(crime);
     }
@@ -80,7 +80,7 @@ public class DataAccessorTest {
      */
     @Test
     public void readToDBTest() {
-        accessor.readToDB(new File("src/test/files/testCSV.csv"));
+        accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
         Crime crime = accessor.getCrime("JE163990");
         assertEquals(crime.getCaseNumber(), "JE163990");
     }
@@ -100,7 +100,7 @@ public class DataAccessorTest {
      */
     @Test
     public void pageSetTest() {
-        ArrayList<Report> reports = accessor.getPageSet();
+        ArrayList<Report> reports = accessor.getPageSet(1);
         assertEquals(((Crime) reports.get(0)).getCaseNumber(), "TestNumber");
     }
 
