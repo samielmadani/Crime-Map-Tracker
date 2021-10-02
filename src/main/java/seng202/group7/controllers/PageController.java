@@ -27,7 +27,7 @@ public class PageController implements Initializable {
     private Pagination pages;
 
     @FXML
-    private Node frame;
+    private Node pageFrame;
 
 
     /**
@@ -40,7 +40,7 @@ public class PageController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+        pageFrame.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent != null) {
                 int size = DataAccessor.getInstance().getSize();
                 
