@@ -29,6 +29,7 @@ import seng202.group7.analyses.Comparer;
  * Handles the comparisons of two crime objects.
  *
  * @author Jack McCorkindale
+ * @author John Elliott
  */
 public class CompareController implements Initializable {
 
