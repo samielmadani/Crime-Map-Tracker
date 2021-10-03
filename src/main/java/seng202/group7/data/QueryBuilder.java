@@ -93,10 +93,11 @@ public final class QueryBuilder {
      * @return      A String representation of an SQL where statement
      */
     public static String search(String keyword){
-        String query = "WHERE id LIKE '%" + keyword + "%' OR "
+        String query = "WHERE "
         + "primary_description LIKE '%" + keyword + "%' OR "
         + "secondary_description LIKE '%" + keyword + "%' OR "
         + "location_description LIKE '%" + keyword + "%' OR "
+        + "id LIKE '%" + keyword + "%' OR "
         + "fbicd LIKE '%" + keyword + "%' OR "
         + "iucr LIKE '%" + keyword + "%'";
         return query;
