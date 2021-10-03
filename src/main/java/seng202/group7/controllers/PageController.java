@@ -108,29 +108,9 @@ public class PageController implements Initializable {
         String input = pageField.getText();
         if (InputValidator.validate(pageField) && !input.isEmpty()) {
             int queryPage = Integer.parseInt(input);
-            if (queryPage > 0 && queryPage < pages.getPageCount()){
+            if (queryPage > 0 && queryPage <= pages.getPageCount()){
                 pages.setCurrentPageIndex(Integer.parseInt(input) - 1); // Is valid and changes the page.
             }
         }
     }
-
-    // /**
-    //  * Checks the current page limit for the paginator and checks the value given if it is valid or not.
-    //  *
-    //  * @param input     The text input.
-    //  * @return  The result of if the text input is valid.
-    //  */
-    // private boolean isValid(String input) {
-    //     // TODO change to new validation method
-    //     boolean valid;
-    //     int numOfDig = String.valueOf(pages.getPageCount()).length();
-    //     if (numOfDig == 0) {
-    //         valid = false;
-    //     } else if (numOfDig == 1){
-    //         valid = input.matches("[1-"+pages.getPageCount()+"]");
-    //     } else {
-    //         valid = input.matches("[1-9]([0-9]{0,"+(numOfDig-1)+"})");
-    //     }
-    //     return valid;
-    // }
 }
