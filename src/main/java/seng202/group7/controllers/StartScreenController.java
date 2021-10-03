@@ -1,18 +1,32 @@
 package seng202.group7.controllers;
 
 import javafx.animation.FadeTransition;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import seng202.group7.data.DataAccessor;
 
 /**
  * The controller, used by / linked to, the Start Screen FXML file.
@@ -21,12 +35,83 @@ import javafx.util.Duration;
  * @author John Elliott
  * @author Shaylin Simadari
  */
-public class StartScreenController {
+public class StartScreenController implements Initializable {
     /**
      * Is the parent node panel to all other nodes.
      */
     @FXML
     private BorderPane rootPane;
+
+    @FXML
+    private TableView <String> table;
+
+    @FXML
+    private TableColumn<String, String> listNames;
+
+    @FXML
+    private Button newList, delete, rename, load;
+
+    @FXML
+    private TextField newListText, renameListText;
+
+    private String selectedList;
+
+    /**
+     * This method is run during the loading of the data view fxml file.
+     * It generates what values will be stored in the columns.
+     *
+     * @param location      A URL object.
+     * @param resources     A ResourceBundle object.
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        listNames.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+        setListNames();
+
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            listSelected(newSelection != null);
+        });
+
+    }
+
+    private void setListNames() {
+        ObservableList<String> lists = DataAccessor.getInstance().getLists();
+        System.out.println(lists);
+        table.setItems(lists);
+    }
+
+    public void listSelected(boolean isList) {
+        rename.setDisable(!isList);
+        renameListText.setDisable(!isList);
+        delete.setDisable(!isList);
+        load.setDisable(!isList);
+        selectedList = table.getSelectionModel().getSelectedItem();
+    }
+
+    public void deleteList() {
+        DataAccessor.getInstance().deleteList(table.getSelectionModel().getSelectedItem());
+        setListNames();
+    }
+
+    public void loadList() {
+        int listId = DataAccessor.getInstance().getListId(selectedList);
+        ControllerData.getInstance().setCurrentList(listId);
+        fadeOutScene(new ActionEvent());
+    }
+
+    public void createList() {
+        DataAccessor.getInstance().createList("test");
+        setListNames();
+    }
+
+    public void renameList() {
+        String list = table.getSelectionModel().getSelectedItem();
+        String newName = renameListText.getText();
+        DataAccessor.getInstance().renameList(list, newName);
+        setListNames();
+        table.getSelectionModel().select(newName);
+    }
 
     /**
      * Set up the fade out transition which will then load the next scene.
@@ -35,7 +120,8 @@ public class StartScreenController {
      */
     public void fadeOutScene(ActionEvent event) {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) rootPane.getScene().getWindow();
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(100));
         fade.setNode(rootPane);

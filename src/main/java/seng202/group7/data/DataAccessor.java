@@ -1,6 +1,8 @@
 package seng202.group7.data;
 
 import au.com.bytecode.opencsv.CSVReader;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import seng202.group7.controllers.ControllerData;
 
 import java.io.File;
@@ -53,6 +55,7 @@ public final class DataAccessor {
         }
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
+            runStatement("PRAGMA foreign_keys = ON;");
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.connect: " + e);
         }
@@ -77,7 +80,7 @@ public final class DataAccessor {
 
             runStatement("CREATE TABLE lists (" + 
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name VARCHAR(32) NOT NULL" +
+                    "name VARCHAR(32) UNIQUE NOT NULL" +
                     ")");
             runStatement("CREATE TABLE reports (" + 
                     "id VARCHAR(8) NOT NULL, " + 
@@ -92,7 +95,7 @@ public final class DataAccessor {
                     "longitude FLOAT, " +
                     "location_description VARCHAR(50), " +
                     "PRIMARY KEY(id, list_id), " +
-                    "FOREIGN KEY(list_id) REFERENCES lists(id) ON UPDATE CASCADE " +
+                    "FOREIGN KEY(list_id) REFERENCES lists(id) ON DELETE CASCADE " +
                     ")");
             runStatement("CREATE TABLE crimes (" + 
                     "report_id VARCHAR(8) NOT NULL, " +
@@ -103,7 +106,7 @@ public final class DataAccessor {
                     "arrest BOOLEAN, " +
                     "beat INT, " +
                     "ward INT, " +
-                    "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id), " +
+                    "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id) ON DELETE CASCADE , " +
                     "PRIMARY KEY(report_id, list_id)" +
                     ")");
             runStatement("CREATE VIEW crimedb AS " +
@@ -504,14 +507,72 @@ public final class DataAccessor {
     }
 
     public void createList(String name) {
-        runStatement("INSERT INTO lists(name) VALUES('')");
         try {
-            PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES('')" +
-                        "VALUES (?);");
+            PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES (?);");
             PSTypes.setPSString(psList, 1, name);
+            psList.execute();
         } catch (SQLException e) {
             //TODO: handle exception
             System.out.println("SQLiteAccessor.createList: " + e);
+        }
+    }
+
+    public ObservableList<String> getLists() {
+        ArrayList<String> lists = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT name FROM lists");
+            // Converts all results into crimes.
+            while (rs.next()) {
+                lists.add(rs.getString("name"));
+            }
+            // Closes the statement and result set.
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.selectReports: " + e);
+        }
+        ObservableList<String> details = FXCollections.observableArrayList(lists);
+        return details;
+    }
+
+    public void renameList(String oldName, String newName) {
+        try {
+            PreparedStatement psList = connection.prepareStatement("UPDATE lists SET name=? WHERE name=?;");
+            psList.setString(1, newName);
+            psList.setString(2, oldName);
+            psList.execute();
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.renameList: " + e);
+        }  
+    }
+
+    public int getListId(String selectedList) {
+        int listId = 0;
+        try {
+            PreparedStatement psList = connection.prepareStatement("SELECT id FROM lists WHERE name=?;");
+            psList.setString(1, selectedList);
+            ResultSet lists = psList.executeQuery();
+            lists.next();
+            listId = lists.getInt("id");
+            // Closes the statement and result set.
+            lists.close();
+            psList.close();            
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.renameList: " + e);
+        }
+        return listId;
+    }
+
+    public void deleteList(String selectedList) {
+        try {
+            PreparedStatement psList = connection.prepareStatement("DELETE FROM lists WHERE name=?;");
+            psList.setString(1, selectedList);
+            psList.execute();
+            // Closes the statement.
+            psList.close();            
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.renameList: " + e);
         }
     }
 

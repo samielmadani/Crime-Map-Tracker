@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="rootPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
-   <bottom>
-      <VBox alignment="CENTER" prefHeight="103.0" prefWidth="775.0" spacing="10.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" onAction="#getFile" prefHeight="25.0" prefWidth="150.0" text="Import Data" />
-            <Button fx:id="startButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#fadeOutScene" prefHeight="25.0" prefWidth="150.0" text="Start Without Data" />
-         </children>
-      </VBox>
-   </bottom>
+<BorderPane fx:id="rootPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
    <top>
       <VBox alignment="CENTER" prefHeight="88.0" prefWidth="775.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="LookOut">
+            <Label alignment="CENTER" text="Welcome to LookOut">
                <font>
                   <Font name="System Bold" size="45.0" />
                </font>
@@ -25,50 +26,29 @@
          </children>
       </VBox>
    </top>
+
    <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="127.0" spacing="3.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label alignment="CENTER" text="A database application that supports the recording, monitoring, analysis and management of crime data for large cities." textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin></Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="114.0" text="Authors:" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="158.0" text="Jack McCorkindale" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="176.0" text="John Elliot" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="194.0" text="Sami Elmadani" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="212.0" text="Sam McMillan" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" layoutX="10.0" layoutY="230.0" maxWidth="1.7976931348623157E308" text="Shaylin Simadari" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font name="System Bold Italic" size="17.0" />
-               </font>
-            </Label>
-         </children>
-         <BorderPane.margin>
-            <Insets left="100.0" right="100.0" />
-         </BorderPane.margin>
-      </VBox>
+      <GridPane hgap="20" maxWidth="500.0" BorderPane.alignment="BASELINE_CENTER">
+         <TableView fx:id="table" prefHeight="450.0" prefWidth="250.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
+            <columns>
+               <TableColumn fx:id="listNames" prefWidth="242.0" resizable="false" text="Available Lists" />
+            </columns>
+         </TableView>
+         <VBox prefHeight="250" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <HBox>
+               <Button fx:id="newList" onAction="#createList" text="Create new list" />
+               <TextField fx:id="newListText" promptText="New list name" />
+            </HBox>
+            <HBox>
+               <Button fx:id="rename" disable="true" onAction="#renameList" text="Rename" />
+               <TextField fx:id="renameListText" disable="true" promptText="Updated list name" />
+            </HBox>
+            <Button fx:id="delete" disable="true" onAction="#deleteList" text="Delete list" />
+            <Button fx:id="load" disable="true" onAction="#loadList" text="Load list" />
+            <VBox.margin>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+         </VBox>
+      </GridPane>
    </center>
 </BorderPane>
