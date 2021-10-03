@@ -3,7 +3,6 @@ package seng202.group7;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.group7.controllers.ControllerData;
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
@@ -12,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -45,10 +43,12 @@ public class DataAccessorTest {
             Statement stmt = accessor.getConnection().createStatement();
             stmt.execute("DELETE FROM crimes");
             stmt.execute("DELETE FROM reports");
+            stmt.execute("DELETE FROM lists");
+            stmt.execute("INSERT INTO lists(id, name) VALUES(1, 'testList')");
             stmt.close();
 
             Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
-            accessor.editCrime(crimeOne);
+            accessor.editCrime(crimeOne, 1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,9 +69,9 @@ public class DataAccessorTest {
     @Test
     public void deleteTest() {
         Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
-        accessor.editCrime(crimeTwo);
+        accessor.editCrime(crimeTwo, 1);
         accessor.delete("TestToDelete", 1);
-        Crime crime = accessor.getCrime("TestToDelete");
+        Crime crime = accessor.getCrime("TestToDelete", 1);
         assertNull(crime);
     }
 
@@ -81,7 +81,7 @@ public class DataAccessorTest {
     @Test
     public void readToDBTest() {
         accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
-        Crime crime = accessor.getCrime("JE163990");
+        Crime crime = accessor.getCrime("JE163990", 1);
         assertEquals(crime.getCaseNumber(), "JE163990");
     }
 
@@ -91,8 +91,13 @@ public class DataAccessorTest {
     @Test
     public void importDBTest() {
         accessor.importInDB(new File("src/test/files/TestImporting.db"));
-        Crime crime = accessor.getCrime("TestNumberImport");
-        assertEquals(crime.getCaseNumber(), "TestNumberImport");
+        Crime crime = accessor.getCrime("TestNumber", 1);
+        assertEquals(crime.getCaseNumber(), "TestNumber");
+    }
+
+    @Test
+    public void getListIdTest() {
+        assertEquals(1, accessor.getListId("testList"));
     }
 
     /**

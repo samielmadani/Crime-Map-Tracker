@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@style.css" fx:id="rootPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
+<BorderPane fx:id="rootPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.StartScreenController">
    <top>
       <VBox alignment="CENTER" prefHeight="88.0" prefWidth="775.0" BorderPane.alignment="CENTER">
          <children>
@@ -31,24 +31,42 @@
       <GridPane hgap="20" maxWidth="500.0" BorderPane.alignment="BASELINE_CENTER">
          <TableView fx:id="table" prefHeight="450.0" prefWidth="250.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2">
             <columns>
-               <TableColumn fx:id="listNames" prefWidth="242.0" resizable="false" text="Available Lists" />
+               <TableColumn fx:id="listNames" prefWidth="250.0" resizable="false" text="Available Lists" />
             </columns>
          </TableView>
          <VBox prefHeight="250" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="0">
             <HBox>
-               <Button fx:id="newList" onAction="#createList" text="Create new list" />
-               <TextField fx:id="newListText" promptText="New list name" />
+               <Button fx:id="newList" onAction="#createList" text="Create new list" HBox.hgrow="SOMETIMES">
+                  <HBox.margin>
+                     <Insets right="5.0" />
+                  </HBox.margin></Button>
+               <TextField fx:id="newListText" prefHeight="26.0" prefWidth="128.0" promptText="New list name" />
             </HBox>
             <HBox>
-               <Button fx:id="rename" disable="true" onAction="#renameList" text="Rename" />
-               <TextField fx:id="renameListText" disable="true" promptText="Updated list name" />
+               <Button fx:id="rename" disable="true" onAction="#renameList" text="Rename">
+                  <HBox.margin>
+                     <Insets right="5.0" />
+                  </HBox.margin></Button>
+               <TextField fx:id="renameListText" disable="true" promptText="Updated list name" HBox.hgrow="SOMETIMES" />
             </HBox>
-            <Button fx:id="delete" disable="true" onAction="#deleteList" text="Delete list" />
-            <Button fx:id="load" disable="true" onAction="#loadList" text="Load list" />
+            <HBox>
+               <Button fx:id="delete" disable="true" onAction="#deleteList" text="Delete list" />
+            </HBox>
+            <HBox>
+               <Button fx:id="load" disable="true" onAction="#loadList" text="Load list" />
+            </HBox>
             <VBox.margin>
                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </VBox.margin>
          </VBox>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
       </GridPane>
    </center>
 </BorderPane>

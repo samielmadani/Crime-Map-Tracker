@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
@@ -14,7 +13,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -97,9 +100,10 @@ public class CompareController implements Initializable {
     public void compareReports() {
         DataAccessor data = DataAccessor.getInstance();
         resultText.setText("");
+        int list = ControllerData.getInstance().getCurrentList();
 
-        Report reportOne = data.getCrime(reportOneText.getText());
-        Report reportTwo = data.getCrime(reportTwoText.getText());
+        Report reportOne = data.getCrime(reportOneText.getText(), list);
+        Report reportTwo = data.getCrime(reportTwoText.getText(), list);
         reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);
         reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);
         if (reportOne == null || reportTwo == null) {

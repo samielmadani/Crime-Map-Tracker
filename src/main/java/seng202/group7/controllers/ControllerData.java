@@ -4,18 +4,10 @@ package seng202.group7.controllers;
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
-import javafx.collections.ObservableSet;
-import javafx.css.PseudoClass;
+
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;

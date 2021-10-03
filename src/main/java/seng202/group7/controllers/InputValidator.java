@@ -122,7 +122,8 @@ public class InputValidator {
             valid = false;
         }
 
-        if (classes.contains(InputType.ID.getValidationType()) && DataAccessor.getInstance().getCrime(input) != null) {
+        if (classes.contains(InputType.ID.getValidationType()) && 
+            DataAccessor.getInstance().getCrime(input, ControllerData.getInstance().getCurrentList()) != null) {
             valid = false;
         }
         return valid;

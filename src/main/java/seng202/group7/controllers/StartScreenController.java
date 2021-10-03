@@ -6,24 +6,22 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TableView.TableViewSelectionModel;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import seng202.group7.data.DataAccessor;
@@ -71,8 +69,17 @@ public class StartScreenController implements Initializable {
         listNames.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
         setListNames();
 
-        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            listSelected(newSelection != null);
+        table.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override 
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                    selectedList = table.getSelectionModel().getSelectedItem();
+                    listSelected(selectedList != null);
+                }
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    loadList();                   
+                }
+            }
         });
 
     }
@@ -87,12 +94,12 @@ public class StartScreenController implements Initializable {
         renameListText.setDisable(!isList);
         delete.setDisable(!isList);
         load.setDisable(!isList);
-        selectedList = table.getSelectionModel().getSelectedItem();
     }
 
     public void deleteList() {
         DataAccessor.getInstance().deleteList(table.getSelectionModel().getSelectedItem());
         setListNames();
+        listSelected(false);
     }
 
     public void loadList() {

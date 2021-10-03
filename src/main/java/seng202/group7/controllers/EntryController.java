@@ -88,22 +88,13 @@ public class EntryController implements Initializable {
      * Sets the types of validation required on each input node
      */
     private void prepareValidation() {
-        // dateText.setOnKeyTyped(event -> {
-        //     try {
-        //         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-        //         LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
-        //         datePicker.setValue(date);
-        //     } catch (DateTimeParseException ignored) {
-        //     } finally {
-        //         activeValidate(event);
-        //     }
-        // });
-
-        // datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
-        //     DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-        //     dateText.setText(datePicker.getValue().format(dateTimeFormat));
-        //     InputValidator.validate(dateText);
-        // });
+        dateText.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+                datePicker.setValue(date);
+            } catch (DateTimeParseException ignored) {}
+        });
 
         InputValidator.addValidation(cNoText, InputType.REQUIRED);
         InputValidator.addValidation(dateText, InputType.REQUIRED);
@@ -279,7 +270,7 @@ public class EntryController implements Initializable {
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
-        dataAccessor.editCrime(data);
+        dataAccessor.editCrime(data, ControllerData.getInstance().getCurrentList());
 
         finishEdit();
     }

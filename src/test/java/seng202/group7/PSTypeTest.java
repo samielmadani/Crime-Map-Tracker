@@ -1,15 +1,17 @@
 package seng202.group7;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.PSTypes;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,14 +51,14 @@ public class PSTypeTest {
 
         try {
             // Uses the int pstype method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number) " +
-                    "VALUES (?);");
+            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id) " +
+                    "VALUES (?, 1);");
             PSTypes.setPSString(ps, 1, "TestNumber"); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
 
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM crimes WHERE case_number='TestNumber'");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM crimes WHERE report_id='TestNumber'");
             assertEquals(rs.getString(1), "TestNumber");
             stmt.close();
             rs.close();
@@ -75,8 +77,8 @@ public class PSTypeTest {
         try {
             long time = Timestamp.valueOf(LocalDate.now().atStartOfDay()).getTime();
             // Uses the int pstype method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description, latitude) " +
-                    "VALUES ('TestNumber', "+time+", 'test', 'test', ?);");
+            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, latitude) " +
+                    "VALUES ('TestNumber', 1, "+time+", 'test', 'test', ?);");
             PSTypes.setPSDouble(ps, 1, 0.0); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
@@ -100,8 +102,8 @@ public class PSTypeTest {
 
         try {
             // Uses the int pstype method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, beat) " +
-                    "VALUES ('TestNumber', ?);");
+            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, beat) " +
+                    "VALUES ('TestNumber', 1, ?);");
             PSTypes.setPSInteger(ps, 1, -10); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.
@@ -124,8 +126,8 @@ public class PSTypeTest {
 
         try {
             // Uses the int pstype method
-            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, arrest) " +
-                    "VALUES ('TestNumber', ?);");
+            PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, arrest) " +
+                    "VALUES ('TestNumber', 1, ?);");
             PSTypes.setPSBoolean(ps, 1, true); // Case Number
             ps.execute();
             ps.close(); // Closes the ps statement, so it can use the connection.

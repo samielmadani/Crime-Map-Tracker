@@ -166,7 +166,7 @@ public final class DataAccessor {
 
     /**
      * Using the current page of the paginator this method returns the relevant section
-     * of reports to be used from the database in the tableview.
+     * of reports to be used from the database in the TableView.
      *
      * @return reports      The list of reports to display.
      */
@@ -209,25 +209,7 @@ public final class DataAccessor {
             ResultSet rs = stmt.executeQuery(query);
             // Converts all results into crimes.
             while (rs.next()) {
-                Timestamp tt = rs.getTimestamp("date");
-                Crime crime = new Crime(
-                        rs.getString("id"),
-                        tt.toLocalDateTime(),
-                        rs.getString("block"),
-                        rs.getString("iucr"),
-                        rs.getString("primary_description"),
-                        rs.getString("secondary_description"),
-                        rs.getString("location_description"),
-                        rs.getBoolean("arrest"),
-                        rs.getBoolean("domestic"),
-                        rs.getInt("beat"),
-                        rs.getInt("ward"),
-                        rs.getString("fbicd"),
-                        rs.getInt("x_coord"),
-                        rs.getInt("y_coord"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
-                );
+                Crime crime = generateCrime(rs);
                 reports.add(crime);
             }
             // Closes the statement and result set.
@@ -240,20 +222,57 @@ public final class DataAccessor {
         return reports;
     }
 
+    private Crime generateCrime(ResultSet rs) throws SQLException{
+        Timestamp tt = rs.getTimestamp("date");
+        Crime crime = new Crime(
+                rs.getString("id"),
+                tt.toLocalDateTime(),
+                rs.getString("block"),
+                rs.getString("iucr"),
+                rs.getString("primary_description"),
+                rs.getString("secondary_description"),
+                rs.getString("location_description"),
+                rs.getBoolean("arrest"),
+                rs.getBoolean("domestic"),
+                rs.getInt("beat"),
+                rs.getInt("ward"),
+                rs.getString("fbicd"),
+                rs.getInt("x_coord"),
+                rs.getInt("y_coord"),
+                rs.getDouble("latitude"),
+                rs.getDouble("longitude")
+        );
+        return crime;
+    }
+
     /**
      * Gets a single crime entry from the database.
      *
      * @param entry     The case number of a crime object.
      * @return          A single report.
      */
-    public Crime getCrime(String entry) {
-        String query = "SELECT * FROM crimedb WHERE id='" + entry + "';";
-        ArrayList<Report> reports = selectReports(query);
-        if (reports != null && reports.size() == 1) {
-            return (Crime) reports.get(0);
-        } else {
+    public Crime getCrime(String entry, int listId) {
+        Crime crime = null;
+        try {
+            PreparedStatement psCrime = connection.prepareStatement("SELECT " + 
+            "id, list_id, date, primary_description, secondary_description, domestic, " +
+            "x_coord, y_coord, latitude, longitude, location_description, block, iucr, fbicd, arrest, beat, ward" +
+            " FROM crimedb WHERE id=? AND list_id=?;");
+            psCrime.setString(1, entry);
+            psCrime.setInt(2, listId);
+            ResultSet rs = psCrime.executeQuery();
+
+            while (rs.next()) {
+                crime = generateCrime(rs);
+            }
+            
+            // Closes the statement.
+            psCrime.close();
+        } catch (SQLException e) {
+            System.out.println("SQLiteAccessor.getCrime: " + e);
             return null;
         }
+        return crime;
     }
 
     /**
@@ -378,7 +397,7 @@ public final class DataAccessor {
                 try {
                     rows.add(row);
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.out.println("readToDB" + e);
                 }
             }
             reader.close();
@@ -390,7 +409,7 @@ public final class DataAccessor {
             }
 
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("readToDB" + e);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -401,41 +420,43 @@ public final class DataAccessor {
      *
      * @param crime     A crime object.
      */
-    public void editCrime(Crime crime) {
+    public void editCrime(Crime crime, int listId) {
         try {
-            PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(case_number, block, iucr, fbicd, arrest, beat, ward) " +
+            PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+            PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-            PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(report_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
             PSTypes.setPSString(psCrime, 1, crime.getCaseNumber()); // Case Number
-            PSTypes.setPSString(psCrime, 2, crime.getBlock()); // Blockps.setString(2, row[2]);
-            PSTypes.setPSString(psCrime, 3, crime.getIucr()); // Iucr
-            PSTypes.setPSString(psCrime, 4, crime.getFbiCD()); // FbiCD
-            PSTypes.setPSBoolean(psCrime, 5, crime.getArrest()); // Arrest
-            PSTypes.setPSInteger(psCrime, 6, crime.getBeat()); // Beat
-            PSTypes.setPSInteger(psCrime, 7, crime.getWard()); // Ward
+            PSTypes.setPSInteger(psCrime, 2, listId); // List
+            PSTypes.setPSString(psCrime, 3, crime.getBlock()); // Block
+            PSTypes.setPSString(psCrime, 4, crime.getIucr()); // Iucr
+            PSTypes.setPSString(psCrime, 5, crime.getFbiCD()); // FbiCD
+            PSTypes.setPSBoolean(psCrime, 6, crime.getArrest()); // Arrest
+            PSTypes.setPSInteger(psCrime, 7, crime.getBeat()); // Beat
+            PSTypes.setPSInteger(psCrime, 8, crime.getWard()); // Ward
 
             PSTypes.setPSString(psReport, 1, crime.getCaseNumber()); // Case Number
 
             Timestamp date = Timestamp.valueOf(crime.getDate());
-            psReport.setTimestamp(2, date); // Date
-            PSTypes.setPSString(psReport, 3, crime.getPrimaryDescription()); // Primary Description
-            PSTypes.setPSString(psReport, 4, crime.getSecondaryDescription()); // Secondary Description
-            PSTypes.setPSBoolean(psReport, 5, crime.getDomestic()); // Domestic
-            PSTypes.setPSInteger(psReport, 6, crime.getXCoord()); // X Coordinate
-            PSTypes.setPSInteger(psReport, 7, crime.getYCoord()); // Y Coordinate
-            PSTypes.setPSDouble(psReport, 8, crime.getLatitude()); // Latitude
-            PSTypes.setPSDouble(psReport, 9, crime.getLongitude()); // Longitude
-            PSTypes.setPSString(psReport, 10, crime.getLocationDescription()); // Location Description
+            PSTypes.setPSInteger(psReport, 2, listId); // List
+            psReport.setTimestamp(3, date); // Date
+            PSTypes.setPSString(psReport, 4, crime.getPrimaryDescription()); // Primary Description
+            PSTypes.setPSString(psReport, 5, crime.getSecondaryDescription()); // Secondary Description
+            PSTypes.setPSBoolean(psReport, 6, crime.getDomestic()); // Domestic
+            PSTypes.setPSInteger(psReport, 7, crime.getXCoord()); // X Coordinate
+            PSTypes.setPSInteger(psReport, 8, crime.getYCoord()); // Y Coordinate
+            PSTypes.setPSDouble(psReport, 9, crime.getLatitude()); // Latitude
+            PSTypes.setPSDouble(psReport, 10, crime.getLongitude()); // Longitude
+            PSTypes.setPSString(psReport, 11, crime.getLocationDescription()); // Location Description
 
-            psCrime.execute();
             psReport.execute();
+            psCrime.execute();
             psCrime.close();
             psReport.close();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SQLiteAccessor.edit: " + e);
         }
     }
 
@@ -456,7 +477,7 @@ public final class DataAccessor {
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-            // Uses batchs to chain all the individual insertions into a single query to the database. This is also to increase speed.
+            // Uses batches to chain all the individual insertions into a single query to the database. This is also to increase speed.
             for (String[] row : rows) {
                 PSTypes.setPSString(psReport, 1, row[0]); // Case Number
                 PSTypes.setPSInteger(psReport, 2, listId); // List
@@ -478,7 +499,7 @@ public final class DataAccessor {
                 
                 PSTypes.setPSString(psCrime, 1, row[0]); // Case Number
                 PSTypes.setPSInteger(psCrime, 2, listId); // List
-                PSTypes.setPSString(psCrime, 3, row[2]); // Blockps.setString(2, row[2]);
+                PSTypes.setPSString(psCrime, 3, row[2]); // Block
                 PSTypes.setPSString(psCrime, 4, row[3]); // Iucr
                 PSTypes.setPSString(psCrime, 5, row[11]); // FbiCD
                 PSTypes.setPSBoolean(psCrime, 6, row[7]); // Arrest
