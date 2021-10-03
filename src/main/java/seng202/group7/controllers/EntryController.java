@@ -88,22 +88,22 @@ public class EntryController implements Initializable {
      * Sets the types of validation required on each input node
      */
     private void prepareValidation() {
-        dateText.setOnKeyTyped(event -> {
-            try {
-                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-                LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
-                datePicker.setValue(date);
-            } catch (DateTimeParseException ignored) {
-            } finally {
-                activeValidate(event);
-            }
-        });
+        // dateText.setOnKeyTyped(event -> {
+        //     try {
+        //         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+        //         LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
+        //         datePicker.setValue(date);
+        //     } catch (DateTimeParseException ignored) {
+        //     } finally {
+        //         activeValidate(event);
+        //     }
+        // });
 
-        datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
-            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-            dateText.setText(datePicker.getValue().format(dateTimeFormat));
-            InputValidator.validate(dateText);
-        });
+        // datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
+        //     DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
+        //     dateText.setText(datePicker.getValue().format(dateTimeFormat));
+        //     InputValidator.validate(dateText);
+        // });
 
         InputValidator.addValidation(cNoText, InputType.REQUIRED);
         InputValidator.addValidation(dateText, InputType.REQUIRED);

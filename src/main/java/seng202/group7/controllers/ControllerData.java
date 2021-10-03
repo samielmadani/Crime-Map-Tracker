@@ -111,6 +111,14 @@ public final class ControllerData {
         return tableState;
     }
 
+    public int getCurrentList() {
+        return currentList;
+    }
+
+    public void setCurrentList(int listId) {
+        currentList = listId;
+    }
+
 
     /**
      * Makes a screen to get a file from a user using the FilerChooser class.

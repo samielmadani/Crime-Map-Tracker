@@ -65,6 +65,8 @@ public class StartScreenController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        InputValidator.addValidation(newListText, InputType.LISTNAME);
+        InputValidator.addValidation(renameListText, InputType.LISTNAME);
 
         listNames.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
         setListNames();
@@ -77,7 +79,6 @@ public class StartScreenController implements Initializable {
 
     private void setListNames() {
         ObservableList<String> lists = DataAccessor.getInstance().getLists();
-        System.out.println(lists);
         table.setItems(lists);
     }
 
@@ -101,16 +102,20 @@ public class StartScreenController implements Initializable {
     }
 
     public void createList() {
-        DataAccessor.getInstance().createList("test");
-        setListNames();
+        if (InputValidator.validate(newListText)) {
+            DataAccessor.getInstance().createList(newListText.getText());
+            setListNames();
+        }
     }
 
     public void renameList() {
-        String list = table.getSelectionModel().getSelectedItem();
-        String newName = renameListText.getText();
-        DataAccessor.getInstance().renameList(list, newName);
-        setListNames();
-        table.getSelectionModel().select(newName);
+        if (InputValidator.validate(renameListText)) {
+            String list = table.getSelectionModel().getSelectedItem();
+            String newName = renameListText.getText();
+            DataAccessor.getInstance().renameList(list, newName);
+            setListNames();
+            table.getSelectionModel().select(newName);
+        }
     }
 
     /**

@@ -547,19 +547,20 @@ public final class DataAccessor {
         }  
     }
 
-    public int getListId(String selectedList) {
-        int listId = 0;
+    public Integer getListId(String selectedList) {
+        Integer listId = null;
         try {
             PreparedStatement psList = connection.prepareStatement("SELECT id FROM lists WHERE name=?;");
             psList.setString(1, selectedList);
             ResultSet lists = psList.executeQuery();
-            lists.next();
-            listId = lists.getInt("id");
+            while(lists.next()) {
+                listId = lists.getInt("id");
+            }
             // Closes the statement and result set.
             lists.close();
             psList.close();            
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.renameList: " + e);
+            System.out.println("SQLiteAccessor.getListId: " + e);
         }
         return listId;
     }
@@ -572,7 +573,7 @@ public final class DataAccessor {
             // Closes the statement.
             psList.close();            
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.renameList: " + e);
+            System.out.println("SQLiteAccessor.deleteList: " + e);
         }
     }
 
