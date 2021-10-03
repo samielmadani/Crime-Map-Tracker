@@ -39,7 +39,7 @@ import seng202.group7.data.Serializer;
  * @author Shaylin Simadari
  * @author John Elliott
  */
-public class FilterController implements Initializable {
+public class FilterController implements Initializable, SavesGUIFields {
 
     @FXML
     private DatePicker datePicker;
@@ -127,7 +127,7 @@ public class FilterController implements Initializable {
 
         prepareValidation();
 
-        setFilterConditions();
+        loadGUIFields();
     }
 
     /**
@@ -191,7 +191,7 @@ public class FilterController implements Initializable {
         File file = fileChooser.showOpenDialog(stage);
         if(file != null) {
             filterConditions = Serializer.deserialize(file);
-            setFilterConditions();
+            loadGUIFields();
         }
     }
 
@@ -223,7 +223,7 @@ public class FilterController implements Initializable {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
-            getFilterConditions();
+            saveGUIFields();
             Serializer.serialize(file, filterConditions);
         }
     }
@@ -238,7 +238,7 @@ public class FilterController implements Initializable {
                 return;
             }
         }
-        getFilterConditions();
+        saveGUIFields();
         String query = QueryBuilder.where(filterConditions);
 
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
@@ -271,7 +271,7 @@ public class FilterController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu(ActionEvent event) throws IOException {
-        getFilterConditions();
+        saveGUIFields();
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
@@ -282,7 +282,7 @@ public class FilterController implements Initializable {
     /**
      * Sets all the fields in the filter menu to those from filterConditions
     */
-    private void setFilterConditions(){
+    public void loadGUIFields(){
         if(filterConditions == null){
             return;
         }
@@ -299,7 +299,7 @@ public class FilterController implements Initializable {
     /**
      * Saves all the fields in the filter menu to a static variable
      */
-    private void getFilterConditions(){
+    public void saveGUIFields(){
         filterConditions = new FilterConditions(
                 datePicker.getValue(),
                 datePicker2.getValue(),

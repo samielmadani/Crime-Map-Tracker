@@ -3,7 +3,6 @@ package seng202.group7.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,9 +11,7 @@ import javafx.scene.layout.VBox;
 import seng202.group7.data.QueryBuilder;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * This menu allows a user to pick a field to search and then attempts to match
@@ -23,25 +20,11 @@ import java.util.ResourceBundle;
  * @author John Elliott
  * @author Shaylin Simadari
  */
-public class SearchController implements Initializable {
+public class SearchController {
     @FXML
     private TextField inputField;
     @FXML
     private Label errorLabel;
-
-    private static String searchInput;
-
-    /**
-     * This method is run during the loading of the search menu fxml file.
-     * It generates the options that are displayed in the choice box.
-     *
-     * @param location      A URL object.
-     * @param resources     A ResourceBundle object.
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-//        setSearchParameters();
-    }
 
     /**
      * Gets the current side panel and replaces it with the general menu panel.
@@ -50,7 +33,6 @@ public class SearchController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu(ActionEvent event) throws IOException {
-//        getSearchParameters();
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
@@ -97,13 +79,5 @@ public class SearchController implements Initializable {
         BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Changes side menu to the filter menu.
         pane.setCenter(tableView);
-    }
-
-    private void setSearchParameters(){
-        inputField.setText(searchInput);
-    }
-
-    private void getSearchParameters(){
-        searchInput = inputField.getText();
     }
 }

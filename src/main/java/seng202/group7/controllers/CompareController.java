@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 
 import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,8 +24,9 @@ import seng202.group7.analyses.Comparer;
  * Handles the comparisons of two crime objects.
  *
  * @author Jack McCorkindale
+ * @author Shaylin Simadari
  */
-public class CompareController implements Initializable {
+public class CompareController implements Initializable, SavesGUIFields {
 
     @FXML
     private TextField reportOneText, reportTwoText;
@@ -61,7 +61,7 @@ public class CompareController implements Initializable {
             }
 
         });
-        setReports();
+        loadGUIFields();
     }
 
     /**
@@ -84,7 +84,7 @@ public class CompareController implements Initializable {
      * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu() throws IOException {
-        getReports();
+        saveGUIFields();
         BorderPane pane = (BorderPane) frame.getParent();
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
         // Changes side menu to the filter menu.
@@ -151,7 +151,7 @@ public class CompareController implements Initializable {
         }
     }
 
-    private void getReports(){
+    public void saveGUIFields(){
         if(!reportOneText.getText().equals("")) {
             report1 = reportOneText.getText();
         }
@@ -160,7 +160,7 @@ public class CompareController implements Initializable {
         }
     }
 
-    private void setReports(){
+    public void loadGUIFields(){
         if(report1 != null) {
             reportOneText.setText(report1);
         }
