@@ -6,16 +6,20 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
@@ -25,6 +29,7 @@ import seng202.group7.analyses.Comparer;
  * Handles the comparisons of two crime objects.
  *
  * @author Jack McCorkindale
+ * @author John Elliott
  */
 public class CompareController implements Initializable {
 
@@ -143,6 +148,79 @@ public class CompareController implements Initializable {
             resultText.setText(String.format("Crime %s and %s occurred at the same time.", reportOneText.getText(), reportTwoText.getText()));
         } else {
             resultText.setText(String.format("Crime %s and %s occurred %sapart.", reportOneText.getText(), reportTwoText.getText(), timeString));
+        }
+    }
+
+    /**
+     * Will check to see if the data is being viewed through the table or data entry. It will then run the respective
+     * methods to get the case number of the crime and insert the value into the appropriate table based on the button clicked.
+     *
+     * @param event         The button event that triggered this method.
+     */
+    public void addSelected(ActionEvent event) {
+        String selectedCrime;
+        // Starts with getting the root panel.
+        BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
+        // Then it gets the pagination node from the centre.
+        Node centreNode = ((BorderPane) pane.getCenter()).getCenter();
+        try {
+            if (centreNode instanceof Pagination) {
+                selectedCrime = getFromPages(centreNode);
+            } else {
+                selectedCrime = getFromEntry(centreNode);
+            }
+        } catch (Exception ignore) {
+            selectedCrime = null; // No correct data loaded so no value can be selected.
+        }
+
+        if (selectedCrime != null) {
+            Button addButton = (Button) event.getSource();
+            // Checks to see which add button was clicked so that it can be added to the right text field.
+            if (Objects.equals(addButton.getId(), "addR1")) {
+                reportOneText.setText(selectedCrime);
+            } else {
+                reportTwoText.setText(selectedCrime);
+            }
+        }
+    }
+
+    /**
+     * Gets given a node which corresponding to a Pagination node and from this it gets the table and the currently
+     * selected value of the table which it then returns.
+     *
+     * @param centreNode    The Pagination node.
+     * @return  The case number.
+     */
+    private String getFromPages(Node centreNode) {
+        Pagination pagination = (Pagination) centreNode;
+        // From currentStakePane being stored in the Pagination class the children (which is the dataView FXML file) are retrieved.
+        BorderPane tablePane = ((BorderPane) ((StackPane) pagination.getChildrenUnmodifiable().get(0)).getChildren().get(0));
+        // Uses the "?" as the casting is happening during the runtime of the application and so it can not check the type held within the classes.
+        // Instead, now when retrieving items from the table we have to cast them to crime objects.
+        TableView<?> tableView = (TableView<?>) tablePane.getCenter();
+        Crime crime = (Crime) tableView.getSelectionModel().getSelectedItem();
+        if (crime != null) {
+            return crime.getCaseNumber();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets given a node which corresponding to a GridPane which holds a set of VBoxes with TextFields inside them.
+     * It uses the lookup method on first the GridPane to get the VBox needed and then the VBox to find the TextField.
+     * It then returns the string within the textField.
+     *
+     * @param centreNode    The GridPane node.
+     * @return  The case number.
+     */
+    private String getFromEntry(Node centreNode) {
+        GridPane gridEntry = (GridPane) centreNode;
+        String selectedCrime = ((TextField) gridEntry.lookup("#generalInformation").lookup("#cNoText")).getText();
+        if (Objects.equals(selectedCrime, "")) {
+            return null;
+        } else {
+            return selectedCrime;
         }
     }
 }

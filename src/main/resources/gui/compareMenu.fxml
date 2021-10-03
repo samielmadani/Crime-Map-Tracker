@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="frame"  xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.CompareController" stylesheets="@style.css">
+<VBox fx:id="frame" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.CompareController">
    <children>
       <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0" prefWidth="175.0" spacing="10.0">
          <padding>
@@ -34,13 +34,23 @@
             </HBox>
 
             <Label alignment="CENTER" prefWidth="175.0" text="Report 1" />
-            <TextField fx:id="reportOneText"  styleClass="report" />
+            <HBox prefHeight="26.0" prefWidth="155.0">
+               <children>
+                  <TextField fx:id="reportOneText" prefHeight="25.0" prefWidth="118.0" styleClass="report" />
+                  <Button fx:id="addR1" mnemonicParsing="false" onAction="#addSelected" text="Add" />
+               </children>
+            </HBox>
 
 
             <Label alignment="CENTER" prefWidth="175.0" text="Report 2" />
-            <TextField fx:id="reportTwoText" styleClass="report" />
+            <HBox prefHeight="27.0" prefWidth="155.0">
+               <children>
+                  <TextField fx:id="reportTwoText" prefHeight="25.0" prefWidth="118.0" styleClass="report" />
+                  <Button fx:id="addR2" mnemonicParsing="false" onAction="#addSelected" text="Add" />
+               </children>
+            </HBox>
 
-            <Button text="Compare" onAction="#compareReports" />
+            <Button onAction="#compareReports" prefHeight="25.0" prefWidth="187.0" text="Compare" />
 
             <Label fx:id="resultText" wrapText="true" />
          </children>

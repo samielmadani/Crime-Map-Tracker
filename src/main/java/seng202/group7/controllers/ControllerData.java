@@ -59,14 +59,6 @@ public final class ControllerData {
      */
     private String whereQuery = "";
 
-    private PseudoClass errorClass = PseudoClass.getPseudoClass("error");
-    private PseudoClass required = PseudoClass.getPseudoClass("required");
-    private PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
-    private PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
-    private PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
-    private PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
-    private PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
-
 
     /**
      * The constructor which is made private so that it can not be initialized from other classes.
@@ -186,103 +178,5 @@ public final class ControllerData {
      */
     public void setWhereQuery(String searchingQuery) {
         this.whereQuery = searchingQuery;
-    }
-
-    /**
-     * Checks if the input has a value and adds the error class if it is invalid.
-     *
-     * @return If the field has an entry
-     */
-    private boolean validateRequired(String input) {
-        boolean valid;
-        valid = !(input.isEmpty());
-        return valid;
-    }
-
-    /**
-     * Validates the value in each box. The validation is currently limited to Integer, Double, Date, and Time. <p>
-     * For an input box to be validated against a condition it must be added to the ArrayList during initialization.
-     *
-     * @param input             The input to be validated
-     * @param classes           The pseudo classes.
-     * @return                  If the input is valid
-     */
-    private boolean validateText(String input, ObservableSet<PseudoClass> classes) {
-        boolean valid = true;
-        if (classes.contains(integerFormat)) {
-            try {
-                Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                valid = false;
-            }
-        }
-        if (classes.contains(doubleFormat)) {
-            try {
-                Double.parseDouble(input);
-            } catch (NumberFormatException e) {
-                valid = false;
-            }
-        }
-        if (classes.contains(timeFormat)) {
-            try {
-                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("H:mm");
-                LocalTime.parse(input, dateTimeFormat);
-            } catch (DateTimeParseException e) {
-                valid = false;
-            }
-        }
-        if (classes.contains(uniqueId) && DataAccessor.getInstance().getCrime(input) != null) {
-            valid = false;
-        }
-        return valid;
-    }
-
-    /**
-     * Passes the value through the required validation methods.
-     *
-     * @param inputBox The input to be validated
-     * @return If the input is valid
-     */
-    public boolean validate(Node inputBox) {
-        boolean valid = true;
-        String input = null;
-        if (inputBox.getClass() == TextField.class) {
-            input = ((TextField) inputBox).getText();
-        } else if (inputBox.getClass() == TextArea.class) {
-            input = ((TextArea) inputBox).getText();
-        } else if (inputBox.getClass() == DatePicker.class) {
-            input = ((DatePicker) inputBox).getEditor().getText();
-        }
-        if (inputBox.getPseudoClassStates().contains(dateEditor)) {
-            input = ((TextField) inputBox).getText();
-            try {
-                DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
-                LocalDate.parse(input, dateTimeFormat);
-            } catch (DateTimeParseException e) {
-                if (!input.equals("")) {
-                    valid = false;
-                }
-            }
-        }
-        // Checks to see if the text field is empty.
-        if (inputBox.getPseudoClassStates().contains(required)) {
-            valid &= validateRequired(input);
-        }
-        if (valid && !"".equals(input)) {
-            valid &= validateText(input, inputBox.getPseudoClassStates());
-        }
-        if (valid && inputBox.getPseudoClassStates().contains(uniqueId)) {
-            valid &= validateText(input, inputBox.getPseudoClassStates());
-        }
-        inputBox.pseudoClassStateChanged(errorClass, !valid);
-        return valid;
-    }
-
-    public void setCurrentList(int listId) {
-        currentList = listId;
-    }
-
-    public int getCurrentList() {
-        return currentList;
     }
 }

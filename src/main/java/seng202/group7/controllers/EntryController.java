@@ -11,7 +11,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
-import javafx.css.PseudoClass;
 import seng202.group7.data.DataAccessor;
 
 import java.net.URL;
@@ -56,18 +55,6 @@ public class EntryController implements Initializable {
 
     private ArrayList<Node> allValues, editableValues;
 
-    /**
-     * Possible pseudoClasses for the class, errorClass changes formatting for invalid entries and the others 
-     * alert the validation class what validation is required
-     */
-    private final PseudoClass required = PseudoClass.getPseudoClass("required");
-    private final PseudoClass doubleFormat = PseudoClass.getPseudoClass("double");
-    private final PseudoClass integerFormat = PseudoClass.getPseudoClass("integer");
-    private final PseudoClass dateFormat = PseudoClass.getPseudoClass("date");
-    private final PseudoClass dateEditor = PseudoClass.getPseudoClass("dateEditor");
-    private final PseudoClass timeFormat = PseudoClass.getPseudoClass("time");
-    private final PseudoClass uniqueId = PseudoClass.getPseudoClass("id");
-
 
     /**
      * This method is run during the loading of the crime edit fxml file.
@@ -93,7 +80,6 @@ public class EntryController implements Initializable {
         if (data != null) {
             setData();
         } else {
-            cNoText.pseudoClassStateChanged(uniqueId, true);
             editEntry();
         }
     }
@@ -116,28 +102,26 @@ public class EntryController implements Initializable {
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
             dateText.setText(datePicker.getValue().format(dateTimeFormat));
-            ControllerData.getInstance().validate(dateText);
+            InputValidator.validate(dateText);
         });
 
-        cNoText.pseudoClassStateChanged(required, true);
-        dateText.pseudoClassStateChanged(required, true);
-        timeText.pseudoClassStateChanged(required, true);
-        priText.pseudoClassStateChanged(required, true);
-        secText.pseudoClassStateChanged(required, true);
+        InputValidator.addValidation(cNoText, InputType.REQUIRED);
+        InputValidator.addValidation(dateText, InputType.REQUIRED);
+        InputValidator.addValidation(timeText, InputType.REQUIRED);
+        InputValidator.addValidation(priText, InputType.REQUIRED);
+        InputValidator.addValidation(secText, InputType.REQUIRED);
 
-        beatText.pseudoClassStateChanged(integerFormat, true);
-        wardText.pseudoClassStateChanged(integerFormat, true);
-        xCoordText.pseudoClassStateChanged(integerFormat, true);
-        yCoordText.pseudoClassStateChanged(integerFormat, true);
+        InputValidator.addValidation(beatText, InputType.INTEGER);
+        InputValidator.addValidation(wardText, InputType.INTEGER);
+        InputValidator.addValidation(xCoordText, InputType.INTEGER);
+        InputValidator.addValidation(yCoordText, InputType.INTEGER);
 
-        latText.pseudoClassStateChanged(doubleFormat, true);
-        longText.pseudoClassStateChanged(doubleFormat, true);
+        InputValidator.addValidation(latText, InputType.DOUBLE);
+        InputValidator.addValidation(longText, InputType.DOUBLE);
 
-        dateText.pseudoClassStateChanged(dateFormat, true);
-        timeText.pseudoClassStateChanged(timeFormat, true);
-
-        dateText.pseudoClassStateChanged(dateEditor, true);
-
+        InputValidator.addValidation(dateText, InputType.DATE);
+        InputValidator.addValidation(timeText, InputType.TIME);
+        InputValidator.addValidation(cNoText, InputType.ID);
     }
 
     /**
@@ -146,7 +130,7 @@ public class EntryController implements Initializable {
      */
     public void activeValidate(KeyEvent event) {
         Node inputBox = (Node) event.getSource();
-        ControllerData.getInstance().validate(inputBox);
+        InputValidator.validate(inputBox);
     }
 
     /**
@@ -258,7 +242,7 @@ public class EntryController implements Initializable {
     public void saveEdit() {
         boolean valid = true;
         for (Node node : allValues) {
-            if (!ControllerData.getInstance().validate(node)) {
+            if (!InputValidator.validate(node)) {
                 valid = false;
             }
         }
@@ -294,7 +278,6 @@ public class EntryController implements Initializable {
 
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
-        cNoText.pseudoClassStateChanged(uniqueId, false);
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
         dataAccessor.editCrime(data);
 

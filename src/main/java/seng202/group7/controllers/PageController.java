@@ -1,16 +1,22 @@
 package seng202.group7.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import seng202.group7.data.DataAccessor;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import javax.xml.validation.Validator;
 
 /**
  * This class creates the paginator that then itself generates the tables,
@@ -27,7 +33,13 @@ public class PageController implements Initializable {
     private Pagination pages;
 
     @FXML
-    private Node frame;
+    private Node pageFrame;
+
+    @FXML
+    private TextField pageField;
+
+    @FXML
+    private Label dataTotal;
 
 
     /**
@@ -39,11 +51,12 @@ public class PageController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        InputValidator.addValidation(pageField, InputType.INTEGER);
 
-        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+        pageFrame.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent != null) {
-                int size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
-                
+                int size = DataAccessor.getInstance().getSize();
+                dataTotal.setText("Data Total: "+size); // Sets current display total.
                 pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
                 pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());
             }
@@ -51,6 +64,7 @@ public class PageController implements Initializable {
         });
 
         pages.setPageFactory(this::createPage); // When ever a page is swapped it calls this method.
+
     }
 
     /**
@@ -69,4 +83,54 @@ public class PageController implements Initializable {
         }
         return null;
     }
+
+    /**
+     * Sets the current page to the start.
+     */
+    public void toFront() {
+        pages.setCurrentPageIndex(0);
+        pageField.setText("1");
+    }
+
+    /**
+     * Sets the current page to the end.
+     */
+    public void toEnd() {
+        pages.setCurrentPageIndex(pages.getPageCount());
+        pageField.setText(""+pages.getPageCount());
+    }
+
+    /**
+     * Gets the current text for the page the user wants to goto and then checks if it's valid after which it will either
+     * change the page to the new page or change the text field back to a valid input and then if it can change pages.
+     */
+    public void gotoPage() {
+        String input = pageField.getText();
+        if (InputValidator.validate(pageField) && !input.isEmpty()) {
+            int queryPage = Integer.parseInt(input);
+            if (queryPage > 0 && queryPage < pages.getPageCount()){
+                pages.setCurrentPageIndex(Integer.parseInt(input) - 1); // Is valid and changes the page.
+            }
+        }
+    }
+
+    // /**
+    //  * Checks the current page limit for the paginator and checks the value given if it is valid or not.
+    //  *
+    //  * @param input     The text input.
+    //  * @return  The result of if the text input is valid.
+    //  */
+    // private boolean isValid(String input) {
+    //     // TODO change to new validation method
+    //     boolean valid;
+    //     int numOfDig = String.valueOf(pages.getPageCount()).length();
+    //     if (numOfDig == 0) {
+    //         valid = false;
+    //     } else if (numOfDig == 1){
+    //         valid = input.matches("[1-"+pages.getPageCount()+"]");
+    //     } else {
+    //         valid = input.matches("[1-9]([0-9]{0,"+(numOfDig-1)+"})");
+    //     }
+    //     return valid;
+    // }
 }
