@@ -1,5 +1,6 @@
 package seng202.group7.analyses;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -125,6 +126,55 @@ public class Rank {
         return hashToList(map);
     }
 
+    public static ArrayList<CrimeFrequency> crimeOverTime(ArrayList<Report> data) {
+
+        ArrayList<CrimeFrequency>  crimeOverTime = new ArrayList<>();
+        int yearValue = data.get(0).getDate().getYear();
+        int monthValue = data.get(0).getDate().getMonthValue();
+        int lastYear = data.get(data.size() - 1).getDate().getYear();
+        int lastMonth = data.get(data.size() -1).getDate().getMonthValue();
+        boolean lastValueNotFound = true;
+
+        while(lastValueNotFound) {
+
+            if (yearValue == lastYear && monthValue == lastMonth) {
+                lastValueNotFound = false;
+            }
+
+            CrimeFrequency freq = new CrimeFrequency(String.valueOf(monthValue) + " " + String.valueOf(yearValue), 0);
+            crimeOverTime.add(freq);
+
+            monthValue += 1;
+            if (monthValue == 13) {
+                monthValue = 1;
+                yearValue += 1;
+            }
+        }
+        boolean crimeMatch;
+        int index = 0;
+
+        for (CrimeFrequency freq: crimeOverTime){
+            crimeMatch = true;
+            while (crimeMatch) {
+                LocalDateTime date = data.get(index).getDate();
+                String dateString = String.valueOf(date.getMonthValue()) + " " + String.valueOf(date.getYear());
+                if(dateString.equals(freq.getDate())) {
+                    freq.setFrequency(freq.getFrequency() + 1);
+                    index += 1;
+                    if (index == data.size()) {
+                        crimeMatch = false;
+                    }
+                } else {
+                    crimeMatch = false;
+                }
+            }
+
+        }
+        return crimeOverTime;
+    }
+
+
+
     /**
      * Helper function for block and primary frequency rank, converts a hash table into a sorted list of tuples.
      *
@@ -138,7 +188,7 @@ public class Rank {
             list.add(new Tuple<>(entry.getKey(), entry.getValue()));
         }
         list.sort((a, b) -> a.y - (int) b.y);
-        Collections.reverse(list);
         return list;
     }
+
 }

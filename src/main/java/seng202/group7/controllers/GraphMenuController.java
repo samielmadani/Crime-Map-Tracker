@@ -1,16 +1,16 @@
 package seng202.group7.controllers;
 
-import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -27,9 +27,7 @@ public class GraphMenuController implements Initializable {
     @FXML
     private Node frame;
 
-    private PseudoClass frequentCrime;
-    private PseudoClass wardDanger;
-    private PseudoClass streetDanger;
+    private Parent root;
 
     /**
      * This method is run during the loading of the graph menu fxml file.
@@ -39,16 +37,13 @@ public class GraphMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        frequentCrime = PseudoClass.getPseudoClass("frequentCrime");
+
         graphType.getItems().add("Most Frequent Crime Types");
-        graphType.setValue("Most Frequent Crime Types");
-
-        wardDanger = PseudoClass.getPseudoClass("wardDanger");
         graphType.getItems().add("Most Dangerous Wards");
-
-        streetDanger = PseudoClass.getPseudoClass("streetDanger");
         graphType.getItems().add("Most Dangerous Streets");
+        graphType.getItems().add("Crime Over Time");
 
+        graphType.setValue("Most Frequent Crime Types");
     }
 
     /**
@@ -58,13 +53,17 @@ public class GraphMenuController implements Initializable {
      * @throws IOException      The exception that is thrown when the FXML Loader can't load the fxml file
      */
     public void selectGraph() throws IOException {
-        String graphSelection = graphType.getValue();
-        GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
 
-        graphView.pseudoClassStateChanged(frequentCrime, graphSelection.equals("Most Frequent Crime Types"));
-        graphView.pseudoClassStateChanged(wardDanger, graphSelection.equals("Most Dangerous Wards"));
-        graphView.pseudoClassStateChanged(streetDanger, graphSelection.equals("Most Dangerous Streets"));
-        ((BorderPane) frame.getParent()).setCenter(graphView);
+        ArrayList<Integer> graphVariables;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/barGraphView.fxml"));
+        root = loader.load();
+        BarGraphViewController graphView = loader.getController();
+        graphView.prepareBarGraph(graphType.getValue());
+
+        ((BorderPane) frame.getParent()).setCenter(root);
     }
 
 }
+
+

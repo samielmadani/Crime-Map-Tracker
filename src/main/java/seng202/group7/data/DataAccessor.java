@@ -173,6 +173,11 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
+    public ArrayList<Report> getAllSortedByDate() {
+        String query = "SELECT * FROM crimedb ORDER BY date ASC";
+        return selectReports(query);
+    }
+
     /**
      * Uses a query for the crimedb view to get a selection of reports.
      *
