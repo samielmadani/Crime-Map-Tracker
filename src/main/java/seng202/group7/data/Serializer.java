@@ -1,6 +1,12 @@
 package seng202.group7.data;
 
-import java.io.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 
 /**
  * A class used to serialize objects and store them in a file, and to deserialize them back into objects
