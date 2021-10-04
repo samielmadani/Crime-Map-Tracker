@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -67,23 +65,21 @@ public class CompareController implements Initializable {
     }
 
     /**
-     * Clears results and sends the two reports requested to the correct comparison types.
+     * Gets the two pieces of data and creates a string based on the distance and time comparison between the two values
      */
     public void compareReports() {
         DataAccessor data = DataAccessor.getInstance();
         resultText.setText("");
         String resultTextString = "";
 
-        Report reportOne = data.getCrime(reportOneText.getText());
-        Report reportTwo = data.getCrime(reportTwoText.getText());
+        Crime reportOne = data.getCrime(reportOneText.getText());
+        Crime reportTwo = data.getCrime(reportTwoText.getText());
         reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);
         reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);
-        Crime c1 = (Crime) reportOne;
-        Crime c2 = (Crime) reportTwo;
         if (reportOne == null || reportTwo == null) {
             return;
         } else {
-            if (c1.getCaseNumber().equals(c2.getCaseNumber())) {
+            if (reportOne.getCaseNumber().equals(reportTwo.getCaseNumber())) {
                 resultTextString += "The two crimes are the same value, please select two different values.";
             } else {
                 resultTextString += "Distance:";
@@ -96,7 +92,7 @@ public class CompareController implements Initializable {
     }
 
     /**
-     * Compares the distance between the two reports and displays it for the user.
+     * Compares the distance between the two reports and returns a string representing this value
      *
      * @param reportOne     The first report to be compared
      * @param reportTwo     The second report to be compared
@@ -115,7 +111,7 @@ public class CompareController implements Initializable {
     }
 
     /**
-     * Compares the time difference between the two reports and displays it for the user.
+     * Compares the time difference between the two reports and returns a string representing this value
      *
      * @param reportOne     The first report to be compared
      * @param reportTwo     The second report to be compared
