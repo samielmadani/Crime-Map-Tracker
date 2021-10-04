@@ -44,14 +44,38 @@ public final class Comparer {
         double lat2 = 0;
         double lon1 = 0;
         double lon2 = 0;
+
+        double checkNull = 0;
         try {
             lat1 = reportOne.getLatitude();
-            lat2 = reportTwo.getLatitude();
             lon1 = reportOne.getLongitude();
+        } catch (NullPointerException e) {
+            //Report one has no location values
+            checkNull = -1;
+        } try {
+            lat2 = reportTwo.getLatitude();
             lon2 = reportTwo.getLongitude();
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
+            //Report two has no location values
+            if (checkNull == 0) {
+                checkNull = -2;
+            } else {
+                //Both reports have no location values
+                checkNull = -3;
+            }
         }
+        if (checkNull != 0) {
+            return checkNull;
+        }
+
+        if (lat1 == 0 && lat2 == 0) {
+            return -3;
+        } else if (lat1 == 0) {
+            return -1;
+        } else if (lat2 == 0) {
+            return -2;
+        }
+
         double theta = lon1 - lon2;
         double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1))
                 * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));

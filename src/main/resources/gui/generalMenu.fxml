@@ -33,8 +33,7 @@
          </MenuButton>
       </HBox>
       <Button fx:id="newEntryButton" alignment="BASELINE_LEFT" layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#toNewEntry" prefWidth="175.0" text="    New Entry" />
-      <Button fx:id="timeButton" alignment="BASELINE_LEFT" layoutX="20.0" layoutY="55.0" mnemonicParsing="false" onAction="#toTime" prefWidth="175.0" text="    Time Difference" />
-      <Button fx:id="distanceButton" alignment="BASELINE_LEFT" layoutX="20.0" layoutY="90.0" mnemonicParsing="false" onAction="#toDistance" prefWidth="175.0" text="    Distance" />
+      <Button fx:id="compareButton" onAction="#toCompare" layoutX="20.0" layoutY="55.0" mnemonicParsing="false" prefWidth="175.0" text="    Compare Report" />
    </children>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
