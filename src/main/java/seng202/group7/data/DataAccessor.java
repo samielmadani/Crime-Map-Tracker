@@ -49,11 +49,10 @@ public final class DataAccessor {
      */
     private DataAccessor() {
         File database = new File("MainDatabase.db");
-        if (!database.exists()) {
-            createDatabase();
-            return;
-        }
         try {
+            if (!database.exists()) {
+                createDatabase("MainDatabase.db");
+            }
             connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
             runStatement("PRAGMA foreign_keys = ON;");
         } catch (SQLException e) {
@@ -71,50 +70,49 @@ public final class DataAccessor {
 
     /**
      * Creates a new database if one doesn't exist
+     * @throws SQLException
      */
-    private void createDatabase() {
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
+    private void createDatabase(String location) throws SQLException {
+        Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location);
 
-            runStatement("PRAGMA foreign_keys = ON;");
+        Statement stmt = newdb.createStatement();
+        stmt.execute("PRAGMA foreign_keys = ON;");
 
-            runStatement("CREATE TABLE lists (" + 
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name VARCHAR(32) UNIQUE NOT NULL" +
-                    ")");
-            runStatement("CREATE TABLE reports (" + 
-                    "id VARCHAR(8) NOT NULL, " + 
-                    "list_id INTEGER NOT NULL, " +
-                    "date TIMESTAMP NOT NULL, " +
-                    "primary_description VARCHAR(50) NOT NULL, " +
-                    "secondary_description VARCHAR(50) NOT NULL, " + 
-                    "domestic BOOLEAN, " +
-                    "x_coord INT, " +
-                    "y_coord INT, " +
-                    "latitude FLOAT, " +
-                    "longitude FLOAT, " +
-                    "location_description VARCHAR(50), " +
-                    "PRIMARY KEY(id, list_id), " +
-                    "FOREIGN KEY(list_id) REFERENCES lists(id) ON DELETE CASCADE " +
-                    ")");
-            runStatement("CREATE TABLE crimes (" + 
-                    "report_id VARCHAR(8) NOT NULL, " +
-                    "list_id INTEGER NOT NULL, " +
-                    "block VARCHAR(50), " +
-                    "iucr VARCHAR(4), " +
-                    "fbicd VARCHAR(3), " + 
-                    "arrest BOOLEAN, " +
-                    "beat INT, " +
-                    "ward INT, " +
-                    "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id) ON DELETE CASCADE, " +
-                    "PRIMARY KEY(report_id, list_id)" +
-                    ")");
-            runStatement("CREATE VIEW crimedb AS " +
-                    "SELECT *" + 
-                    "FROM reports JOIN crimes c ON id=c.report_id AND reports.list_id=c.list_id");
-                } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.create: " + e);
-        }
+        stmt.execute("CREATE TABLE lists (" + 
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "name VARCHAR(32) UNIQUE NOT NULL" +
+                ")");
+        stmt.execute("CREATE TABLE reports (" + 
+                "id VARCHAR(8) NOT NULL, " + 
+                "list_id INTEGER NOT NULL, " +
+                "date TIMESTAMP NOT NULL, " +
+                "primary_description VARCHAR(50) NOT NULL, " +
+                "secondary_description VARCHAR(50) NOT NULL, " + 
+                "domestic BOOLEAN, " +
+                "x_coord INT, " +
+                "y_coord INT, " +
+                "latitude FLOAT, " +
+                "longitude FLOAT, " +
+                "location_description VARCHAR(50), " +
+                "PRIMARY KEY(id, list_id), " +
+                "FOREIGN KEY(list_id) REFERENCES lists(id) ON UPDATE CASCADE ON DELETE CASCADE" +
+                ")");
+        stmt.execute("CREATE TABLE crimes (" + 
+                "report_id VARCHAR(8) NOT NULL, " +
+                "list_id INTEGER NOT NULL, " +
+                "block VARCHAR(50), " +
+                "iucr VARCHAR(4), " +
+                "fbicd VARCHAR(3), " + 
+                "arrest BOOLEAN, " +
+                "beat INT, " +
+                "ward INT, " +
+                "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id) ON UPDATE CASCADE ON DELETE CASCADE, " +
+                "PRIMARY KEY(report_id, list_id)" +
+                ")");
+        stmt.execute("CREATE VIEW crimedb AS " +
+                "SELECT *" + 
+                "FROM reports JOIN crimes c ON id=c.report_id AND reports.list_id=c.list_id");
+        newdb.close();
     }
 
 
@@ -479,33 +477,7 @@ public final class DataAccessor {
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
             // Uses batches to chain all the individual insertions into a single query to the database. This is also to increase speed.
             for (String[] row : rows) {
-                PSTypes.setPSString(psReport, 1, row[0]); // Case Number
-                PSTypes.setPSInteger(psReport, 2, listId); // List
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
-                if (Objects.equals(row[1], "")) {
-                    psReport.setNull(3, Types.TIME);
-                } else {
-                    psReport.setTimestamp(3, Timestamp.valueOf(LocalDateTime.parse(row[1], formatter)));
-                } // Date
-                PSTypes.setPSString(psReport, 4, row[4]); // Primary Description
-                PSTypes.setPSString(psReport, 5, row[5]); // Secondary Description
-                PSTypes.setPSBoolean(psReport, 6, row[8]); // Domestic
-                PSTypes.setPSInteger(psReport, 7, row[12]); // X Coordinate
-                PSTypes.setPSInteger(psReport, 8, row[13]); // Y Coordinate
-                PSTypes.setPSDouble(psReport, 9, row[14]); // Latitude
-                PSTypes.setPSDouble(psReport, 10, row[15]); // Longitude
-                PSTypes.setPSString(psReport, 11, row[6]); // Location Description
-                psReport.addBatch();
-                
-                PSTypes.setPSString(psCrime, 1, row[0]); // Case Number
-                PSTypes.setPSInteger(psCrime, 2, listId); // List
-                PSTypes.setPSString(psCrime, 3, row[2]); // Block
-                PSTypes.setPSString(psCrime, 4, row[3]); // Iucr
-                PSTypes.setPSString(psCrime, 5, row[11]); // FbiCD
-                PSTypes.setPSBoolean(psCrime, 6, row[7]); // Arrest
-                PSTypes.setPSInteger(psCrime, 7, row[9]); // Beat
-                PSTypes.setPSInteger(psCrime, 8, row[10]); // Ward
-                psCrime.addBatch();
+                addEntry(row, listId, psReport, psCrime);
             }
             // Executes all the insertions.
             psReport.executeBatch();
@@ -524,7 +496,36 @@ public final class DataAccessor {
                 System.out.println("SQLiteAccessor.ClosePS: " + e);
             }
         }
+    }
 
+    private void addEntry(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException {
+        PSTypes.setPSString(psReport, 1, row[0]); // Case Number
+        PSTypes.setPSInteger(psReport, 2, listId); // List
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
+        if (Objects.equals(row[1], "")) {
+            psReport.setNull(3, Types.TIME);
+        } else {
+            psReport.setTimestamp(3, Timestamp.valueOf(LocalDateTime.parse(row[1], formatter)));
+        } // Date
+        PSTypes.setPSString(psReport, 4, row[4]); // Primary Description
+        PSTypes.setPSString(psReport, 5, row[5]); // Secondary Description
+        PSTypes.setPSBoolean(psReport, 6, row[8]); // Domestic
+        PSTypes.setPSInteger(psReport, 7, row[12]); // X Coordinate
+        PSTypes.setPSInteger(psReport, 8, row[13]); // Y Coordinate
+        PSTypes.setPSDouble(psReport, 9, row[14]); // Latitude
+        PSTypes.setPSDouble(psReport, 10, row[15]); // Longitude
+        PSTypes.setPSString(psReport, 11, row[6]); // Location Description
+        psReport.addBatch();
+        
+        PSTypes.setPSString(psCrime, 1, row[0]); // Case Number
+        PSTypes.setPSInteger(psCrime, 2, listId); // List
+        PSTypes.setPSString(psCrime, 3, row[2]); // Block
+        PSTypes.setPSString(psCrime, 4, row[3]); // Iucr
+        PSTypes.setPSString(psCrime, 5, row[11]); // FbiCD
+        PSTypes.setPSBoolean(psCrime, 6, row[7]); // Arrest
+        PSTypes.setPSInteger(psCrime, 7, row[9]); // Beat
+        PSTypes.setPSInteger(psCrime, 8, row[10]); // Ward
+        psCrime.addBatch();
     }
 
     public void createList(String name) {
@@ -595,6 +596,89 @@ public final class DataAccessor {
             psList.close();            
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.deleteList: " + e);
+        }
+    }
+
+    public void export(String conditions, int listId, String saveLocation) {
+        if (saveLocation.endsWith(".db")) {
+
+            createExportDatabase(saveLocation);
+
+            runStatement("ATTACH DATABASE '" + saveLocation + "' AS other;");
+
+            String query = "INSERT INTO other.reports SELECT " +
+            "id, " + 
+            "date, " +
+            "primary_description, " +
+            "secondary_description, " + 
+            "domestic, " +
+            "x_coord, " +
+            "y_coord, " +
+            "latitude, " +
+            "longitude, " +
+            "location_description " + 
+            "FROM crimedb WHERE ";
+            query = addConditions(query, conditions, listId);
+            runStatement(query);
+
+            query = "INSERT INTO other.crimes SELECT " +
+            "report_id, " + 
+            "block, " +
+            "iucr, " +
+            "fbicd, " + 
+            "arrest, " +
+            "beat, " +
+            "ward " + 
+            "FROM crimedb WHERE ";
+            query = addConditions(query, conditions, listId);
+            runStatement(query);
+
+        } else if (saveLocation.endsWith("csv")) {
+
+        }
+
+    }
+
+    private String addConditions(String query, String conditions, int listId) {
+        query += conditions;
+        if (!conditions.isEmpty()) {
+            query += " AND";
+        }
+        query += " list_id=" + listId +";";
+        return query;
+    }
+
+    private void createExportDatabase(String location) {
+        try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location)) {
+            Statement stmt = newdb.createStatement();
+            stmt.execute("PRAGMA foreign_keys = ON;");
+
+            stmt.execute("CREATE TABLE reports (" + 
+                    "id VARCHAR(8) NOT NULL, " + 
+                    "date TIMESTAMP NOT NULL, " +
+                    "primary_description VARCHAR(50) NOT NULL, " +
+                    "secondary_description VARCHAR(50) NOT NULL, " + 
+                    "domestic BOOLEAN, " +
+                    "x_coord INT, " +
+                    "y_coord INT, " +
+                    "latitude FLOAT, " +
+                    "longitude FLOAT, " +
+                    "location_description VARCHAR(50), " +
+                    "PRIMARY KEY(id) " +
+                    ")");
+            stmt.execute("CREATE TABLE crimes (" + 
+                    "report_id VARCHAR(8) NOT NULL, " +
+                    "block VARCHAR(50), " +
+                    "iucr VARCHAR(4), " +
+                    "fbicd VARCHAR(3), " + 
+                    "arrest BOOLEAN, " +
+                    "beat INT, " +
+                    "ward INT, " +
+                    "FOREIGN KEY(report_id) REFERENCES reports(id) ON UPDATE CASCADE ON DELETE CASCADE, " +
+                    "PRIMARY KEY(report_id)" +
+                    ")");
+        } catch (SQLException e) { 
+            System.out.println("SQLiteAccessor.createExportDB: " + e);
         }
     }
 

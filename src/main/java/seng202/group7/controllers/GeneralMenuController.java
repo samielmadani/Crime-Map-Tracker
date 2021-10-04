@@ -1,12 +1,16 @@
 package seng202.group7.controllers;
 
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import seng202.group7.data.DataAccessor;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -65,12 +69,36 @@ public class GeneralMenuController {
         }
     }
 
-    public void exportToCSV() {
-        System.out.println("test");
+    public void exportWithFilter() {
+        String conditions = ControllerData.getInstance().getWhereQuery();
+        File saveLocation = getLocation();
+        DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
     }
 
-    public void exportToDB() {
-        System.out.println("test");
+    public void exportWithoutFilter() {
+        File saveLocation = getLocation();
+        DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+    }
+
+    private File getLocation() {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setInitialDirectory(new File("./"));
+        FileChooser.ExtensionFilter dbFilter = new FileChooser.ExtensionFilter("Database (*.db)", "*.db");
+        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().addAll(dbFilter, csvFilter);
+
+        fileChooser.setTitle("Select save location");
+        Stage stage = (Stage) frame.getScene().getWindow();
+
+        // Launches the file chooser.
+        File selectedFile = fileChooser.showSaveDialog(stage);
+        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
+        if (selectedFile != null) {
+            selectedFile.delete();
+            return selectedFile;
+        }
+        return null;
     }
 
     /**
