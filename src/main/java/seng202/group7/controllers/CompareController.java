@@ -5,10 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableSet;
 import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,7 +25,7 @@ import seng202.group7.analyses.Comparer;
  * The controller, used by / linked to, the compares FXML file.
  * Handles the comparisons of two crime objects.
  *
- * @author Jack McCorkindale
+ * @author Jack McCorkindale John Elliot Sam McMillan
  */
 public class CompareController implements Initializable {
 
@@ -53,29 +51,8 @@ public class CompareController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         errorClass = PseudoClass.getPseudoClass("error");
-
-        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
-
-            if (newParent != null) {
-                setType(frame.getPseudoClassStates());
-            }
-
-        });
     }
 
-    /**
-     * Changes the name of the menu to the type of data that is being compared.
-     * @param pseudoClasses     A style class.
-     */
-    public void setType(ObservableSet<PseudoClass> pseudoClasses) {
-        if (pseudoClasses.contains(PseudoClass.getPseudoClass("distance"))) {
-            menuText.setText("Distance Compare");
-            frame.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), false);
-        } else if (pseudoClasses.contains(PseudoClass.getPseudoClass("time"))) {
-            menuText.setText("Time Compare");
-            frame.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), false);
-        }
-    }
 
     /**
      * Gets the current side panel and replaces it with the general menu panel.
