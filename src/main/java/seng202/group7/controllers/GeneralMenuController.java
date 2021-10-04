@@ -35,30 +35,13 @@ public class GeneralMenuController {
     }
 
     /**
-     * Changes the menu bar to show the distance comparison menu.
+     * Changes the menu bar to show the comparison menu.
      *
      * @throws IOException An error that occurs when loading the FXML file.
      */
-    public void toDistance() throws IOException{
+    public void toCompare() throws IOException{
         BorderPane pane = (BorderPane) frame.getParent();
-        
         VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
-        menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("distance"), true);
-        // Changes side menu to the filter menu.
-        pane.setLeft(menuItems);
-    }
-
-    /**
-     * Changes the menu bar to show the time comparison menu.
-     *
-     * @throws IOException An error that occurs when loading the FXML file.
-     */
-    public void toTime() throws IOException{
-        BorderPane pane = (BorderPane) frame.getParent();
-        
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
-        menuItems.pseudoClassStateChanged(PseudoClass.getPseudoClass("time"), true);
-        
         // Changes side menu to the filter menu.
         pane.setLeft(menuItems);
     }
