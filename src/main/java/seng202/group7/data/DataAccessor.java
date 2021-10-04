@@ -106,7 +106,7 @@ public final class DataAccessor {
                     "arrest BOOLEAN, " +
                     "beat INT, " +
                     "ward INT, " +
-                    "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id) ON DELETE CASCADE , " +
+                    "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id) ON DELETE CASCADE, " +
                     "PRIMARY KEY(report_id, list_id)" +
                     ")");
             runStatement("CREATE VIEW crimedb AS " +

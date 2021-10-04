@@ -112,6 +112,7 @@ public class StartScreenController implements Initializable {
         if (InputValidator.validate(newListText)) {
             DataAccessor.getInstance().createList(newListText.getText());
             setListNames();
+            newListText.clear();
         }
     }
 
@@ -122,6 +123,7 @@ public class StartScreenController implements Initializable {
             DataAccessor.getInstance().renameList(list, newName);
             setListNames();
             table.getSelectionModel().select(newName);
+            renameListText.clear();
         }
     }
 
@@ -135,7 +137,7 @@ public class StartScreenController implements Initializable {
         // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Stage stage = (Stage) rootPane.getScene().getWindow();
         FadeTransition fade = new FadeTransition();
-        fade.setDuration(Duration.millis(100));
+        fade.setDuration(Duration.millis(50));
         fade.setNode(rootPane);
         fade.setFromValue(1);
         fade.setToValue(0);

@@ -151,14 +151,4 @@ public class MenuController implements Initializable {
         // Changes side menu to the filter menu.
         menuFrame.setLeft(graphMenu);
     }
-
-
-    public void switchList() {
-        int list =ControllerData.getInstance().getCurrentList();
-        if (list == 1) {
-            ControllerData.getInstance().setCurrentList(2);
-        } else {
-            ControllerData.getInstance().setCurrentList(1);
-        }
-    }
 }
