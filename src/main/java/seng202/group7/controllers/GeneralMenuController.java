@@ -82,6 +82,14 @@ public class GeneralMenuController {
         }
     }
 
+    public void exportToCSV() {
+        System.out.println("test");
+    }
+
+    public void exportToDB() {
+        System.out.println("test");
+    }
+
     /**
      * Moves the program to an empty entry view to create a new crime object.
      * @throws IOException An error that occurs when loading the FXML file.
