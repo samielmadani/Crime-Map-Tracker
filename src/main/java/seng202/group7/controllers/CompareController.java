@@ -86,7 +86,7 @@ public class CompareController implements Initializable {
             } else {
                 resultTextString += "Distance:";
                 resultTextString += compareDistance(reportOne, reportTwo);
-                resultTextString += "Time:";
+                resultTextString += "\n\nTime Difference:";
                 resultTextString += compareTime(reportOne, reportTwo);
                 }
         }
@@ -102,13 +102,13 @@ public class CompareController implements Initializable {
     private String compareDistance(Report reportOne, Report reportTwo) {
         double distance = Comparer.locationDifference(reportOne, reportTwo);
         if (distance == -1) {
-            return String.format("\nCrime %s has no location values.\n", reportOneText.getText());
+            return String.format(" Crime %s has no location values.", reportOneText.getText());
         } else if(distance == -2) {
-            return String.format("\nCrime %s has no location values.\n", reportTwoText.getText());
+            return String.format(" Crime %s has no location values.", reportTwoText.getText());
         } else if(distance == -3) {
-            return String.format("\nCrime %s and Crime %s have no location values.\n", reportOneText.getText(), reportTwoText.getText());
+            return String.format(" Crime %s and Crime %s have no location values.", reportOneText.getText(), reportTwoText.getText());
         } else {
-            return String.format("\nCrime %s and %s occurred %.2fkm apart.\n", reportOneText.getText(), reportTwoText.getText(), distance);
+            return String.format(" %.2fkm.", distance);
         }
     }
 
@@ -134,9 +134,9 @@ public class CompareController implements Initializable {
             timeString += String.format("%d minute(s) ", time.get(0));
         }
         if (timeString.equals("")) {
-            return String.format("\nCrime %s and %s occurred at the same time.", reportOneText.getText(), reportTwoText.getText());
+            return (" Occurred at the same time.");
         } else {
-            return String.format("\nCrime %s and %s occurred %sapart.", reportOneText.getText(), reportTwoText.getText(), timeString);
+            return String.format(" %sapart.", timeString);
         }
     }
 
