@@ -18,6 +18,7 @@
     </HBox>
         <Label alignment="CENTER" layoutX="20.0" layoutY="20.0" prefWidth="100" text="Graph type" />
         <ComboBox fx:id="graphType" prefWidth="150.0" />
-        <Button fx:id="generateGraph" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#selectGraph" prefWidth="100" text="Generate Graph" />
+        <Button fx:id="generateGraph" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#selectBarGraph" prefWidth="100" text="Generate Graph" />
+        <Button fx:id="CrimeOverTime" layoutX="10.0" layoutY="13.0"  mnemonicParsing="false" onAction="#selectLineGraph" prefWidth="100" text="Line Graph" />
     </children>
 </VBox>

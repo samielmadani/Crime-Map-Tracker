@@ -50,9 +50,9 @@ public class GraphMenuController implements Initializable {
      * Method triggered when the user clicks on the generate graph button, Checks what selection is made by the user in
      * the combo box and reloads the graphView.
      *
-     * @throws IOException      The exception that is thrown when the FXML Loader can't load the fxml file
+     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
      */
-    public void selectGraph() throws IOException {
+    public void selectBarGraph() throws IOException {
 
         ArrayList<Integer> graphVariables;
 
@@ -64,6 +64,15 @@ public class GraphMenuController implements Initializable {
         ((BorderPane) frame.getParent()).setCenter(root);
     }
 
+    public void selectLineGraph() throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/lineGraph.fxml"));
+        root = loader.load();
+        LineGraphViewController graphView = loader.getController();
+        graphView.prepareLineGraph();
+
+        ((BorderPane) frame.getParent()).setCenter(root);
+    }
 }
 
 

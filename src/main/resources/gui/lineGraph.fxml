@@ -15,7 +15,7 @@
     <RowConstraints minHeight="10.0"  vgrow="SOMETIMES"/>
   </rowConstraints>
    <children>
-      <LineChart title="CrimeOverTime" fx:id="LineChart">
+      <LineChart title="CrimeOverTime" fx:id="overTimeChart">
         <xAxis>
           <CategoryAxis label="xAxis" side="BOTTOM" fx:id="xAxis"/>
         </xAxis>
