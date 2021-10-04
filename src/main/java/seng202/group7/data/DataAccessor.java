@@ -280,7 +280,7 @@ public final class DataAccessor {
      *
      * @param entryId       The case number of the crime object.
      */
-    public void delete(String entryId, int listId){
+    public void deleteReport(String entryId, int listId){
         String reportQuery = "DELETE FROM reports WHERE id = '" + entryId + "' AND list_id=" + listId;
         runStatement(reportQuery);
     }

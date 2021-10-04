@@ -70,7 +70,7 @@ public class DataAccessorTest {
     public void deleteTest() {
         Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
         accessor.editCrime(crimeTwo, 1);
-        accessor.delete("TestToDelete", 1);
+        accessor.deleteReport("TestToDelete", 1);
         Crime crime = accessor.getCrime("TestToDelete", 1);
         assertNull(crime);
     }

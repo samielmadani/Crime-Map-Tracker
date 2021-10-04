@@ -321,7 +321,7 @@ public class EntryController implements Initializable {
     public void deleteEntry() {
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
-        dataAccessor.delete(cNoText.getText(), ControllerData.getInstance().getCurrentList());
+        dataAccessor.deleteReport(cNoText.getText(), ControllerData.getInstance().getCurrentList());
         returnView();
     }
 
