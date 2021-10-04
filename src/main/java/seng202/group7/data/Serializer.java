@@ -2,6 +2,9 @@ package seng202.group7.data;
 
 import java.io.*;
 
+/**
+ * A class used to serialize objects and store them in a file, and to deserialize them back into objects
+ */
 public final class Serializer {
     /**
      * Serializes a FilterConditions object into a file

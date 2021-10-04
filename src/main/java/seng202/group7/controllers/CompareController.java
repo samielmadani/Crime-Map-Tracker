@@ -151,6 +151,7 @@ public class CompareController implements Initializable, SavesGUIFields {
         }
     }
 
+    @Override
     public void saveGUIFields(){
         if(!reportOneText.getText().equals("")) {
             report1 = reportOneText.getText();
@@ -160,6 +161,7 @@ public class CompareController implements Initializable, SavesGUIFields {
         }
     }
 
+    @Override
     public void loadGUIFields(){
         if(report1 != null) {
             reportOneText.setText(report1);

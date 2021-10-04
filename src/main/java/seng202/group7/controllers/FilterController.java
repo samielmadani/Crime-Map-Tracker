@@ -279,9 +279,7 @@ public class FilterController implements Initializable, SavesGUIFields {
         pane.setLeft(menuItems);
     }
 
-    /**
-     * Sets all the fields in the filter menu to those from filterConditions
-    */
+    @Override
     public void loadGUIFields(){
         if(filterConditions == null){
             return;
@@ -296,9 +294,7 @@ public class FilterController implements Initializable, SavesGUIFields {
         domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? "Y" : "N");
     }
 
-    /**
-     * Saves all the fields in the filter menu to a static variable
-     */
+    @Override
     public void saveGUIFields(){
         filterConditions = new FilterConditions(
                 datePicker.getValue(),
