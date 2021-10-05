@@ -15,8 +15,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.view.MainScreen;
 
 import java.io.IOException;
 import java.net.URL;
@@ -123,8 +125,8 @@ public class DataViewController implements Initializable {
             ((BorderPane) table.getParent()).setCenter(detailView);
             controllerData.setTableState(table);
             
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Entry View screens FXML file.", e.getClass().toString()));
         }
     }
 

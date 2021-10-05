@@ -1,6 +1,7 @@
 package seng202.group7.controllers;
 
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import seng202.group7.view.MainScreen;
 
 /**
  * This class acts as a connection between the controllers passing data through here so that only the controller's
@@ -141,22 +143,11 @@ public final class ControllerData {
                     accessor.importInDB(selectedFile, currentList);
                 }
             } catch (SQLException e) {
-                createError("Invalid data");
+                MainScreen.createWarnWin(new CustomException("Invalid data", e.getClass().toString()));
             }
         }
     }
 
-    /**
-     * Creates a new window that will contain what error has occurred and give the user options for handling
-     * @param errorMessage The message to display to the user
-     */
-    public void createError(String errorMessage) {
-        GridPane root = new GridPane();
-        Stage errorStage = new Stage();
-        errorStage.setTitle(errorMessage);
-        errorStage.setScene(new Scene(root, 450, 450));
-        errorStage.show();
-    }
 
     /**
      * Gets the current page of the paginator.
