@@ -61,6 +61,10 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * Changes the connection of the database that is currently loaded.
+     * @param path
+     */
     public void changeConnection(String path){
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:"+path);
@@ -222,6 +226,12 @@ public final class DataAccessor {
         return reports;
     }
 
+    /**
+     * Turns an entry in a result set into a Crime object.
+     * @param rs The result of the result set to be turned into a Crime object.
+     * @return The created Crime object.
+     * @throws SQLException Thrown if a value is invalid.
+     */
     private Crime generateCrime(ResultSet rs) throws SQLException{
         Timestamp tt = rs.getTimestamp("date");
         Crime crime = new Crime(
@@ -433,7 +443,7 @@ public final class DataAccessor {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             // Uses batches to chain all the individual insertions into a single query to the database. This is also to increase speed.
             for (String[] row : rows) {
-                addEntry(row, listId, psReport, psCrime);
+                addCrime(row, listId, psReport, psCrime);
             }
             // Executes all the insertions.
             psReport.executeBatch();
@@ -446,7 +456,10 @@ public final class DataAccessor {
         connection.setAutoCommit(true);
     }
 
-    private void addEntry(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException, DateTimeParseException {
+    /**
+     * Adds a crime to the report and crime statements required to add the crime to the database.
+     */
+    private void addCrime(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException, DateTimeParseException {
         PSTypes.setPSString(psReport, 1, row[0]); // Case Number
         PSTypes.setPSInteger(psReport, 2, listId); // List
         if (Objects.equals(row[1], "")) {
@@ -475,6 +488,11 @@ public final class DataAccessor {
         psCrime.addBatch();
     }
 
+    /**
+     * Tries the 2 valid date formats used by the application.
+     * @param date The string format of the date to be converted to LocalDateTime.
+     * @return The LocalDateTime from a successful parsing.
+     */
     private LocalDateTime parseDate(String date) {
         DateTimeFormatter formatter;
         try {
@@ -486,6 +504,10 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * Creates a new list in the database with the name passed in.
+     * @param name The name of the new database.
+     */
     public void createList(String name) {
         try (PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES (?);")) {
             PSTypes.setPSString(psList, 1, name);
@@ -496,12 +518,15 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * 
+     * @return An ObservableList containing all the lists in the database.
+     */
     public ObservableList<String> getLists() {
         ArrayList<String> lists = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT name FROM lists");
-            // Converts all results into crimes.
             while (rs.next()) {
                 lists.add(rs.getString("name"));
             }
@@ -515,6 +540,11 @@ public final class DataAccessor {
         return details;
     }
 
+    /**
+     * Renames a list contained in the database.
+     * @param oldName The current name of the list.
+     * @param newName The name that the list will be changed to.
+     */
     public void renameList(String oldName, String newName) {
         try {
             PreparedStatement psList = connection.prepareStatement("UPDATE lists SET name=? WHERE name=?;");
@@ -527,10 +557,14 @@ public final class DataAccessor {
         }  
     }
 
+    /**
+     * Returns the numeric ID of a list given its name.
+     * @param selectedList The name of the required list
+     * @return The numeric ID of the selected list.
+     */
     public Integer getListId(String selectedList) {
         Integer listId = null;
-        try {
-            PreparedStatement psList = connection.prepareStatement("SELECT id FROM lists WHERE name=?;");
+        try (PreparedStatement psList = connection.prepareStatement("SELECT id FROM lists WHERE name=?;")) {
             psList.setString(1, selectedList);
             ResultSet lists = psList.executeQuery();
             while(lists.next()) {
@@ -538,25 +572,32 @@ public final class DataAccessor {
             }
             // Closes the statement and result set.
             lists.close();
-            psList.close();            
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.getListId: " + e);
         }
         return listId;
     }
 
+    /**
+     * Deletes the selected list from the database.
+     * @param selectedList The name of the list to be deleted.
+     */
     public void deleteList(String selectedList) {
-        try {
-            PreparedStatement psList = connection.prepareStatement("DELETE FROM lists WHERE name=?;");
+        try (PreparedStatement psList = connection.prepareStatement("DELETE FROM lists WHERE name=?;")) {
             psList.setString(1, selectedList);
             psList.execute();
-            // Closes the statement.
-            psList.close();            
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.deleteList: " + e);
         }
     }
 
+    /**
+     * Determines what type of file needs to be exported to and navigates to the relevant method.
+     * @param conditions The filter conditions to be complied with.
+     * @param listId The list the data is being exported from.
+     * @param saveLocation The location tof the new file.
+     * @throws SQLException
+     */
     public void export(String conditions, int listId, String saveLocation) throws SQLException{
         if (saveLocation.endsWith(".db")) {
             exportDB(conditions, listId, saveLocation);
@@ -565,6 +606,13 @@ public final class DataAccessor {
         }
     }
 
+    /**
+     * Writes the data contained in the database relevant to the current filter conditions into a csv file.
+     * @param conditions The filter conditions to be complied with.
+     * @param listId The list the data is being exported from.
+     * @param saveLocation The location of the new file.
+     * @throws SQLException
+     */
     private void exportCSV(String conditions, int listId, String saveLocation) throws SQLException {
         try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ','); Statement stmt = connection.createStatement();){
         
@@ -597,6 +645,13 @@ public final class DataAccessor {
         }   
     }
 
+    /**
+     * Writes the data contained in the database relevant to the current filter conditions into a database file.
+     * @param conditions The filter conditions to be complied with.
+     * @param listId The list the data is being exported from.
+     * @param saveLocation The location of the new file.
+     * @throws SQLException
+     */
     private void exportDB(String conditions, int listId, String saveLocation) throws SQLException {
         createExportDatabase(saveLocation);
         runStatement("ATTACH DATABASE '" + saveLocation + "' AS other;");
@@ -629,6 +684,13 @@ public final class DataAccessor {
         runStatement(query);
     }
 
+    /**
+     * Adds the required list to the conditions.
+     * @param query SELECT statement to be refined.
+     * @param conditions Filter conditions applied to query.
+     * @param listId List to query data from.
+     * @return
+     */
     private String addConditions(String query, String conditions, int listId) {
         query += conditions;
         if (!conditions.isEmpty()) {
@@ -638,6 +700,10 @@ public final class DataAccessor {
         return query;
     }
 
+    /**
+     * Creates a database for the data to be exported into at the given location.
+     * @param location The location to create the database.
+     */
     private void createExportDatabase(String location) {
         try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location); Statement stmt = newdb.createStatement()) {
             

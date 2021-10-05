@@ -129,6 +129,11 @@ public class InputValidator {
         return valid;
     }
     
+    /**
+     * Adds the validation PseudoClass to the input node and makes it validated on relevant input
+     * @param inputNode The node that needs to be validated
+     * @param requiredValidation The type of validation that needs to be applied to the input node
+     */
     public static void addValidation(Node inputNode, InputType requiredValidation) {
         inputNode.pseudoClassStateChanged(requiredValidation.getValidationType(), true);
         if (inputNode instanceof TextField) {

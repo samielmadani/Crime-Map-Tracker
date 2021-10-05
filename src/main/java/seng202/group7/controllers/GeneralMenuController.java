@@ -69,6 +69,9 @@ public class GeneralMenuController {
         rootPane.setCenter(dataView);
     }
 
+    /**
+     * Gets the conditions the user has active and the location to save a new file before sending it to the DataAccessor to export
+     */
     public void exportWithFilter() {
         String conditions = ControllerData.getInstance().getWhereQuery();
         File saveLocation = getLocation();
@@ -82,6 +85,9 @@ public class GeneralMenuController {
         }
     }
 
+    /**
+     * Gets the location to save a new file before sending it to the DataAccessor to export
+     */
     public void exportWithoutFilter() {
         File saveLocation = getLocation();
         if (saveLocation == null) {
@@ -94,6 +100,10 @@ public class GeneralMenuController {
         }
     }
 
+    /**
+     * Allows the user to select a location to save the database they are exporting.
+     * @return The file to be created.
+     */
     private File getLocation() {
         FileChooser fileChooser = new FileChooser();
 
@@ -109,7 +119,6 @@ public class GeneralMenuController {
         File selectedFile = fileChooser.showSaveDialog(stage);
         // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
         if (selectedFile != null) {
-            selectedFile.delete();
             return selectedFile;
         }
         return null;

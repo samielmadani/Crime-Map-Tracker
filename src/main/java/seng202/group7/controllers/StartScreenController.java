@@ -14,13 +14,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
@@ -84,11 +81,17 @@ public class StartScreenController implements Initializable {
 
     }
 
+    /**
+     * Adds all lists in the database to the list table
+     */
     private void setListNames() {
         ObservableList<String> lists = DataAccessor.getInstance().getLists();
         table.setItems(lists);
     }
 
+    /**
+     * Runs when a list is selected and makes the relevant user input available for use
+     */
     public void listSelected(boolean isList) {
         rename.setDisable(!isList);
         renameListText.setDisable(!isList);
@@ -96,18 +99,27 @@ public class StartScreenController implements Initializable {
         load.setDisable(!isList);
     }
 
+    /**
+     * Deletes the selected list.
+     */
     public void deleteList() {
         DataAccessor.getInstance().deleteList(table.getSelectionModel().getSelectedItem());
         setListNames();
         listSelected(false);
     }
 
+    /**
+     * Loads the selected list and moves to the table view.
+     */
     public void loadList() {
         int listId = DataAccessor.getInstance().getListId(selectedList);
         ControllerData.getInstance().setCurrentList(listId);
-        fadeOutScene(new ActionEvent());
+        fadeOutScene();
     }
 
+    /**
+     * Creates a new list with the name the user has input into the TextField which is next to the create button.
+     */
     public void createList() {
         if (InputValidator.validate(newListText)) {
             DataAccessor.getInstance().createList(newListText.getText());
@@ -116,6 +128,9 @@ public class StartScreenController implements Initializable {
         }
     }
 
+    /**
+     * Renames the selected list to what is in the TextField next to the rename button.
+     */
     public void renameList() {
         if (InputValidator.validate(renameListText)) {
             String list = table.getSelectionModel().getSelectedItem();
@@ -132,7 +147,7 @@ public class StartScreenController implements Initializable {
      *
      * @param event     The event action that was triggered.
      */
-    public void fadeOutScene(ActionEvent event) {
+    public void fadeOutScene() {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
         // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Stage stage = (Stage) rootPane.getScene().getWindow();

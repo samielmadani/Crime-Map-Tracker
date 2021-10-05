@@ -146,6 +146,10 @@ public final class ControllerData {
         }
     }
 
+    /**
+     * Creates a new window that will contain what error has occurred and give the user options for handling
+     * @param errorMessage The message to display to the user
+     */
     public void createError(String errorMessage) {
         GridPane root = new GridPane();
         Stage errorStage = new Stage();
