@@ -1,13 +1,12 @@
 package seng202.group7.view;
 
-import com.google.gson.internal.Streams;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 
@@ -65,6 +64,7 @@ public class MainScreen extends Application {
      */
     public static void createErrorWin(CustomException cause) {
         Alert alert = new Alert(Alert.AlertType.ERROR, "Message: " + cause.getMessage());
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.setTitle(cause.getInfo());
         alert.setOnHidden(event -> window.close());
         alert.show();
@@ -77,6 +77,7 @@ public class MainScreen extends Application {
      */
     public static void createWarnWin(CustomException cause) {
         Alert alert = new Alert(Alert.AlertType.WARNING, "Message: " + cause.getMessage());
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.setTitle(cause.getInfo());
         alert.show();
     }

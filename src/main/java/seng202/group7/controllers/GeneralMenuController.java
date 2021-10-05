@@ -39,7 +39,7 @@ public class GeneralMenuController {
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Filter Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the the Filter Menu screens FXML file.", e.getClass().toString()));
         }
 
     }
@@ -54,7 +54,7 @@ public class GeneralMenuController {
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Compare Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the the Compare Menu screens FXML file.", e.getClass().toString()));
         }
 
     }
@@ -142,14 +142,14 @@ public class GeneralMenuController {
     public void toNewEntry() {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
-        ControllerData.getInstance().setCurrentRow(null);
-        Node dataView = rootPane.getCenter();
-        ControllerData.getInstance().setTableState(dataView);
         try {
             Node newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+            ControllerData.getInstance().setCurrentRow(null);
+            Node dataView = rootPane.getCenter();
+            ControllerData.getInstance().setTableState(dataView);
             rootPane.setCenter(newFrame);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Entry View screens FXML file.", e.getClass().toString()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the the Entry View screens FXML file.", e.getClass().toString()));
         }
     }
 
@@ -162,7 +162,7 @@ public class GeneralMenuController {
             VBox searchMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/searchMenu.fxml")));
             rootPane.setLeft(searchMenu);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Search Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the the Search Menu screens FXML file.", e.getClass().toString()));
         }
 
     }
