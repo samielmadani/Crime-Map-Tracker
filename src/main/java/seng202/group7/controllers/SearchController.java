@@ -103,12 +103,12 @@ public class SearchController implements Initializable {
         String input = inputField.getText();
         // Determines the condition that will be used.
         String query = switch (field) {
-            case "Case Number" -> "WHERE id LIKE '" + input + "%'";
-            case "Primary Description" -> "WHERE primary_description LIKE '" + input + "%'";
-            case "Secondary Description" -> "WHERE secondary_description LIKE '" + input + "%'";
-            case "Location Description" -> "WHERE location_description LIKE '" + input + "%'";
-            case "FBI Code" -> "WHERE fbicd LIKE '" + input + "%'";
-            case "Illinois Number" -> "WHERE iucr LIKE '" + input + "%'";
+            case "Case Number" -> " id LIKE '" + input + "%'";
+            case "Primary Description" -> " primary_description LIKE '" + input + "%'";
+            case "Secondary Description" -> " secondary_description LIKE '" + input + "%'";
+            case "Location Description" -> " location_description LIKE '" + input + "%'";
+            case "FBI Code" -> " fbicd LIKE '" + input + "%'";
+            case "Illinois Number" -> " iucr LIKE '" + input + "%'";
             default -> "";
         };
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.

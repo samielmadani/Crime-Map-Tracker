@@ -62,7 +62,7 @@ public class GraphViewController implements Initializable {
      * @param pseudoClassStates     Has three different States which determines what graph is loaded.
      */
     public void prepareGraph(ObservableSet<PseudoClass> pseudoClassStates) {
-        ArrayList<Report> data = DataAccessor.getInstance().getAll();
+        ArrayList<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
         ArrayList<Tuple<String, Integer>> dataSet;
         if (pseudoClassStates.contains(PseudoClass.getPseudoClass("frequentCrime")) || (pseudoClassStates.size() == 0)) {
             dataSet = Rank.primaryFrequencyRank(data);
@@ -79,7 +79,7 @@ public class GraphViewController implements Initializable {
     /**
      *Create the graph by inputting the values into the bar chart object.
      *
-     * @param data      The arraylist of String integer tuples from Rank class
+     * @param data      The ArrayList of String integer tuples from Rank class
      * @param title     The String title of the graph
      * @param xLabel    The x axis label of the graph
      * @param yLabel    The y axis label of the graph

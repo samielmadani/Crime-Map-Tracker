@@ -1,21 +1,14 @@
 package seng202.group7.controllers;
 
-
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.sql.SQLException;
 
-import javafx.collections.ObservableSet;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -48,6 +41,11 @@ public final class ControllerData {
      * Stores the current page of the paginator.
      */
     private int currentPage = 0;
+
+    /**
+     * Stores the list that is currently in use.
+     */
+    private int currentList = 1;
 
     /**
      * This is a condition that is used by the data accessor when searching the database.
@@ -106,6 +104,14 @@ public final class ControllerData {
         return tableState;
     }
 
+    public int getCurrentList() {
+        return currentList;
+    }
+
+    public void setCurrentList(int listId) {
+        currentList = listId;
+    }
+
 
     /**
      * Makes a screen to get a file from a user using the FilerChooser class.
@@ -113,7 +119,7 @@ public final class ControllerData {
      *
      * @param event     The event action that was triggered.
      */
-    public boolean getFile(ActionEvent event) {
+    public void getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("./"));
         fileChooser.setTitle("Select file");
@@ -126,17 +132,30 @@ public final class ControllerData {
         if (selectedFile != null) {
             String fileName = selectedFile.getName();
             DataAccessor accessor = DataAccessor.getInstance();
-            if (fileName.endsWith(".csv")) {
-                // Reads a CSV into the database.
-                accessor.readToDB(selectedFile);
-            } else {
-                // Reads a outside database into the main database.
-                accessor.importInDB(selectedFile);
+            try {
+                if (fileName.endsWith(".csv")) {
+                    // Reads a CSV into the database.
+                    accessor.readToDB(selectedFile, currentList);
+                } else {
+                    // Reads a outside database into the main database.
+                    accessor.importInDB(selectedFile, currentList);
+                }
+            } catch (SQLException e) {
+                createError("Invalid data");
             }
-            return true;
-        } else {
-            return false;
         }
+    }
+
+    /**
+     * Creates a new window that will contain what error has occurred and give the user options for handling
+     * @param errorMessage The message to display to the user
+     */
+    public void createError(String errorMessage) {
+        GridPane root = new GridPane();
+        Stage errorStage = new Stage();
+        errorStage.setTitle(errorMessage);
+        errorStage.setScene(new Scene(root, 450, 450));
+        errorStage.show();
     }
 
     /**

@@ -8,9 +8,11 @@ import java.time.format.DateTimeParseException;
 import javafx.collections.ObservableSet;
 import javafx.scene.Node;
 import javafx.css.PseudoClass;
+import javafx.event.EventHandler;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import seng202.group7.data.DataAccessor;
 
 /**
@@ -115,14 +117,44 @@ public class InputValidator {
                 valid = false;
             }
         }
-        if (classes.contains(InputType.ID.getValidationType()) && DataAccessor.getInstance().getCrime(input) != null) {
+
+        if (classes.contains(InputType.LISTNAME.getValidationType()) && DataAccessor.getInstance().getListId(input) != null) {
+            valid = false;
+        }
+
+        if (classes.contains(InputType.ID.getValidationType()) && 
+            DataAccessor.getInstance().getCrime(input, ControllerData.getInstance().getCurrentList()) != null) {
             valid = false;
         }
         return valid;
     }
     
+    /**
+     * Adds the validation PseudoClass to the input node and makes it validated on relevant input
+     * @param inputNode The node that needs to be validated
+     * @param requiredValidation The type of validation that needs to be applied to the input node
+     */
     public static void addValidation(Node inputNode, InputType requiredValidation) {
         inputNode.pseudoClassStateChanged(requiredValidation.getValidationType(), true);
+        if (inputNode instanceof TextField) {
+            ((TextField) inputNode).setOnKeyTyped(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    validate(inputNode);
+                }
+            });
+        } else if (inputNode instanceof TextArea) {
+            ((TextArea) inputNode).setOnKeyTyped(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    validate(inputNode);
+                }
+            });
+        } else if (inputNode instanceof DatePicker) {
+            ((DatePicker) inputNode).valueProperty().addListener((observable, oldDate, newDate)->{
+                InputValidator.validate(inputNode);
+            });
+        }
     }
 }
 

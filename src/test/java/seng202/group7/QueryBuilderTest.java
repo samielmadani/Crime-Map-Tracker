@@ -22,9 +22,9 @@ public class QueryBuilderTest {
     public void whereQueryTest() {
         LocalDate testDate = LocalDate.now();
         String query = QueryBuilder.where(testDate, "test", null, 30, null, true, null);
-        assertEquals(query, "WHERE date >= "+ Timestamp.valueOf(testDate.atStartOfDay()).getTime() +
+        assertEquals("date >= "+ Timestamp.valueOf(testDate.atStartOfDay()).getTime() +
                 " AND date < "+ Timestamp.valueOf(testDate.plusDays(1).atStartOfDay()).getTime() +
-                " AND primary_description='test' AND ward=30 AND arrest=1");
+                " AND primary_description='test' AND ward=30 AND arrest=1", query);
     }
 
     /**
@@ -33,6 +33,6 @@ public class QueryBuilderTest {
     @Test
     public void whereQueryEmptyTest() {
         String query = QueryBuilder.where(null, null, null, null, null, null, null);
-        assertEquals(query, "");
+        assertEquals("", query);
     }
 }

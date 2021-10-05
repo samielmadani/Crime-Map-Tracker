@@ -1,13 +1,18 @@
 package seng202.group7.controllers;
 
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import seng202.group7.data.DataAccessor;
+
+import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
@@ -55,14 +60,68 @@ public class GeneralMenuController {
      */
     public void newImport(ActionEvent event) throws IOException {
 
-        if (ControllerData.getInstance().getFile(event)) {
-            BorderPane rootPane = (BorderPane) frame.getParent();
-            // Loads the paginator screen.
-            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+        ControllerData.getInstance().getFile(event);
+        BorderPane rootPane = (BorderPane) frame.getParent();
+        // Loads the paginator screen.
+        BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
 
-            // Adds the data view to the center of the screen.
-            rootPane.setCenter(dataView);
+        // Adds the data view to the center of the screen.
+        rootPane.setCenter(dataView);
+    }
+
+    /**
+     * Gets the conditions the user has active and the location to save a new file before sending it to the DataAccessor to export
+     */
+    public void exportWithFilter() {
+        String conditions = ControllerData.getInstance().getWhereQuery();
+        File saveLocation = getLocation();
+        if (saveLocation == null) {
+            return;
         }
+        try {
+            DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+        } catch (SQLException e) {
+            ControllerData.getInstance().createError("Could not export data. Error:" + e);
+        }
+    }
+
+    /**
+     * Gets the location to save a new file before sending it to the DataAccessor to export
+     */
+    public void exportWithoutFilter() {
+        File saveLocation = getLocation();
+        if (saveLocation == null) {
+            return;
+        }
+        try {
+            DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+        } catch (SQLException e) {
+            ControllerData.getInstance().createError("Could not export data. Error:" + e);
+        }
+    }
+
+    /**
+     * Allows the user to select a location to save the database they are exporting.
+     * @return The file to be created.
+     */
+    private File getLocation() {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setInitialDirectory(new File("./"));
+        FileChooser.ExtensionFilter dbFilter = new FileChooser.ExtensionFilter("Database (*.db)", "*.db");
+        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().addAll(dbFilter, csvFilter);
+
+        fileChooser.setTitle("Select save location");
+        Stage stage = (Stage) frame.getScene().getWindow();
+
+        // Launches the file chooser.
+        File selectedFile = fileChooser.showSaveDialog(stage);
+        // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
+        if (selectedFile != null) {
+            return selectedFile;
+        }
+        return null;
     }
 
     /**

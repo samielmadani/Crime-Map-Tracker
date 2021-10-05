@@ -151,5 +151,4 @@ public class MenuController implements Initializable {
         // Changes side menu to the filter menu.
         menuFrame.setLeft(graphMenu);
     }
-
 }

@@ -1,6 +1,5 @@
 package seng202.group7.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -8,16 +7,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import seng202.group7.data.DataAccessor;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-
-import javax.xml.validation.Validator;
-
 /**
  * This class creates the paginator that then itself generates the tables,
  * that are used to store selections of the database's information.
@@ -55,7 +50,7 @@ public class PageController implements Initializable {
 
         pageFrame.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent != null) {
-                int size = DataAccessor.getInstance().getSize();
+                int size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
                 dataTotal.setText("Data Total: "+size); // Sets current display total.
                 pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
                 pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());
@@ -108,29 +103,9 @@ public class PageController implements Initializable {
         String input = pageField.getText();
         if (InputValidator.validate(pageField) && !input.isEmpty()) {
             int queryPage = Integer.parseInt(input);
-            if (queryPage > 0 && queryPage < pages.getPageCount()){
+            if (queryPage > 0 && queryPage <= pages.getPageCount()){
                 pages.setCurrentPageIndex(Integer.parseInt(input) - 1); // Is valid and changes the page.
             }
         }
     }
-
-    // /**
-    //  * Checks the current page limit for the paginator and checks the value given if it is valid or not.
-    //  *
-    //  * @param input     The text input.
-    //  * @return  The result of if the text input is valid.
-    //  */
-    // private boolean isValid(String input) {
-    //     // TODO change to new validation method
-    //     boolean valid;
-    //     int numOfDig = String.valueOf(pages.getPageCount()).length();
-    //     if (numOfDig == 0) {
-    //         valid = false;
-    //     } else if (numOfDig == 1){
-    //         valid = input.matches("[1-"+pages.getPageCount()+"]");
-    //     } else {
-    //         valid = input.matches("[1-9]([0-9]{0,"+(numOfDig-1)+"})");
-    //     }
-    //     return valid;
-    // }
 }

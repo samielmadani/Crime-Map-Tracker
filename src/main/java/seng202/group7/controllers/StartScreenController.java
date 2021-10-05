@@ -1,18 +1,27 @@
 package seng202.group7.controllers;
 
 import javafx.animation.FadeTransition;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
-import javafx.event.ActionEvent;
+import java.util.ResourceBundle;
+import javafx.event.EventHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import seng202.group7.data.DataAccessor;
 
 /**
  * The controller, used by / linked to, the Start Screen FXML file.
@@ -21,23 +30,129 @@ import javafx.util.Duration;
  * @author John Elliott
  * @author Shaylin Simadari
  */
-public class StartScreenController {
+public class StartScreenController implements Initializable {
     /**
      * Is the parent node panel to all other nodes.
      */
     @FXML
     private BorderPane rootPane;
 
+    @FXML
+    private TableView <String> table;
+
+    @FXML
+    private TableColumn<String, String> listNames;
+
+    @FXML
+    private Button newList, delete, rename, load;
+
+    @FXML
+    private TextField newListText, renameListText;
+
+    private String selectedList;
+
+    /**
+     * This method is run during the loading of the data view fxml file.
+     * It generates what values will be stored in the columns.
+     *
+     * @param location      A URL object.
+     * @param resources     A ResourceBundle object.
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        InputValidator.addValidation(newListText, InputType.LISTNAME);
+        InputValidator.addValidation(renameListText, InputType.LISTNAME);
+
+        listNames.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+        setListNames();
+
+        table.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override 
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                    selectedList = table.getSelectionModel().getSelectedItem();
+                    listSelected(selectedList != null);
+                }
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    loadList();                   
+                }
+            }
+        });
+
+    }
+
+    /**
+     * Adds all lists in the database to the list table
+     */
+    private void setListNames() {
+        ObservableList<String> lists = DataAccessor.getInstance().getLists();
+        table.setItems(lists);
+    }
+
+    /**
+     * Runs when a list is selected and makes the relevant user input available for use
+     */
+    public void listSelected(boolean isList) {
+        rename.setDisable(!isList);
+        renameListText.setDisable(!isList);
+        delete.setDisable(!isList);
+        load.setDisable(!isList);
+    }
+
+    /**
+     * Deletes the selected list.
+     */
+    public void deleteList() {
+        DataAccessor.getInstance().deleteList(table.getSelectionModel().getSelectedItem());
+        setListNames();
+        listSelected(false);
+    }
+
+    /**
+     * Loads the selected list and moves to the table view.
+     */
+    public void loadList() {
+        int listId = DataAccessor.getInstance().getListId(selectedList);
+        ControllerData.getInstance().setCurrentList(listId);
+        fadeOutScene();
+    }
+
+    /**
+     * Creates a new list with the name the user has input into the TextField which is next to the create button.
+     */
+    public void createList() {
+        if (InputValidator.validate(newListText)) {
+            DataAccessor.getInstance().createList(newListText.getText());
+            setListNames();
+            newListText.clear();
+        }
+    }
+
+    /**
+     * Renames the selected list to what is in the TextField next to the rename button.
+     */
+    public void renameList() {
+        if (InputValidator.validate(renameListText)) {
+            String list = table.getSelectionModel().getSelectedItem();
+            String newName = renameListText.getText();
+            DataAccessor.getInstance().renameList(list, newName);
+            setListNames();
+            table.getSelectionModel().select(newName);
+            renameListText.clear();
+        }
+    }
+
     /**
      * Set up the fade out transition which will then load the next scene.
      *
      * @param event     The event action that was triggered.
      */
-    public void fadeOutScene(ActionEvent event) {
+    public void fadeOutScene() {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) rootPane.getScene().getWindow();
         FadeTransition fade = new FadeTransition();
-        fade.setDuration(Duration.millis(100));
+        fade.setDuration(Duration.millis(50));
         fade.setNode(rootPane);
         fade.setFromValue(1);
         fade.setToValue(0);
@@ -67,19 +182,5 @@ public class StartScreenController {
         Parent newRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menu.fxml")));
         Scene scene = stage.getScene();
         scene.setRoot(newRoot);
-    }
-
-
-    /**
-     * Calls a method to run a file picker to import a file into the database.
-     * It then if a file is selected load the application.
-     *
-     * @param event     The event action that was triggered.
-     */
-    public void getFile(ActionEvent event) {
-        // Checks that a file was actually selected.
-        if (ControllerData.getInstance().getFile(event)) {
-            fadeOutScene(event);
-        }
     }
 }

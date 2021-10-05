@@ -3,16 +3,15 @@ package seng202.group7;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seng202.group7.controllers.ControllerData;
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -45,10 +44,12 @@ public class DataAccessorTest {
             Statement stmt = accessor.getConnection().createStatement();
             stmt.execute("DELETE FROM crimes");
             stmt.execute("DELETE FROM reports");
+            stmt.execute("DELETE FROM lists");
+            stmt.execute("INSERT INTO lists(id, name) VALUES(1, 'testList')");
             stmt.close();
 
             Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
-            accessor.editCrime(crimeOne);
+            accessor.editCrime(crimeOne, 1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,7 +61,7 @@ public class DataAccessorTest {
      */
     @Test
     public void checkSize() {
-        assertEquals(accessor.getSize(), 1);
+        assertEquals(accessor.getSize(1), 1);
     }
 
     /**
@@ -69,9 +70,13 @@ public class DataAccessorTest {
     @Test
     public void deleteTest() {
         Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
-        accessor.editCrime(crimeTwo);
-        accessor.delete("TestToDelete");
-        Crime crime = accessor.getCrime("TestToDelete");
+        accessor.editCrime(crimeTwo, 1);
+        try {
+            accessor.deleteReport("TestToDelete", 1);
+        } catch (SQLException e) {
+            fail();
+        }
+        Crime crime = accessor.getCrime("TestToDelete", 1);
         assertNull(crime);
     }
 
@@ -80,8 +85,13 @@ public class DataAccessorTest {
      */
     @Test
     public void readToDBTest() {
-        accessor.readToDB(new File("src/test/files/testCSV.csv"));
-        Crime crime = accessor.getCrime("JE163990");
+        try {
+            accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            fail();
+        }
+        Crime crime = accessor.getCrime("JE163990", 1);
         assertEquals(crime.getCaseNumber(), "JE163990");
     }
 
@@ -90,9 +100,18 @@ public class DataAccessorTest {
      */
     @Test
     public void importDBTest() {
-        accessor.importInDB(new File("src/test/files/TestImporting.db"));
-        Crime crime = accessor.getCrime("TestNumberImport");
-        assertEquals(crime.getCaseNumber(), "TestNumberImport");
+        try {
+            accessor.importInDB(new File("src/test/files/TestImporting.db"), 1);
+        } catch (SQLException e) {
+           fail();
+        }
+        Crime crime = accessor.getCrime("TestNumber", 1);
+        assertEquals(crime.getCaseNumber(), "TestNumber");
+    }
+
+    @Test
+    public void getListIdTest() {
+        assertEquals(1, accessor.getListId("testList"));
     }
 
     /**
@@ -100,7 +119,7 @@ public class DataAccessorTest {
      */
     @Test
     public void pageSetTest() {
-        ArrayList<Report> reports = accessor.getPageSet();
+        ArrayList<Report> reports = accessor.getPageSet(1);
         assertEquals(((Crime) reports.get(0)).getCaseNumber(), "TestNumber");
     }
 

@@ -1,4 +1,5 @@
 package seng202.group7.controllers;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -133,7 +134,7 @@ public class DataViewController implements Initializable {
      */
     private void setTableContent() {
         // Gets the current set of reports based on the pagination's current page.
-        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet();
+        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
         for (Report report : reports) {
