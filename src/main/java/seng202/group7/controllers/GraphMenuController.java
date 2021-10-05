@@ -46,23 +46,23 @@ public class GraphMenuController implements Initializable {
         graphType.setValue("Most Frequent Crime Types");
     }
 
-//    /**
-//     * Method triggered when the user clicks on the generate graph button, Checks what selection is made by the user in
-//     * the combo box and reloads the graphView.
-//     *
-//     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
-//     */
-//    public void selectBarGraph() throws IOException {
-//
-//        ArrayList<Integer> graphVariables;
-//
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/barGraphView.fxml"));
-//        root = loader.load();
-//        BarGraphViewController graphView = loader.getController();
-//        graphView.prepareBarGraph(graphType.getValue());
-//
-//        ((BorderPane) frame.getParent()).setCenter(root);
-//    }
+    /**
+     * Method triggered when the user clicks on the generate graph button, Checks what selection is made by the user in
+     * the combo box and reloads the graphView.
+     *
+     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
+     */
+    public void selectBarGraph() throws IOException {
+
+        ArrayList<Integer> graphVariables;
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/barGraphView.fxml"));
+        root = loader.load();
+        BarGraphViewController graphView = loader.getController();
+        graphView.prepareBarGraph(graphType.getValue());
+
+        ((BorderPane) frame.getParent()).setCenter(root);
+    }
 
     public void selectLineGraph() throws IOException {
 
