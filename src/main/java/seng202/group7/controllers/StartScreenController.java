@@ -168,18 +168,4 @@ public class StartScreenController implements Initializable {
         Scene scene = stage.getScene();
         scene.setRoot(newRoot);
     }
-
-
-    /**
-     * Calls a method to run a file picker to import a file into the database.
-     * It then if a file is selected load the application.
-     *
-     * @param event     The event action that was triggered.
-     */
-    public void getFile(ActionEvent event) {
-        // Checks that a file was actually selected.
-        if (ControllerData.getInstance().getFile(event)) {
-            fadeOutScene(event);
-        }
-    }
 }

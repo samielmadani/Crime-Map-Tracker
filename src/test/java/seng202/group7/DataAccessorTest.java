@@ -9,6 +9,7 @@ import seng202.group7.data.Report;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -70,7 +71,11 @@ public class DataAccessorTest {
     public void deleteTest() {
         Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
         accessor.editCrime(crimeTwo, 1);
-        accessor.deleteReport("TestToDelete", 1);
+        try {
+            accessor.deleteReport("TestToDelete", 1);
+        } catch (SQLException e) {
+            fail();
+        }
         Crime crime = accessor.getCrime("TestToDelete", 1);
         assertNull(crime);
     }
@@ -80,7 +85,12 @@ public class DataAccessorTest {
      */
     @Test
     public void readToDBTest() {
-        accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
+        try {
+            accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            fail();
+        }
         Crime crime = accessor.getCrime("JE163990", 1);
         assertEquals(crime.getCaseNumber(), "JE163990");
     }
@@ -90,7 +100,11 @@ public class DataAccessorTest {
      */
     @Test
     public void importDBTest() {
-        accessor.importInDB(new File("src/test/files/TestImporting.db"));
+        try {
+            accessor.importInDB(new File("src/test/files/TestImporting.db"), 1);
+        } catch (SQLException e) {
+           fail();
+        }
         Crime crime = accessor.getCrime("TestNumber", 1);
         assertEquals(crime.getCaseNumber(), "TestNumber");
     }

@@ -14,6 +14,7 @@ import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -320,8 +321,11 @@ public class EntryController implements Initializable {
      */
     public void deleteEntry() {
         DataAccessor dataAccessor = DataAccessor.getInstance();
-
-        dataAccessor.deleteReport(cNoText.getText(), ControllerData.getInstance().getCurrentList());
+        try {
+            dataAccessor.deleteReport(cNoText.getText(), ControllerData.getInstance().getCurrentList());
+        } catch (SQLException e) {
+            ControllerData.getInstance().createError("Could not delete entry. Error:" + e);
+        }
         returnView();
     }
 

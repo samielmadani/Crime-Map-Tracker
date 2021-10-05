@@ -1,13 +1,14 @@
 package seng202.group7.controllers;
 
-
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
-
+import java.sql.SQLException;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -118,7 +119,7 @@ public final class ControllerData {
      *
      * @param event     The event action that was triggered.
      */
-    public boolean getFile(ActionEvent event) {
+    public void getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("./"));
         fileChooser.setTitle("Select file");
@@ -131,17 +132,26 @@ public final class ControllerData {
         if (selectedFile != null) {
             String fileName = selectedFile.getName();
             DataAccessor accessor = DataAccessor.getInstance();
-            if (fileName.endsWith(".csv")) {
-                // Reads a CSV into the database.
-                accessor.readToDB(selectedFile, currentList);
-            } else {
-                // Reads a outside database into the main database.
-                accessor.importInDB(selectedFile);
+            try {
+                if (fileName.endsWith(".csv")) {
+                    // Reads a CSV into the database.
+                    accessor.readToDB(selectedFile, currentList);
+                } else {
+                    // Reads a outside database into the main database.
+                    accessor.importInDB(selectedFile, currentList);
+                }
+            } catch (SQLException e) {
+                createError("Invalid data");
             }
-            return true;
-        } else {
-            return false;
         }
+    }
+
+    public void createError(String errorMessage) {
+        GridPane root = new GridPane();
+        Stage errorStage = new Stage();
+        errorStage.setTitle(errorMessage);
+        errorStage.setScene(new Scene(root, 450, 450));
+        errorStage.show();
     }
 
     /**

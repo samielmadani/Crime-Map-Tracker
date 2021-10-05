@@ -12,6 +12,7 @@ import seng202.group7.data.DataAccessor;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Objects;
 
 /**
@@ -59,25 +60,38 @@ public class GeneralMenuController {
      */
     public void newImport(ActionEvent event) throws IOException {
 
-        if (ControllerData.getInstance().getFile(event)) {
-            BorderPane rootPane = (BorderPane) frame.getParent();
-            // Loads the paginator screen.
-            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+        ControllerData.getInstance().getFile(event);
+        BorderPane rootPane = (BorderPane) frame.getParent();
+        // Loads the paginator screen.
+        BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
 
-            // Adds the data view to the center of the screen.
-            rootPane.setCenter(dataView);
-        }
+        // Adds the data view to the center of the screen.
+        rootPane.setCenter(dataView);
     }
 
     public void exportWithFilter() {
         String conditions = ControllerData.getInstance().getWhereQuery();
         File saveLocation = getLocation();
-        DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+        if (saveLocation == null) {
+            return;
+        }
+        try {
+            DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+        } catch (SQLException e) {
+            ControllerData.getInstance().createError("Could not export data. Error:" + e);
+        }
     }
 
     public void exportWithoutFilter() {
         File saveLocation = getLocation();
-        DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+        if (saveLocation == null) {
+            return;
+        }
+        try {
+            DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+        } catch (SQLException e) {
+            ControllerData.getInstance().createError("Could not export data. Error:" + e);
+        }
     }
 
     private File getLocation() {

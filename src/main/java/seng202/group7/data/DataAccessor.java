@@ -1,12 +1,14 @@
 package seng202.group7.data;
 
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.group7.controllers.ControllerData;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -20,9 +22,9 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -278,102 +280,56 @@ public final class DataAccessor {
      *
      * @param entryId       The case number of the crime object.
      */
-    public void deleteReport(String entryId, int listId){
+    public void deleteReport(String entryId, int listId) throws SQLException{
         String reportQuery = "DELETE FROM reports WHERE id = '" + entryId + "' AND list_id=" + listId;
         runStatement(reportQuery);
     }
-
-    /**
-     * Gets the schema for the connected database and stores it as a string.
-     *
-     * @param conn          The database connection being used.
-     * @return schema       The database's schema.
-     */
-    private String getSchema(Connection conn) {
-        try {
-            DatabaseMetaData md = conn.getMetaData();
-            ResultSet rs = md.getTables(null, null, "%", new String[]{"TABLE"});
-            StringBuilder sb = new StringBuilder();
-            while(rs.next()) {
-                String name = rs.getString(3);
-                sb.append(name);
-                sb.append(" {");
-                // Gets the first entry
-                String query = "SELECT * FROM " + name + " LIMIT 1;";
-                Statement stmt = connection.createStatement();
-                //Gets the schema of the entry
-                ResultSetMetaData rsmd = stmt.executeQuery(query).getMetaData();
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    sb.append("(").append(rsmd.getColumnName(i)).append(", ");
-                    sb.append(rsmd.getColumnType(i)).append(")");
-                    sb.append(", ");
-                }
-                sb.append("\n");
-                stmt.close();
-            }
-            rs.close();
-            return sb.toString();
-        } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.getSchema: " + e);
-        }
-        return null;
-    }
-
-    /**
-     * Creates a connection to the outside database and check if its schema matches the main databases.
-     * @param selectedFile      The outside database.
-     * @return valid            True if the database if valid.
-     */
-    private boolean validateSchema(File selectedFile){
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:" + selectedFile);
-            String newSchema = getSchema(conn);
-            conn.close();
-            // Compares main schema to schema of new file.
-            return Objects.equals(getSchema(connection), newSchema);
-        } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.validateSchema: " + e);
-        }
-        return false;
-    }
-
 
     /**
      * Runs during the importing of a outside database into the main database.
      *
      * @param selectedFile      The Database file.
      */
-    public void importInDB(File selectedFile) {
-        // Checks if schema is valid then attaches the database and inserts the data from the table and then detaches the database.
-        if (validateSchema(selectedFile)) {
-            runStatement("ATTACH '" + selectedFile + "' AS " + "newCrimeDB;");
-            runStatement("INSERT OR REPLACE INTO reports SELECT * FROM newCrimeDB.reports");
-            runStatement("INSERT OR REPLACE INTO crimes SELECT * FROM newCrimeDB.crimes");
-            runStatement("DETACH DATABASE " + "'newCrimeDB';");
-        } else {
-            System.out.println("Invalid Schema.");
-        }
+    public void importInDB(File selectedFile, int listId) throws SQLException {
+        runStatement("ATTACH '" + selectedFile + "' AS " + "newCrimeDB;");
+        runStatement("INSERT OR REPLACE INTO reports " +
+            "SELECT " +
+            "id, " + 
+            "'" + listId + "' ," +
+            "date, " +
+            "primary_description, " +
+            "secondary_description, " + 
+            "domestic, " +
+            "x_coord, " +
+            "y_coord, " +
+            "latitude, " +
+            "longitude, " +
+            "location_description " + 
+            "FROM newCrimeDB.reports");
+
+        runStatement("INSERT OR REPLACE INTO crimes SELECT " +
+            "report_id, " + 
+            "'" + listId + "', " +
+            "block, " +
+            "iucr, " +
+            "fbicd, " + 
+            "arrest, " +
+            "beat, " +
+            "ward " + 
+            "FROM newCrimeDB.crimes");
+
+        runStatement("DETACH DATABASE " + "'newCrimeDB';");
     }
 
 
     /**
      * Runs a query with no result set and ensures that the statements are then closed.
      * @param query     The query being used.
+     * @throws SQLException
      */
-    private void runStatement(String query) {
-        Statement stmt = null;
-        try {
-            stmt = connection.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.runningStatement: " + query + " " + e);
-        } finally {
-            try {
-                if (stmt != null) { stmt.close();}
-            } catch (SQLException e) {
-                System.out.println("SQLiteAccessor.CloseStmt: " + query + " " + e);
-            }
-        }
+    private void runStatement(String query) throws SQLException {
+        Statement stmt = connection.createStatement();
+        stmt.execute(query);
     }
 
     /**
@@ -381,7 +337,7 @@ public final class DataAccessor {
      *
      * @param pathname      CSV file.
      */
-    public void readToDB(File pathname, int listId) {
+    public void readToDB(File pathname, int listId) throws SQLException {
         ArrayList<String> schemaDefault = new ArrayList<>(Arrays.asList("CASE#", "DATE  OF OCCURRENCE", "BLOCK", " IUCR", " PRIMARY DESCRIPTION", " SECONDARY DESCRIPTION",
                 " LOCATION DESCRIPTION", "ARREST", "DOMESTIC", "BEAT", "WARD", "FBI CD", "X COORDINATE", "Y COORDINATE",
                 "LATITUDE", "LONGITUDE", "LOCATION"));
@@ -408,8 +364,6 @@ public final class DataAccessor {
 
         } catch (IOException e) {
             System.out.println("readToDB" + e);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -501,11 +455,10 @@ public final class DataAccessor {
     private void addEntry(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException {
         PSTypes.setPSString(psReport, 1, row[0]); // Case Number
         PSTypes.setPSInteger(psReport, 2, listId); // List
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
         if (Objects.equals(row[1], "")) {
             psReport.setNull(3, Types.TIME);
         } else {
-            psReport.setTimestamp(3, Timestamp.valueOf(LocalDateTime.parse(row[1], formatter)));
+            psReport.setTimestamp(3, Timestamp.valueOf(parseDate(row[1])));
         } // Date
         PSTypes.setPSString(psReport, 4, row[4]); // Primary Description
         PSTypes.setPSString(psReport, 5, row[5]); // Secondary Description
@@ -526,6 +479,18 @@ public final class DataAccessor {
         PSTypes.setPSInteger(psCrime, 7, row[9]); // Beat
         PSTypes.setPSInteger(psCrime, 8, row[10]); // Ward
         psCrime.addBatch();
+    }
+
+    private LocalDateTime parseDate(String date) {
+        LocalDateTime dateTime = null;
+        DateTimeFormatter formatter;
+        try {
+            formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+            return LocalDateTime.parse(date, formatter);
+        } catch (DateTimeParseException ignore) {
+            formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
+            return LocalDateTime.parse(date, formatter);
+        }
     }
 
     public void createList(String name) {
@@ -599,44 +564,76 @@ public final class DataAccessor {
         }
     }
 
-    public void export(String conditions, int listId, String saveLocation) {
+    public void export(String conditions, int listId, String saveLocation) throws SQLException{
         if (saveLocation.endsWith(".db")) {
-
-            createExportDatabase(saveLocation);
-
-            runStatement("ATTACH DATABASE '" + saveLocation + "' AS other;");
-
-            String query = "INSERT INTO other.reports SELECT " +
-            "id, " + 
-            "date, " +
-            "primary_description, " +
-            "secondary_description, " + 
-            "domestic, " +
-            "x_coord, " +
-            "y_coord, " +
-            "latitude, " +
-            "longitude, " +
-            "location_description " + 
-            "FROM crimedb WHERE ";
-            query = addConditions(query, conditions, listId);
-            runStatement(query);
-
-            query = "INSERT INTO other.crimes SELECT " +
-            "report_id, " + 
-            "block, " +
-            "iucr, " +
-            "fbicd, " + 
-            "arrest, " +
-            "beat, " +
-            "ward " + 
-            "FROM crimedb WHERE ";
-            query = addConditions(query, conditions, listId);
-            runStatement(query);
-
+            exportDB(conditions, listId, saveLocation);
         } else if (saveLocation.endsWith("csv")) {
-
+            exportCSV(conditions, listId, saveLocation);
         }
+    }
 
+    private void exportCSV(String conditions, int listId, String saveLocation) throws SQLException {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ',')){
+        
+            writer.writeNext("CASE#,DATE  OF OCCURRENCE,BLOCK, IUCR, PRIMARY DESCRIPTION, SECONDARY DESCRIPTION, LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION".split(","));
+
+            Statement stmt = connection.createStatement();
+            String query = "SELECT " +
+                "id, " + 
+                "date, " +
+                "block, " +
+                "iucr, " +
+                "primary_description, " +
+                "secondary_description, " + 
+                "location_description, " + 
+                "arrest, " +
+                "domestic, " +
+                "beat, " +
+                "ward, " + 
+                "fbicd, " +
+                "x_coord, " +
+                "y_coord, " +
+                "latitude, " +
+                "longitude " +
+                "FROM crimedb WHERE ";
+            query = addConditions(query, conditions, listId);
+            ResultSet rs = stmt.executeQuery(query);
+            writer.writeAll(rs, false);
+        } catch (IOException e) {
+            System.out.println(e);
+        }   
+    }
+
+    private void exportDB(String conditions, int listId, String saveLocation) throws SQLException {
+        createExportDatabase(saveLocation);
+        runStatement("ATTACH DATABASE '" + saveLocation + "' AS other;");
+
+        String query = "INSERT INTO other.reports SELECT " +
+        "id, " + 
+        "date, " +
+        "primary_description, " +
+        "secondary_description, " + 
+        "domestic, " +
+        "x_coord, " +
+        "y_coord, " +
+        "latitude, " +
+        "longitude, " +
+        "location_description " + 
+        "FROM crimedb WHERE ";
+        query = addConditions(query, conditions, listId);
+        runStatement(query);
+
+        query = "INSERT INTO other.crimes SELECT " +
+        "report_id, " + 
+        "block, " +
+        "iucr, " +
+        "fbicd, " + 
+        "arrest, " +
+        "beat, " +
+        "ward " + 
+        "FROM crimedb WHERE ";
+        query = addConditions(query, conditions, listId);
+        runStatement(query);
     }
 
     private String addConditions(String query, String conditions, int listId) {
