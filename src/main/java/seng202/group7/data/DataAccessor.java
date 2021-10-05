@@ -11,11 +11,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -114,6 +112,7 @@ public final class DataAccessor {
         stmt.execute("CREATE VIEW crimedb AS " +
                 "SELECT *" + 
                 "FROM reports JOIN crimes c ON id=c.report_id AND reports.list_id=c.list_id");
+        stmt.close();
         newdb.close();
     }
 
@@ -268,6 +267,7 @@ public final class DataAccessor {
             
             // Closes the statement.
             psCrime.close();
+            rs.close();
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.getCrime: " + e);
             return null;
@@ -330,6 +330,7 @@ public final class DataAccessor {
     private void runStatement(String query) throws SQLException {
         Statement stmt = connection.createStatement();
         stmt.execute(query);
+        stmt.close();
     }
 
     /**
@@ -403,9 +404,10 @@ public final class DataAccessor {
             PSTypes.setPSString(psReport, 11, crime.getLocationDescription()); // Location Description
 
             psReport.execute();
+            psReport.close();
+
             psCrime.execute();
             psCrime.close();
-            psReport.close();
 
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.edit: " + e);
@@ -422,13 +424,12 @@ public final class DataAccessor {
     private void write(ArrayList<String[]> rows, int listId) throws SQLException {
         // Turn off autocommit to increase speed.
         connection.setAutoCommit(false);
-        PreparedStatement psCrime = null;
-        PreparedStatement psReport = null;
-        try {
-            psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-            psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+        try (PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, " + 
+                "block, iucr, fbicd, arrest, beat, ward) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+            PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, " + 
+                "primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")) {
             // Uses batches to chain all the individual insertions into a single query to the database. This is also to increase speed.
             for (String[] row : rows) {
                 addEntry(row, listId, psReport, psCrime);
@@ -441,14 +442,6 @@ public final class DataAccessor {
             connection.setAutoCommit(true);
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.write: " + e);
-        } finally {
-            // Closes all prepared statements.
-            try {
-                if (psCrime != null) { psCrime.close(); }
-                if (psReport != null) { psReport.close(); }
-            } catch (SQLException e) {
-                System.out.println("SQLiteAccessor.ClosePS: " + e);
-            }
         }
     }
 
@@ -482,7 +475,6 @@ public final class DataAccessor {
     }
 
     private LocalDateTime parseDate(String date) {
-        LocalDateTime dateTime = null;
         DateTimeFormatter formatter;
         try {
             formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
@@ -494,8 +486,7 @@ public final class DataAccessor {
     }
 
     public void createList(String name) {
-        try {
-            PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES (?);");
+        try (PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES (?);")) {
             PSTypes.setPSString(psList, 1, name);
             psList.execute();
         } catch (SQLException e) {
@@ -529,6 +520,7 @@ public final class DataAccessor {
             psList.setString(1, newName);
             psList.setString(2, oldName);
             psList.execute();
+            psList.close();
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.renameList: " + e);
         }  
@@ -573,11 +565,10 @@ public final class DataAccessor {
     }
 
     private void exportCSV(String conditions, int listId, String saveLocation) throws SQLException {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ',')){
+        try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ','); Statement stmt = connection.createStatement();){
         
             writer.writeNext("CASE#,DATE  OF OCCURRENCE,BLOCK, IUCR, PRIMARY DESCRIPTION, SECONDARY DESCRIPTION, LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION".split(","));
 
-            Statement stmt = connection.createStatement();
             String query = "SELECT " +
                 "id, " + 
                 "date, " +
@@ -599,6 +590,7 @@ public final class DataAccessor {
             query = addConditions(query, conditions, listId);
             ResultSet rs = stmt.executeQuery(query);
             writer.writeAll(rs, false);
+            rs.close();
         } catch (IOException e) {
             System.out.println(e);
         }   
@@ -646,8 +638,8 @@ public final class DataAccessor {
     }
 
     private void createExportDatabase(String location) {
-        try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location)) {
-            Statement stmt = newdb.createStatement();
+        try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location); Statement stmt = newdb.createStatement()) {
+            
             stmt.execute("PRAGMA foreign_keys = ON;");
 
             stmt.execute("CREATE TABLE reports (" + 
