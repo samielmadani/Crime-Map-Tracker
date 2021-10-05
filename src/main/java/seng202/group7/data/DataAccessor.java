@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -439,13 +440,13 @@ public final class DataAccessor {
             psCrime.executeBatch();
             // Commits the changes and re-enables the auto commit.
             connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException e) {
             System.out.println("SQLiteAccessor.write: " + e);
         }
+        connection.setAutoCommit(true);
     }
 
-    private void addEntry(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException {
+    private void addEntry(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException, DateTimeParseException {
         PSTypes.setPSString(psReport, 1, row[0]); // Case Number
         PSTypes.setPSInteger(psReport, 2, listId); // List
         if (Objects.equals(row[1], "")) {
@@ -477,7 +478,7 @@ public final class DataAccessor {
     private LocalDateTime parseDate(String date) {
         DateTimeFormatter formatter;
         try {
-            formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+            formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a", Locale.US);
             return LocalDateTime.parse(date, formatter);
         } catch (DateTimeParseException ignore) {
             formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
