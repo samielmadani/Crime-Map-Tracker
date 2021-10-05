@@ -141,7 +141,7 @@ public class Rank {
                 lastValueNotFound = false;
             }
 
-            CrimeFrequency freq = new CrimeFrequency(String.valueOf(monthValue) + " " + String.valueOf(yearValue), 0);
+            CrimeFrequency freq = new CrimeFrequency(monthValue + " " + yearValue, 0);
             crimeOverTime.add(freq);
 
             monthValue += 1;

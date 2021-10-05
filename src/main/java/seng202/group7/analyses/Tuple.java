@@ -30,4 +30,8 @@ public class Tuple<X, Y> {
     public Y getY() {
         return y;
     }
+
+    public void setX(X x) {
+        this.x = x;
+    }
 }
