@@ -70,7 +70,7 @@ public class CompareController implements Initializable {
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the General Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
 
     }

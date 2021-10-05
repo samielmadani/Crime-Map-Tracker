@@ -126,7 +126,7 @@ public class DataViewController implements Initializable {
             controllerData.setTableState(table);
             
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Entry View screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));
         }
     }
 

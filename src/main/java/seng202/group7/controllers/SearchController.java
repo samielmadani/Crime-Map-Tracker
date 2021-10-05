@@ -72,7 +72,7 @@ public class SearchController implements Initializable {
             // Changes side menu to the filter menu.
             pane.setCenter(tableView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Pagination screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
         }
 
     }

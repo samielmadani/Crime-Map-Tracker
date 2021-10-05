@@ -30,17 +30,20 @@ public class MainScreen extends Application {
      * Loads the first FXML file and sets it to the current scene for the stage.
      *
      * @param windowStage      The stage that the scene will be load onto.
-     * @throws IOException      An error that occurs when loading the FXML file.
      */
     @Override
-    public void start(Stage windowStage) throws IOException {
+    public void start(Stage windowStage) {
         window = windowStage;
         windowStage.setTitle("LookOut");
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
-        Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
-        Scene scene = new Scene(view);
-        windowStage.setScene(scene);
-        windowStage.show();
+        try {
+            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
+            Scene scene = new Scene(view);
+            windowStage.setScene(scene);
+            windowStage.show();
+        } catch (IOException | NullPointerException e) {
+            createErrorWin(new CustomException("Error caused when loading the Start screens FXML file.", e.getClass().toString()));
+        }
     }
 
     /**

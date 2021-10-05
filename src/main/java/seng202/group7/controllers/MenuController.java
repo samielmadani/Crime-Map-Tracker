@@ -55,7 +55,7 @@ public class MenuController implements Initializable {
             toData();
 
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the General Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
     }
 
@@ -98,7 +98,7 @@ public class MenuController implements Initializable {
             // Sets the menu to the main panel and hides it, so it starts closed.
             menuFrame.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the General Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
 
     }
@@ -117,7 +117,7 @@ public class MenuController implements Initializable {
             // Adds the paginator to the center of the screen.
             menuFrame.setCenter(dataView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Pagination screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
         }
 
 
@@ -127,7 +127,7 @@ public class MenuController implements Initializable {
             // Sets the menu to the main panel and hides it, so it starts closed.
             menuFrame.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the General Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
 
     }
@@ -143,7 +143,7 @@ public class MenuController implements Initializable {
             // Adds the help screen to the center of the screen.
             menuFrame.setCenter(dataView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Help screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Help screens FXML file.", e.getClass().toString()));
         }
 
 
@@ -153,7 +153,7 @@ public class MenuController implements Initializable {
             // Sets the menu to the main panel and hides it, so it starts closed.
             menuFrame.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the General Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
 
 
@@ -170,7 +170,7 @@ public class MenuController implements Initializable {
             //Adds the graph view to the center of the screen.
             menuFrame.setCenter(graphView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Graph View screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
 
         try {
@@ -178,7 +178,7 @@ public class MenuController implements Initializable {
             // Changes side menu to the filter menu.
             menuFrame.setLeft(graphMenu);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Graph Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph Menu screens FXML file.", e.getClass().toString()));
         }
 
     }

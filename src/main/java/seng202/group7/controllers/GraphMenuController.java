@@ -67,7 +67,7 @@ public class GraphMenuController implements Initializable {
             graphView.pseudoClassStateChanged(streetDanger, graphSelection.equals("Most Dangerous Streets"));
             ((BorderPane) frame.getParent()).setCenter(graphView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the the Graph View screens FXML file.", e.getClass().toString()));
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
         }
 
     }
