@@ -7,7 +7,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.view.MainScreen;
 
 import java.io.IOException;
 import java.net.URL;
@@ -73,8 +75,8 @@ public class PageController implements Initializable {
         ControllerData.getInstance().setCurrentPage(pageIndex);
         try {
             return FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Raw Data View screens FXML file.", e.getClass().toString()));
         }
         return null;
     }

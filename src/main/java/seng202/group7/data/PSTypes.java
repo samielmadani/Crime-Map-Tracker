@@ -1,5 +1,7 @@
 package seng202.group7.data;
 
+import seng202.group7.view.MainScreen;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -29,7 +31,7 @@ public final class PSTypes {
                 ps.setInt(parameterIndex, Integer.parseInt(x));
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setInteger: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setInteger: " + e, e.getClass().toString()));
         }
     }
 
@@ -48,7 +50,7 @@ public final class PSTypes {
                 ps.setInt(parameterIndex, x);
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setInteger: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setInteger: " + e, e.getClass().toString()));
         }
     }
 
@@ -67,7 +69,7 @@ public final class PSTypes {
                 ps.setDouble(parameterIndex, Double.parseDouble(x));
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setDouble: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setDouble: " + e, e.getClass().toString()));
         }
     }
 
@@ -86,7 +88,7 @@ public final class PSTypes {
                 ps.setDouble(parameterIndex, x);
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setDouble: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setDouble: " + e, e.getClass().toString()));
         }
     }
 
@@ -105,7 +107,7 @@ public final class PSTypes {
                 ps.setString(parameterIndex, x);
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setString: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setString: " + e, e.getClass().toString()));
         }
     }
 
@@ -124,12 +126,12 @@ public final class PSTypes {
                 ps.setBoolean(parameterIndex, x.equalsIgnoreCase("Y"));
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setBoolean: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setBoolean: " + e, e.getClass().toString()));
         }
     }
 
     /**
-     * Checks if a boolean is null and sets the PreparedStatement to null-Types.BOOLEAN instead.
+     * Checks if a "boolean" is null and sets the PreparedStatement to null-Types.BOOLEAN instead.
      *
      * @param ps                    The PreparedStatement being used.
      * @param parameterIndex        The index in the PreparedStatement.
@@ -143,7 +145,7 @@ public final class PSTypes {
                 ps.setBoolean(parameterIndex, x);
             }
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.setBoolean: " + e);
+            MainScreen.createWarnWin(new CustomException("SQLiteAccessor.setBoolean: " + e, e.getClass().toString()));
         }
     }
 }

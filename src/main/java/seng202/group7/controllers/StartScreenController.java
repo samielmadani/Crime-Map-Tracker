@@ -21,7 +21,9 @@ import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.view.MainScreen;
 
 /**
  * The controller, used by / linked to, the Start Screen FXML file.
@@ -38,7 +40,7 @@ public class StartScreenController implements Initializable {
     private BorderPane rootPane;
 
     @FXML
-    private TableView <String> table;
+    private TableView<String> table;
 
     @FXML
     private TableColumn<String, String> listNames;
@@ -144,12 +146,9 @@ public class StartScreenController implements Initializable {
 
     /**
      * Set up the fade out transition which will then load the next scene.
-     *
-     * @param event     The event action that was triggered.
      */
     public void fadeOutScene() {
         // Creates the fade transition and assigns it a set of properties used to outline its style.
-        // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Stage stage = (Stage) rootPane.getScene().getWindow();
         FadeTransition fade = new FadeTransition();
         fade.setDuration(Duration.millis(50));
@@ -158,12 +157,11 @@ public class StartScreenController implements Initializable {
         fade.setToValue(0);
         // Creates a trigger that will, at the end of the transition, activate the method toNextScene.
         fade.setOnFinished(actionEvent -> {
+            // Transitions to the next scene.
             try {
-                // Transitions to the next scene.
                 toNextScene(stage);
-            } catch (IOException e) {
-                // Catches an error that can be thrown if there is an error when loading the next FXML file.
-                e.printStackTrace();
+            } catch (CustomException e) {
+                MainScreen.createErrorWin(e);
             }
         });
         // Runs the fade out.
@@ -176,10 +174,15 @@ public class StartScreenController implements Initializable {
      * This is the start of the main application.
      *
      * @param stage             The event action that was triggered.
-     * @throws IOException      An error that occurs when loading the FXML file.
+     * @throws CustomException      An error that occurs when loading the FXML file.
      */
-    private void toNextScene(Stage stage) throws IOException {
-        Parent newRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menu.fxml")));
+    private void toNextScene(Stage stage) throws CustomException {
+        Parent newRoot;
+        try {
+            newRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menu.fxml")));
+        } catch (IOException | NullPointerException e) {
+            throw new CustomException("Error caused when loading the Menu screens FXML file.", e.getClass().toString());
+        }
         Scene scene = stage.getScene();
         scene.setRoot(newRoot);
     }

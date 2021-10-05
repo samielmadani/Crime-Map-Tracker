@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import seng202.group7.data.CustomException;
+import seng202.group7.view.MainScreen;
 
 import java.io.IOException;
 import java.net.URL;
@@ -51,20 +53,28 @@ public class SearchController implements Initializable {
      * Gets the current side panel and replaces it with the general menu panel.
      *
      * @param event             The event action that was triggered.
-     * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void toMenu(ActionEvent event) throws IOException {
+    public void toMenu(ActionEvent event){
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setLeft(menuItems);
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Changes side menu to the filter menu.
+            pane.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
 
         // This removes the current search effect being applied to the table when the paginator is initialized.
         ControllerData.getInstance().setWhereQuery("");
-        BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setCenter(tableView);
+        try {
+            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            // Changes side menu to the filter menu.
+            pane.setCenter(tableView);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+        }
+
     }
 
     /**
@@ -96,9 +106,8 @@ public class SearchController implements Initializable {
      * and therefore allow a user to search based on the text entered.
      *
      * @param event             The event action that was triggered.
-     * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void searchInput(ActionEvent event) throws IOException {
+    public void searchInput(ActionEvent event) {
         String field = fieldBox.getValue();
         String input = inputField.getText();
         // Determines the condition that will be used.
@@ -115,8 +124,13 @@ public class SearchController implements Initializable {
         ControllerData.getInstance().setWhereQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
-        BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setCenter(tableView);
+        try {
+            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            // Changes side menu to the filter menu.
+            pane.setCenter(tableView);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+        }
+
     }
 }

@@ -21,9 +21,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
+import seng202.group7.view.MainScreen;
 
 /**
  * The controller, used by / linked to, the compares FXML file.
@@ -60,14 +62,17 @@ public class CompareController implements Initializable {
 
     /**
      * Gets the current side panel and replaces it with the general menu panel.
-     *
-     * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void toMenu() throws IOException {
+    public void toMenu() {
         BorderPane pane = (BorderPane) frame.getParent();
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setLeft(menuItems);
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Changes side menu to the filter menu.
+            pane.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+
     }
 
     /**

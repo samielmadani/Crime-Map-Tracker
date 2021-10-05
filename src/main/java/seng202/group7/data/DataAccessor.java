@@ -5,6 +5,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng202.group7.controllers.ControllerData;
+import seng202.group7.view.MainScreen;
 
 import java.io.File;
 import java.io.FileReader;
@@ -57,7 +58,7 @@ public final class DataAccessor {
             connection = DriverManager.getConnection("jdbc:sqlite:MainDatabase.db");
             runStatement("PRAGMA foreign_keys = ON;");
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.connect: " + e);
+            MainScreen.createErrorWin(new CustomException("Error connecting to database.", e.getClass().toString()));
         }
     }
 
@@ -69,7 +70,7 @@ public final class DataAccessor {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:"+path);
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.connect: " + e);
+            MainScreen.createErrorWin(new CustomException("Error connecting to database.", e.getClass().toString()));
         }
     }
 
@@ -163,7 +164,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.size: " + e);
+            MainScreen.createWarnWin(new CustomException("Error getting size of the database.", e.getClass().toString()));
         }
         return size;
     }
@@ -220,7 +221,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.selectReports: " + e);
+            MainScreen.createWarnWin(new CustomException("Error getting set of reports from the database.", e.getClass().toString()));
             return null;
         }
         return reports;
@@ -280,7 +281,7 @@ public final class DataAccessor {
             psCrime.close();
             rs.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.getCrime: " + e);
+            MainScreen.createWarnWin(new CustomException("Error getting single crime from the database.", e.getClass().toString()));
             return null;
         }
         return crime;
@@ -363,7 +364,7 @@ public final class DataAccessor {
                 try {
                     rows.add(row);
                 } catch (Exception e) {
-                    System.out.println("readToDB" + e);
+                    MainScreen.createWarnWin(new CustomException("Error reading to database.", e.getClass().toString()));
                 }
             }
             reader.close();
@@ -375,7 +376,7 @@ public final class DataAccessor {
             }
 
         } catch (IOException e) {
-            System.out.println("readToDB" + e);
+            MainScreen.createErrorWin(new CustomException("Error reading to database.", e.getClass().toString()));
         }
     }
 
@@ -421,7 +422,7 @@ public final class DataAccessor {
             psCrime.close();
 
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.edit: " + e);
+            MainScreen.createWarnWin(new CustomException("Error updating crime in the database.", e.getClass().toString()));
         }
     }
 
@@ -451,7 +452,7 @@ public final class DataAccessor {
             // Commits the changes and re-enables the auto commit.
             connection.commit();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.write: " + e);
+            MainScreen.createWarnWin(new CustomException("Error writing to the database.", e.getClass().toString()));
         }
         connection.setAutoCommit(true);
     }
@@ -513,8 +514,7 @@ public final class DataAccessor {
             PSTypes.setPSString(psList, 1, name);
             psList.execute();
         } catch (SQLException e) {
-            //TODO: handle exception
-            System.out.println("SQLiteAccessor.createList: " + e);
+            MainScreen.createWarnWin(new CustomException("Please enter a name into the text field.", e.getClass().toString()));
         }
     }
 
@@ -534,7 +534,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.selectReports: " + e);
+            MainScreen.createWarnWin(new CustomException("Error getting the list of reports.", e.getClass().toString()));
         }
         ObservableList<String> details = FXCollections.observableArrayList(lists);
         return details;
@@ -553,7 +553,7 @@ public final class DataAccessor {
             psList.execute();
             psList.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.renameList: " + e);
+            MainScreen.createWarnWin(new CustomException("List name already being used.", e.getClass().toString()));
         }  
     }
 
@@ -573,7 +573,7 @@ public final class DataAccessor {
             // Closes the statement and result set.
             lists.close();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.getListId: " + e);
+            MainScreen.createWarnWin(new CustomException("Error getting the list ID.", e.getClass().toString()));
         }
         return listId;
     }
@@ -587,7 +587,7 @@ public final class DataAccessor {
             psList.setString(1, selectedList);
             psList.execute();
         } catch (SQLException e) {
-            System.out.println("SQLiteAccessor.deleteList: " + e);
+            MainScreen.createWarnWin(new CustomException("Error deleting list from the database.", e.getClass().toString()));
         }
     }
 
@@ -641,7 +641,7 @@ public final class DataAccessor {
             writer.writeAll(rs, false);
             rs.close();
         } catch (IOException e) {
-            System.out.println(e);
+            MainScreen.createErrorWin(new CustomException("Error exporting CSV from the database.", e.getClass().toString()));
         }   
     }
 
@@ -733,8 +733,8 @@ public final class DataAccessor {
                     "FOREIGN KEY(report_id) REFERENCES reports(id) ON UPDATE CASCADE ON DELETE CASCADE, " +
                     "PRIMARY KEY(report_id)" +
                     ")");
-        } catch (SQLException e) { 
-            System.out.println("SQLiteAccessor.createExportDB: " + e);
+        } catch (SQLException e) {
+            MainScreen.createErrorWin(new CustomException("Error exporting a new database from the database.", e.getClass().toString()));
         }
     }
 
