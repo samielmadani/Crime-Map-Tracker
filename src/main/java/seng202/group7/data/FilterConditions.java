@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class FilterConditions implements Serializable {
-    private LocalDate dateFrom;
-    private LocalDate dateTo;
-    private String primaryDescription;
-    private String locationDescription;
-    private Integer ward;
-    private Integer beat;
-    private Boolean arrest;
-    private Boolean domestic;
+    private final LocalDate dateFrom;
+    private final LocalDate dateTo;
+    private final String primaryDescription;
+    private final String locationDescription;
+    private final Integer ward;
+    private final Integer beat;
+    private final Boolean arrest;
+    private final Boolean domestic;
 
     public FilterConditions(LocalDate dateFrom, LocalDate dateTo, String primaryDescription, String locationDescription,
                             Integer ward, Integer beat, Boolean arrest, Boolean domestic) {

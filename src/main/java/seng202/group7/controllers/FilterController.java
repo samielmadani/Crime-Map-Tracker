@@ -40,7 +40,7 @@ import seng202.group7.data.Serializer;
  * @author Shaylin Simadari
  * @author John Elliott
  */
-public class FilterController implements Initializable, SavesGUIFields {
+public class FilterController implements Initializable {
 
     @FXML
     private DatePicker datePicker;
@@ -280,8 +280,7 @@ public class FilterController implements Initializable, SavesGUIFields {
         pane.setLeft(menuItems);
     }
 
-    @Override
-    public void loadGUIFields(){
+    private void loadGUIFields(){
         if(filterConditions == null){
             return;
         }
@@ -295,8 +294,7 @@ public class FilterController implements Initializable, SavesGUIFields {
         domesticBox.setValue(filterConditions.getDomestic() == null ? null : filterConditions.getDomestic() ? "Y" : "N");
     }
 
-    @Override
-    public void saveGUIFields(){
+    private void saveGUIFields(){
         filterConditions = new FilterConditions(
                 datePicker.getValue(),
                 datePicker2.getValue(),
