@@ -33,11 +33,6 @@ public final class ControllerData {
     private Crime currentRow;
 
     /**
-     * Stores the current table state so when the back button is pushed the position is the same.
-     */
-    private Node tableState;
-
-    /**
      * Stores the current page of the paginator.
      */
     private int currentPage = 0;
@@ -84,24 +79,6 @@ public final class ControllerData {
      */
     public Crime getCurrentRow() {
         return currentRow;
-    }
-
-    /**
-     * Setter for storing the current state of the table.
-     *
-     * @param tableView       The table state.
-     */
-    public void setTableState(Node tableView) {
-        tableState = tableView;
-    }
-
-    /**
-     * Getter for retrieving the current state of the table.
-     *
-     * @return tableState       The current state of the table.
-     */
-    public Node getTableState() {
-        return tableState;
     }
 
     public int getCurrentList() {
