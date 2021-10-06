@@ -76,7 +76,8 @@ public class PageController implements Initializable {
         try {
             return FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Raw Data View screens FXML file.", e.getClass().toString()));
+            System.out.println(e);
+            // MainScreen.createErrorWin(new CustomException("Error caused when loading the Raw Data View screens FXML file.", e.getClass().toString()));
         }
         return null;
     }

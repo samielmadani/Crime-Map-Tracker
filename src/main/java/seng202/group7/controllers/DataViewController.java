@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -47,16 +50,16 @@ public class DataViewController implements Initializable {
      */
     @FXML
     private TableView<Crime> tableView;
-    /**
-     * This is the columns of the table with the type string.
-     */
-    @FXML
-    private TableColumn<Crime, String> caseCol, wardCol, descCol, dateCol;
-    /**
-     * This is the columns of the table with the type boolean.
-     */
-    @FXML
-    private TableColumn<Crime, Boolean> arrestCol;
+    // /**
+    //  * This is the columns of the table with the type string.
+    //  */
+    // @FXML
+    // private TableColumn<Crime, String> caseCol, wardCol, descCol, dateCol;
+    // /**
+    //  * This is the columns of the table with the type boolean.
+    //  */
+    // @FXML
+    // private TableColumn<Crime, Boolean> arrestCol;
 
 
     /**
@@ -68,18 +71,51 @@ public class DataViewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ArrayList<String> possibleColumns = new ArrayList<>(Arrays.asList("Case Number,CaseNumber", "Date,date",
+            "Primary Description,PrimaryDescription","Secondary Description,SecondaryDescription", "Domestic,Domestic",
+            "X Coordinate,XCoord", "Y Coordinate,YCoord", " Latitude,Latitude","Longitude,Longitude",
+            "Location Description,LocationDescription", "Block,Block", "Iucr,Iucr", "FBI CD,FbiCD", "Arrest,arrest", 
+            "Beat,Beat", "Ward,Ward"));
+        ArrayList<String> defaultColumns = new ArrayList<>(Arrays.asList("Case Number", "Date",
+            "Primary Description","Arrest", "Ward"));
+        ContextMenu contextMenu = new ContextMenu();
+        String[] test; 
+        TableColumn<Crime, String> newColumn;
+        for (String columnName : possibleColumns) {
+            test = columnName.split(",");
+            newColumn = new TableColumn<>(test[0]);
+            newColumn.setCellValueFactory(new PropertyValueFactory<>(test[1]));
+            
+            MenuItem columnMenu = new MenuItem(test[0]);
+            columnMenu.setOnAction(event -> {
+                // TODO find position when rearranged
+                for (TableColumn<Crime, ?> col : tableView.getColumns())
+                    if (col.getText().equals(((MenuItem) event.getSource()).getText())) {
+                        col.setVisible(!col.visibleProperty().get());
+                        break;
+                    }
+            });
+            tableView.getColumns().add(newColumn);
 
-        caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
-        wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
-        descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
-        arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
-        // Sets up a call to firstly create a DateTime pattern and then coverts our local date time stored in class.
-        dateCol.setCellValueFactory(setup -> {
-                    SimpleStringProperty property = new SimpleStringProperty();
-                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                    property.setValue(dateFormat.format(setup.getValue().getDate()));
-                    return property;
-                });
+            contextMenu.getItems().add(columnMenu);
+            if (!defaultColumns.contains(test[0])) {
+                newColumn.setVisible(false);
+            }
+        }
+         
+        tableView.setContextMenu(contextMenu);
+
+        // caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
+        // wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
+        // descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
+        // arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
+        // // Sets up a call to firstly create a DateTime pattern and then coverts our local date time stored in class.
+        // dateCol.setCellValueFactory(setup -> {
+        //             SimpleStringProperty property = new SimpleStringProperty();
+        //             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        //             property.setValue(dateFormat.format(setup.getValue().getDate()));
+        //             return property;
+        //         });
 
         // On a double click and the row isn't empty it will trigger the swap view method.
         tableView.setRowFactory( tv -> {
