@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import seng202.group7.data.QueryBuilder;
@@ -66,7 +67,7 @@ public class SearchController {
      * @param event             The event action that was triggered.
      * @throws IOException      An error that occurs when loading the FXML file.
      */
-    public void search(ActionEvent event) throws IOException {
+    public void search(KeyEvent event) throws IOException {
         if(!validateText()){
             return;
         }

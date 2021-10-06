@@ -27,6 +27,6 @@
             </font>
         </Label>
     </HBox>
-    <TextField fx:id="inputField" onAction="#search" />
+    <TextField fx:id="inputField" onKeyTyped="#search" />
     <Label fx:id="errorLabel" />
 </VBox>
