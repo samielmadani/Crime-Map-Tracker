@@ -89,6 +89,16 @@ public class DataViewController implements Initializable {
                     }
             });
             tableView.getColumns().add(newColumn);
+
+            if (columnData[0].equals("Date")) {
+                newColumn.setCellValueFactory(setup -> {
+                    SimpleStringProperty property = new SimpleStringProperty();
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                    property.setValue(dateFormat.format(setup.getValue().getDate()));
+                    return property;
+                });
+            }
+
             contextMenu.getItems().add(columnMenu);
 
             // Only show default columns
