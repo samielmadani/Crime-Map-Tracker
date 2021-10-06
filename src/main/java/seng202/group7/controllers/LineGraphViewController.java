@@ -27,23 +27,39 @@ public class LineGraphViewController implements Initializable {
     private LineChart<String, Integer> overTimeChart;
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("hello");
-    }
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
-    public void prepareLineGraph() {
-        ArrayList<Report> sortedData = DataAccessor.getInstance().getAllSortedByDate();
+
+    public void prepareLineGraph(String query, ArrayList<String> choices) {
+        ArrayList<Report> sortedData = DataAccessor.getInstance().getData(query);
         ArrayList<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(sortedData);
-
+        String title = getTitle(choices);
         XYChart.Series<String, Integer> dataSet = new XYChart.Series<>();
         for (CrimeFrequency freq: crimeOverTime) {
             dataSet.getData().add(new XYChart.Data<> (freq.getDate(), freq.getFrequency()));
         }
         this.overTimeChart.setLegendVisible(false);
         this.overTimeChart.getData().addAll(dataSet);
-        this.overTimeChart.setTitle("Crime over time");
-        this.xAxis.setLabel("reee");
-        this.yAxis.setLabel("reee");
+        this.overTimeChart.setTitle(title);
+        this.xAxis.setLabel("Date");
+        this.yAxis.setLabel("Number of Crime");
+    }
+
+    public String getTitle(ArrayList<String> choices) {
+        String title = "";
+        if (choices.get(0) != null)  {
+            title += (choices.get(0).substring(0,1).toUpperCase()) + (choices.get(0).substring(1).toUpperCase());
+            title += " Over Time";
+        } else {
+            title += "Crime Over Time";
+        }
+        if (choices.get(1) != null) {
+            title += " in Ward " + choices.get(1);
+        }
+        if (choices.get(2) != null) {
+            title += " and Beat " + choices.get(2);
+        }
+        return title;
     }
 
 }

@@ -167,6 +167,7 @@ public class FilterController implements Initializable {
                 return;
             }
         }
+        System.out.println(primaryBox.getValue());
         String query = QueryBuilder.where(datePicker.getValue(), primaryBox.getValue(), locationBox.getValue(),
                 getIntegerFromString(wardField.getText()), getIntegerFromString(beatField.getText()),
                 getBooleanFromString(arrestBox.getValue()), getBooleanFromString(domesticBox.getValue()));

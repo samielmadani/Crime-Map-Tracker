@@ -20,7 +20,6 @@ public final class QueryBuilder {
                                Integer beat, Boolean arrest, Boolean domestic){
 
         String query = "WHERE ";
-
         if (date != null){
             query += addAndCondition(date);
         }
@@ -30,7 +29,7 @@ public final class QueryBuilder {
         if (locationDescription != null){
             query += addAndCondition("location_description", locationDescription);
         }
-        if (ward != null){
+        if (ward != null ){
             query += addAndCondition("ward", ward);
         }
         if (beat != null){
@@ -46,6 +45,7 @@ public final class QueryBuilder {
         if (query.equals("WHERE ")) {
             return "";
         } else {
+            System.out.println(query + "jack");
             return query.substring(0, query.length()-5);
         }
     }

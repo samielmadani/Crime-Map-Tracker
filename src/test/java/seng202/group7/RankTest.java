@@ -48,14 +48,6 @@ public class RankTest {
         assertEquals("THEFT", list.get(0).x);
     }
 
-    /**
-     * Tests to see the correct crime type (theft) is returned when specifying a ward in frequency ranker
-     */
-    @Test
-    public void primaryFrequencyRank_ward1() {
-        ArrayList<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data, 1);
-        assertEquals("THEFT", list.get(0).x);
-    }
 
     /**
      * Tests to see the correct ward (1) is returned as it has the highest amount of crimes in the data set
@@ -64,15 +56,6 @@ public class RankTest {
     public void wardFrequencyRank() {
         ArrayList<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
         assertEquals("1", list.get(0).x);
-    }
-
-    /**
-     * Tests to see the correct ward (20) is returned as it has the highest amount of Sex offenses in the data set
-     */
-    @Test
-    public void wardFrequencyRank_sexOffense() {
-        ArrayList<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data, "SEX OFFENSE");
-        assertEquals("20", list.get(0).x);
     }
 
     /**

@@ -44,9 +44,7 @@ public class BarGraphViewController implements Initializable {
      * @param resources     A ResourceBundle object.
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
+    public void initialize(URL location, ResourceBundle resources) {}
 
     /**
      * Called from the Graph View controller when the scene is initialized, checks what input is currently
@@ -60,21 +58,30 @@ public class BarGraphViewController implements Initializable {
         if (option.equals("Most Frequent Crime Types")) {
             dataSet = Rank.primaryFrequencyRank(data);
             Collections.reverse(dataSet);
-            generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Frequency of Crime");
+            generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Number of Crime");
         } else if (option.equals("Most Dangerous Wards")) {
             dataSet = Rank.wardFrequencyRank(data);
             Collections.reverse(dataSet);
-            generateBarGraph(dataSet, "Most Dangerous Wards", "Ward", "Frequency of Crime");
+            generateBarGraph(dataSet, "Most Dangerous Wards", "Wards", "Number of Crime");
         } else if (option.equals("Most Dangerous Streets")) {
             dataSet = Rank.streetRank(data);
             Collections.reverse(dataSet);
-            generateBarGraph(dataSet, "Most Dangerous Streets", "Street", "Frequency of Crime");
-        } else if (option.equals("Crime Over Time")) {
-            ArrayList<Report> sortedData = DataAccessor.getInstance().getAllSortedByDate();
-            ArrayList<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(sortedData);
+            generateBarGraph(dataSet, "Most Dangerous Streets", "Streets", "Number of Crime");
+        } else if (option.equals("Most Dangerous Beats")) {
+            dataSet = Rank.beatFrequencyRank(data);
+            Collections.reverse(dataSet);
+            generateBarGraph(dataSet, option, "Beats", "Number of Crime");
+        } else if (option.equals("Less Frequent Crime Types")) {
+            dataSet = Rank.primaryFrequencyRank(data);
+            generateBarGraph(dataSet, option, "Crime Types", "Number of Crime");
+        } else if (option.equals("Safest Wards")) {
+            dataSet = Rank.wardFrequencyRank(data);
+            generateBarGraph(dataSet, option, "Wards", "Number of Crime");
+        } else if (option.equals("Safest Beats")) {
+            dataSet = Rank.beatFrequencyRank(data);
+            generateBarGraph(dataSet, option, "Beats", "Number of Crimes");
         }
     }
-
 
     /**
      *Create the graph by inputting the values into the bar chart object.

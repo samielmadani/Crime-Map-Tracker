@@ -173,9 +173,46 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
-    public ArrayList<Report> getAllSortedByDate() {
-        String query = "SELECT * FROM crimedb ORDER BY date ASC";
+    public ArrayList<Report> getData(String query) {
         return selectReports(query);
+    }
+
+     public ArrayList<String> getColumnString(String column, String conditons) throws SQLException {
+        ArrayList<String> crimeTypeList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+         try (Statement stmt = connection.createStatement()) {
+             ResultSet rs = stmt.executeQuery(query);
+             // Converts all results into crimes.
+             while (rs.next()) {
+                 String columnString = rs.getString(column);
+                 crimeTypeList.add(columnString);
+             }
+             // Closes the statement and result set.
+             rs.close();
+         } catch (SQLException e) {
+             System.out.println(e.getMessage());
+             return null;
+         }
+         return crimeTypeList;
+     }
+
+    public ArrayList<Integer> getColumnInteger(String column, String conditons) throws SQLException {
+        ArrayList<Integer> crimeTypeList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            // Converts all results into crimes.
+            while (rs.next()) {
+                Integer columnInteger = rs.getInt(column);
+                crimeTypeList.add(columnInteger);
+            }
+            // Closes the statement and result set.
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return crimeTypeList;
     }
 
     /**
