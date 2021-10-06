@@ -78,15 +78,18 @@ public class DataViewController implements Initializable {
             "Beat,Beat", "Ward,Ward"));
         ArrayList<String> defaultColumns = new ArrayList<>(Arrays.asList("Case Number", "Date",
             "Primary Description","Arrest", "Ward"));
+
         ContextMenu contextMenu = new ContextMenu();
-        String[] test; 
+        String[] columnData; 
         TableColumn<Crime, String> newColumn;
+
         for (String columnName : possibleColumns) {
-            test = columnName.split(",");
-            newColumn = new TableColumn<>(test[0]);
-            newColumn.setCellValueFactory(new PropertyValueFactory<>(test[1]));
+            columnData = columnName.split(",");
+            newColumn = new TableColumn<>(columnData[0]);
+            newColumn.setCellValueFactory(new PropertyValueFactory<>(columnData[1]));
             
-            MenuItem columnMenu = new MenuItem(test[0]);
+            MenuItem columnMenu = new MenuItem(columnData[0]);
+            // Make it so when clicked will hide/show the column
             columnMenu.setOnAction(event -> {
                 // TODO find position when rearranged
                 for (TableColumn<Crime, ?> col : tableView.getColumns())
@@ -96,26 +99,15 @@ public class DataViewController implements Initializable {
                     }
             });
             tableView.getColumns().add(newColumn);
-
             contextMenu.getItems().add(columnMenu);
-            if (!defaultColumns.contains(test[0])) {
+
+            // Only show default columns
+            if (!defaultColumns.contains(columnData[0])) {
                 newColumn.setVisible(false);
             }
         }
          
         tableView.setContextMenu(contextMenu);
-
-        // caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
-        // wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
-        // descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
-        // arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
-        // // Sets up a call to firstly create a DateTime pattern and then coverts our local date time stored in class.
-        // dateCol.setCellValueFactory(setup -> {
-        //             SimpleStringProperty property = new SimpleStringProperty();
-        //             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        //             property.setValue(dateFormat.format(setup.getValue().getDate()));
-        //             return property;
-        //         });
 
         // On a double click and the row isn't empty it will trigger the swap view method.
         tableView.setRowFactory( tv -> {
