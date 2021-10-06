@@ -1,6 +1,7 @@
 package seng202.group7.controllers;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -12,7 +13,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.view.MainScreen;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -55,6 +59,8 @@ public class EntryController implements Initializable {
     private TextField dateText;
 
     private ArrayList<Node> allValues, editableValues;
+
+    private Node lastFrame;
 
 
     /**
@@ -183,9 +189,11 @@ public class EntryController implements Initializable {
      */
     public void returnView() {
         BorderPane pane = (BorderPane) frame.getParent();
-        ControllerData controllerData = ControllerData.getInstance();
-        Node table = controllerData.getTableState();
-        pane.setCenter(table);
+
+        pane.setCenter(lastFrame);
+
+        // ControllerData controllerData = ControllerData.getInstance();
+        // Node table = controllerData.getTableState();
     }
 
     /**
@@ -327,6 +335,14 @@ public class EntryController implements Initializable {
             ControllerData.getInstance().createError("Could not delete entry. Error:" + e);
         }
         returnView();
+    }
+
+    /**
+     * Sets the last frame the application was on.
+     * @param lastFrame
+     */
+    public void setLastFrame(Node lastFrame) {
+        this.lastFrame = lastFrame;
     }
 
 }

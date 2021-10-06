@@ -132,10 +132,11 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         ControllerData.getInstance().setCurrentRow(null);
-        Node dataView = rootPane.getCenter();
-        ControllerData.getInstance().setTableState(dataView);
-        Node newFrame;
-        newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+
+        Node newFrame = loader.load();
+
+        ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
 
         rootPane.setCenter(newFrame);
     }
