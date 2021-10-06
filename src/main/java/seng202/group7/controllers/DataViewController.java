@@ -91,6 +91,7 @@ public class DataViewController implements Initializable {
             return row;
         });
 
+        // Refreshes the table data when the table view is returned to.
         frame.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent != null) {
                 newParent.parentProperty().addListener((obs1, oldParent1, pagination) -> {
