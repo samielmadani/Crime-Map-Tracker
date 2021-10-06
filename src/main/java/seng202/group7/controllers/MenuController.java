@@ -13,6 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
+import seng202.group7.data.CustomException;
+import seng202.group7.view.MainScreen;
 
 
 /**
@@ -52,8 +54,8 @@ public class MenuController implements Initializable {
             menuFrame.getLeft().setManaged(false);
             toData();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
         }
     }
 
@@ -85,70 +87,99 @@ public class MenuController implements Initializable {
     /**
      * Creates and switches the center view to the programmable google search scene.
      */
-    public void toSearch() throws IOException {
+    public void toSearch(){
         WebView externalSearch = new WebView();
         externalSearch.getEngine().load("https://cse.google.com/cse?cx=59f99af6c7b75d889"); 
         menuFrame.setCenter(externalSearch);
 
         // Loads the first side menu screen.
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Sets the menu to the main panel and hides it, so it starts closed.
-        menuFrame.setLeft(menuItems);
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Sets the menu to the main panel and hides it, so it starts closed.
+            menuFrame.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+
     }
 
 
     /**
      * Loads and sets the center view to the paginator scene.
      * This is done this way so that the raw data button can call this method.
-     *
-     * @throws IOException      Error when loading the FXML file.
      */
-    public void toData() throws IOException {
+    public void toData() {
         // This removes the current search effect being applied to the table when the paginator is initialized.
         ControllerData.getInstance().setWhereQuery("");
         // Loads the paginator which generates the raw data tables.
-        BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
-        // Adds the paginator to the center of the screen.
-        menuFrame.setCenter(dataView);
+        try {
+            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            // Adds the paginator to the center of the screen.
+            menuFrame.setCenter(dataView);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+        }
+
 
         // Loads the first side menu screen.
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Sets the menu to the main panel and hides it, so it starts closed.
-        menuFrame.setLeft(menuItems);
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Sets the menu to the main panel and hides it, so it starts closed.
+            menuFrame.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+
     }
 
     /**
      * Loads and sets the center view to the data view scene.
-     *
-     * @throws IOException      Error when loading the FXML file.
      */
-    public void openHelpPage() throws IOException {
+    public void openHelpPage(){
 
         // Loads the help screen.
-        BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/helpScreen.fxml")));
-        // Adds the help screen to the center of the screen.
-        menuFrame.setCenter(dataView);
+        try {
+            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/helpScreen.fxml")));
+            // Adds the help screen to the center of the screen.
+            menuFrame.setCenter(dataView);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Help screens FXML file.", e.getClass().toString()));
+        }
+
 
         // Loads the first side menu screen.
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Sets the menu to the main panel and hides it, so it starts closed.
-        menuFrame.setLeft(menuItems);
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Sets the menu to the main panel and hides it, so it starts closed.
+            menuFrame.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+
 
 
     }
 
     /**
      * Loads and sets the menu and centre screen to the graph view.
-     *
-     * @throws IOException      Error when loading the FXML file.
      */
-    public void toGraph() throws IOException {
+    public void toGraph(){
         //Loads graph screen
-        GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
-        //Adds the graph view to the center of the screen.
-        menuFrame.setCenter(graphView);
-        VBox graphMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
-        // Changes side menu to the filter menu.
-        menuFrame.setLeft(graphMenu);
+        try {
+            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+            //Adds the graph view to the center of the screen.
+            menuFrame.setCenter(graphView);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
+        }
+
+        try {
+            VBox graphMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphMenu.fxml")));
+            // Changes side menu to the filter menu.
+            menuFrame.setLeft(graphMenu);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph Menu screens FXML file.", e.getClass().toString()));
+        }
+
     }
 }

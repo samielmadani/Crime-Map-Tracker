@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
 
@@ -332,7 +333,7 @@ public class EntryController implements Initializable {
         try {
             dataAccessor.deleteReport(cNoText.getText(), ControllerData.getInstance().getCurrentList());
         } catch (SQLException e) {
-            ControllerData.getInstance().createError("Could not delete entry. Error:" + e);
+            MainScreen.createWarnWin(new CustomException("Could not delete entry.", e.getClass().toString()));
         }
         returnView();
     }

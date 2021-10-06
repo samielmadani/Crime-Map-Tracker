@@ -8,6 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import seng202.group7.data.CustomException;
+import seng202.group7.view.MainScreen;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -54,17 +57,19 @@ public class GraphMenuController implements Initializable {
     /**
      * Method triggered when the user clicks on the generate graph button, Checks what selection is made by the user in
      * the combo box and reloads the graphView.
-     *
-     * @throws IOException      The exception that is thrown when the FXML Loader can't load the fxml file
      */
-    public void selectGraph() throws IOException {
+    public void selectGraph() {
         String graphSelection = graphType.getValue();
-        GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+        try {
+            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+            graphView.pseudoClassStateChanged(frequentCrime, graphSelection.equals("Most Frequent Crime Types"));
+            graphView.pseudoClassStateChanged(wardDanger, graphSelection.equals("Most Dangerous Wards"));
+            graphView.pseudoClassStateChanged(streetDanger, graphSelection.equals("Most Dangerous Streets"));
+            ((BorderPane) frame.getParent()).setCenter(graphView);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
+        }
 
-        graphView.pseudoClassStateChanged(frequentCrime, graphSelection.equals("Most Frequent Crime Types"));
-        graphView.pseudoClassStateChanged(wardDanger, graphSelection.equals("Most Dangerous Wards"));
-        graphView.pseudoClassStateChanged(streetDanger, graphSelection.equals("Most Dangerous Streets"));
-        ((BorderPane) frame.getParent()).setCenter(graphView);
     }
 
 }
