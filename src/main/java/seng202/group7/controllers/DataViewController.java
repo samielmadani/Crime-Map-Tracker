@@ -61,13 +61,12 @@ public class DataViewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // TODO recreating will reset columns to default
         ArrayList<String> possibleColumns = new ArrayList<>(Arrays.asList("Case Number,CaseNumber", "Date,date",
             "Primary Description,PrimaryDescription","Secondary Description,SecondaryDescription", "Domestic,Domestic",
             "X Coordinate,XCoord", "Y Coordinate,YCoord", " Latitude,Latitude","Longitude,Longitude",
             "Location Description,LocationDescription", "Block,Block", "Iucr,Iucr", "FBI CD,FbiCD", "Arrest,arrest", 
             "Beat,Beat", "Ward,Ward"));
-        ArrayList<String> defaultColumns = new ArrayList<>(Arrays.asList("Case Number", "Date",
-            "Primary Description","Arrest", "Ward"));
 
         ContextMenu contextMenu = new ContextMenu();
         String[] columnData; 
@@ -85,24 +84,36 @@ public class DataViewController implements Initializable {
                 for (TableColumn<Crime, ?> col : tableView.getColumns())
                     if (col.getText().equals(((MenuItem) event.getSource()).getText())) {
                         col.setVisible(!col.visibleProperty().get());
+                        ArrayList<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
+                        if (visibleColumns.contains(col.getText())){
+                            visibleColumns.remove(col.getText());
+                        } else {
+                            visibleColumns.add(col.getText());
+                        }
                         break;
                     }
-            });
-            tableView.getColumns().add(newColumn);
-
-            if (columnData[0].equals("Date")) {
-                newColumn.setCellValueFactory(setup -> {
-                    SimpleStringProperty property = new SimpleStringProperty();
-                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                    property.setValue(dateFormat.format(setup.getValue().getDate()));
-                    return property;
+                });
+                tableView.getColumns().add(newColumn);
+                
+                if (columnData[0].equals("Date")) {
+                    newColumn.setCellValueFactory(setup -> {
+                        SimpleStringProperty property = new SimpleStringProperty();
+                        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                        property.setValue(dateFormat.format(setup.getValue().getDate()));
+                        return property;
                 });
             }
 
             contextMenu.getItems().add(columnMenu);
 
+            if (ControllerData.getInstance().getVisibleColumns() == null) {
+                ControllerData.getInstance().setVisibleColumns(
+                    new ArrayList<>(Arrays.asList("Case Number", "Date", "Primary Description","Arrest", "Ward"))
+                    );
+            }
+            ArrayList<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
             // Only show default columns
-            if (!defaultColumns.contains(columnData[0])) {
+            if (!visibleColumns.contains(columnData[0])) {
                 newColumn.setVisible(false);
             }
         }

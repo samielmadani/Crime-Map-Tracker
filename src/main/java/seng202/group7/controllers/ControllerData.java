@@ -5,6 +5,7 @@ import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -52,11 +53,16 @@ public final class ControllerData {
      */
     private String whereQuery = "";
 
+    /**
+     * What columns are currently visible in the data table
+     */
+    private ArrayList<String> visibleColumns;
 
     /**
      * The constructor which is made private so that it can not be initialized from other classes.
      */
     private ControllerData() {}
+
 
     /**
      * Used to get the singleton instants of the class when assessing. This is done over a "static" class due to it
@@ -181,5 +187,13 @@ public final class ControllerData {
      */
     public void setWhereQuery(String searchingQuery) {
         this.whereQuery = searchingQuery;
+    }
+
+    public ArrayList<String> getVisibleColumns() {
+        return visibleColumns;
+    }
+
+    public void setVisibleColumns(ArrayList<String> columns) {
+        visibleColumns = columns;
     }
 }
