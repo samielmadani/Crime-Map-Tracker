@@ -50,16 +50,6 @@ public class DataViewController implements Initializable {
      */
     @FXML
     private TableView<Crime> tableView;
-    // /**
-    //  * This is the columns of the table with the type string.
-    //  */
-    // @FXML
-    // private TableColumn<Crime, String> caseCol, wardCol, descCol, dateCol;
-    // /**
-    //  * This is the columns of the table with the type boolean.
-    //  */
-    // @FXML
-    // private TableColumn<Crime, Boolean> arrestCol;
 
 
     /**
@@ -138,6 +128,7 @@ public class DataViewController implements Initializable {
         
         Pagination page = (Pagination) frame.getParent().getParent();
 
+        // Changes page to force a refresh of the data in the table
         int currentPage = controllerData.getCurrentPage();
         if (currentPage == 0) {
             page.setCurrentPageIndex(currentPage + 1);
