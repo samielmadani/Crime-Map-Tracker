@@ -1,21 +1,25 @@
 package seng202.group7.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+
 import seng202.group7.analyses.CrimeFrequency;
 import seng202.group7.analyses.Rank;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
-public class LineGraphViewController implements Initializable {
+
+/**
+ * Line Graph View Controller displays crime over time graphs based on user input from Graph Menu Controller
+ *
+ * @author Sam
+ */
+public class LineGraphViewController  {
 
     @FXML
     private CategoryAxis xAxis;
@@ -26,10 +30,12 @@ public class LineGraphViewController implements Initializable {
     @FXML
     private LineChart<String, Integer> overTimeChart;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {}
-
-
+    /**
+     * Called from the Graph View Controller when the scene is initialised, gets data from the Data Accessor using the
+     * provided query, gets the appropriate title and displays the crime over time graph.
+     * @param query the string query provided by user input in Graph Menu Controller
+     * @param choices ArrayList of strings provided by user input in Graph Menu Controller
+     */
     public void prepareLineGraph(String query, ArrayList<String> choices) {
         ArrayList<Report> sortedData = DataAccessor.getInstance().getData(query);
         ArrayList<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(sortedData);
@@ -45,6 +51,11 @@ public class LineGraphViewController implements Initializable {
         this.yAxis.setLabel("Number of Crime");
     }
 
+    /**
+     * Uses the Array list of strings choices and creates a graph title.
+     * @param choices  Array list of strings based on user input from Graph Menu Controller
+     * @return String title used as the graph title
+     */
     public String getTitle(ArrayList<String> choices) {
         String title = "";
         if (choices.get(0) != null)  {
@@ -61,5 +72,4 @@ public class LineGraphViewController implements Initializable {
         }
         return title;
     }
-
 }

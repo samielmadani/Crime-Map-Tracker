@@ -84,6 +84,11 @@ public class GraphMenuController implements Initializable {
         graphType.getItems().add("Safest Wards");
     }
 
+    /**
+     * This method monitors everytime a ward combo box is changed and then updates the beat combobox so only values are encapsulated by the
+     * corresponding ward is available to be selected by the user.
+     * @throws SQLException
+     */
     public void changeBeat() throws SQLException {
         ArrayList<Integer> beats = DataAccessor.getInstance().getColumnInteger("beat", "WHERE WARD=" + wardField.getValue());
         beatField.setValue(null);
@@ -95,16 +100,16 @@ public class GraphMenuController implements Initializable {
         }
         beatField.getItems().clear();
         this.beatField.getItems().add(null);
-        Collections.sort(beats);
+        assert beats != null;
+            Collections.sort(beats);
         for (Integer beat: beats) {
             this.beatField.getItems().add(String.valueOf(beat));
         }
     }
 
     /**
-    /**
-     * Method triggered when the user clicks on the generate graph button, Checks what selection is made by the user in
-     * the combo box and reloads the graphView.
+     * Method triggered when the user changes the value in the crime type combo box, Checks what selection is made
+     * and reloads the bar graph view.
      *
      * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
      */
@@ -118,6 +123,12 @@ public class GraphMenuController implements Initializable {
         ((BorderPane) frame.getParent()).setCenter(root);
     }
 
+    /**
+     * Method triggered when the user clicks on the display graph button, Checks what selections have been made by the user
+     * in the crime type, ward and beat combo box's and displays the appropriate crime over time graph\
+     *
+     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
+     */
     public void selectLineGraph() throws IOException {
         ArrayList<String> choices = getChoices();
         String query = constructQuery();
@@ -128,6 +139,10 @@ public class GraphMenuController implements Initializable {
         ((BorderPane) frame.getParent()).setCenter(root);
     }
 
+    /**
+     * Uses the selected combo values and the query builder to create the correct query
+     * @return query, a string value query
+     */
     private String constructQuery() {
         String query = "SELECT * FROM crimedb ";
         query += QueryBuilder.where(null, crimeType.getValue(), null,
@@ -137,6 +152,10 @@ public class GraphMenuController implements Initializable {
         return query;
     }
 
+    /**
+     * Gets the values from crime type, ward, and beat combo box's and creates a string list of the values
+     * @return choices an ArrayList of strings to send to line graph view.
+     */
     public ArrayList<String> getChoices() {
         ArrayList<String> choices = new ArrayList<>();
         choices.add(crimeType.getValue());

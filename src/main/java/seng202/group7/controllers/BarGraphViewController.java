@@ -1,29 +1,26 @@
 package seng202.group7.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import seng202.group7.analyses.CrimeFrequency;
 import seng202.group7.analyses.Rank;
 import seng202.group7.analyses.Tuple;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
-import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.ResourceBundle;
 
 /**
- * Graph View Controller controls displays three different bar graphs based on user input from Graph Menu Controller.
+ * Graph View Controller controls displays 7 different bar graphs based on user input from Graph Menu Controller.
  *
  * @author Jack McCorkindale
  * @author Sam McMillan
  */
-public class BarGraphViewController implements Initializable {
+public class BarGraphViewController  {
 
     @FXML
     private BarChart<String, Integer> crimeChart;
@@ -34,17 +31,7 @@ public class BarGraphViewController implements Initializable {
     @FXML
     private NumberAxis yAxis;
 
-    @FXML
-    private Node frame;
 
-    /**
-     * This method is run during the loading of the graph menu fxml file.
-     *
-     * @param location      A URL object.
-     * @param resources     A ResourceBundle object.
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {}
 
     /**
      * Called from the Graph View controller when the scene is initialized, checks what input is currently
