@@ -6,9 +6,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.lang.invoke.TypeDescriptor;
 
 /**
  * A class used to serialize objects and store them in a file, and to deserialize them back into objects
+ * @author Shaylin Simadari
  */
 public final class Serializer {
     /**
@@ -35,10 +37,16 @@ public final class Serializer {
         try {
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream inputStream = new ObjectInputStream(fileIn);
-            T object = (T) inputStream.readObject();
+            T typedObj = null;
+            Object object = inputStream.readObject();
+            try {
+                typedObj = (T)object;
+            } catch (ClassCastException e) {
+                System.out.println("Serializer error: " + e);
+            }
             inputStream.close();
             fileIn.close();
-            return object;
+            return typedObj;
         } catch (Exception e) {
             e.printStackTrace();
         }
