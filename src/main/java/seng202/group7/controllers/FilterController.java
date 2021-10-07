@@ -178,7 +178,7 @@ public class FilterController implements Initializable {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
             // Changes side menu to the filter menu.
             pane.setCenter(tableView);
         } catch (IOException | NullPointerException e) {
@@ -229,7 +229,7 @@ public class FilterController implements Initializable {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
@@ -240,7 +240,7 @@ public class FilterController implements Initializable {
         // This removes the current search effect being applied to the table when the paginator is initialized.
         ControllerData.getInstance().setWhereQuery("");
         try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
             // Changes side menu to the filter menu.
             pane.setCenter(tableView);
         } catch (IOException | NullPointerException e) {

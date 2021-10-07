@@ -61,7 +61,7 @@ public class GraphMenuController implements Initializable {
     public void selectGraph() {
         String graphSelection = graphType.getValue();
         try {
-            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/graphView.fxml")));
             graphView.pseudoClassStateChanged(frequentCrime, graphSelection.equals("Most Frequent Crime Types"));
             graphView.pseudoClassStateChanged(wardDanger, graphSelection.equals("Most Dangerous Wards"));
             graphView.pseudoClassStateChanged(streetDanger, graphSelection.equals("Most Dangerous Streets"));

@@ -35,7 +35,7 @@ public class GeneralMenuController {
     public void toFilter() {
         BorderPane pane = (BorderPane) frame.getParent();
         try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/filterMenu.fxml")));
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/filterMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
@@ -50,7 +50,7 @@ public class GeneralMenuController {
     public void toCompare() {
         BorderPane pane = (BorderPane) frame.getParent();
         try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/compareMenu.fxml")));
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/compareMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
@@ -71,7 +71,7 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
         // Loads the paginator screen.
         try {
-            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
             // Adds the data view to the center of the screen.
             rootPane.setCenter(dataView);
         } catch (IOException | NullPointerException e) {
@@ -143,7 +143,7 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         try {
-            Node newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+            Node newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/entryView.fxml")));
             ControllerData.getInstance().setCurrentRow(null);
             Node dataView = rootPane.getCenter();
             ControllerData.getInstance().setTableState(dataView);
@@ -159,7 +159,7 @@ public class GeneralMenuController {
     public void toSearch() {
         BorderPane rootPane = (BorderPane) frame.getParent();
         try {
-            VBox searchMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/searchMenu.fxml")));
+            VBox searchMenu = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/searchMenu.fxml")));
             rootPane.setLeft(searchMenu);
         } catch (IOException | NullPointerException e) {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Search Menu screens FXML file.", e.getClass().toString()));

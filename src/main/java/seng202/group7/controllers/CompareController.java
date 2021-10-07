@@ -66,7 +66,7 @@ public class CompareController implements Initializable {
     public void toMenu() {
         BorderPane pane = (BorderPane) frame.getParent();
         try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {

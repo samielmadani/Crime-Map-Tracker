@@ -179,7 +179,7 @@ public class StartScreenController implements Initializable {
     private void toNextScene(Stage stage) throws CustomException {
         Parent newRoot;
         try {
-            newRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menu.fxml")));
+            newRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/menus/mainMenu.fxml")));
         } catch (IOException | NullPointerException e) {
             throw new CustomException("Error caused when loading the Menu screens FXML file.", e.getClass().toString());
         }

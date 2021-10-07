@@ -37,7 +37,7 @@ public class MainScreen extends Application {
         windowStage.setTitle("LookOut");
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
         try {
-            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
+            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/screens/mainScreen.fxml")));
             Scene scene = new Scene(view);
             windowStage.setScene(scene);
             windowStage.show();

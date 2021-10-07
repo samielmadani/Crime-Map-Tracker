@@ -120,7 +120,7 @@ public class DataViewController implements Initializable {
 
         Node table = page.getParent();
         try {
-            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
+            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/entryView.fxml")));
             // Changes center screen to the crime edit.
             ((BorderPane) table.getParent()).setCenter(detailView);
             controllerData.setTableState(table);

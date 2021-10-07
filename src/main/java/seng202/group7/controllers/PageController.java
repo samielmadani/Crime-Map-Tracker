@@ -74,7 +74,7 @@ public class PageController implements Initializable {
         // Stores the current page number so when the table is initialized it can get the correct set of data.
         ControllerData.getInstance().setCurrentPage(pageIndex);
         try {
-            return FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/dataView.fxml")));
+            return FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/dataView.fxml")));
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Raw Data View screens FXML file.", e.getClass().toString()));
         }
