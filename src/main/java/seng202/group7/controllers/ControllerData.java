@@ -142,6 +142,8 @@ public final class ControllerData {
                 }
             } catch (SQLException e) {
                 MainScreen.createWarnWin(new CustomException("Invalid data", e.getClass().toString()));
+            } catch (CustomException error) {
+                MainScreen.createWarnWin(error);
             }
         }
     }

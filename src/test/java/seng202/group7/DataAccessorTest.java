@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 
@@ -87,7 +88,7 @@ public class DataAccessorTest {
     public void readToDBTest() {
         try {
             accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
-        } catch (SQLException e) {
+        } catch (SQLException|CustomException e) {
             // TODO Auto-generated catch block
             fail();
         }
