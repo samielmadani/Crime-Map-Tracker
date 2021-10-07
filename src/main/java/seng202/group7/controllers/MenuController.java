@@ -105,7 +105,7 @@ public class MenuController implements Initializable {
      */
     public void toData() throws IOException {
         // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().setWhereQuery("");
+        ControllerData.getInstance().clearWhereQuery();
         // Loads the paginator which generates the raw data tables.
         BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Adds the paginator to the center of the screen.

@@ -41,7 +41,7 @@ public class SearchController {
         pane.setLeft(menuItems);
 
         // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().setWhereQuery("");
+        ControllerData.getInstance().setSearchQuery("");
         BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
         // Changes side menu to the filter menu.
         pane.setCenter(tableView);
@@ -74,7 +74,8 @@ public class SearchController {
         // Determines the condition that will be used.
         String query = QueryBuilder.search(inputField.getText());
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
-        ControllerData.getInstance().setWhereQuery(query);
+//        ControllerData.getInstance().getWhereQuery().startsWith("WHERE")
+        ControllerData.getInstance().setSearchQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));

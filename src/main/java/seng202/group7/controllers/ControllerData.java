@@ -52,7 +52,12 @@ public final class ControllerData {
     /**
      * This is a condition that is used by the data accessor when searching the database.
      */
-    private String whereQuery = "";
+    private String searchQuery = "";
+
+    /**
+     * This is a condition that is used by the data accessor when filteringing the database.
+     */
+    private String filterQuery = "";
 
     private PseudoClass errorClass = PseudoClass.getPseudoClass("error");
     private PseudoClass required = PseudoClass.getPseudoClass("required");
@@ -171,16 +176,42 @@ public final class ControllerData {
      * @return whereQuery       The condition being applied.
      */
     public String getWhereQuery() {
-        return whereQuery;
+        //remove
+        if (searchQuery.isEmpty() && filterQuery.isEmpty()) {
+            return "";
+        }
+
+        if (searchQuery.isEmpty() || filterQuery.isEmpty()) {
+            return "WHERE " + filterQuery + searchQuery;
+        }
+        return "WHERE " + filterQuery + " AND " + searchQuery;
     }
 
     /**
-     * The setter for the where query.
+     * The clears the where query.
      *
-     * @param searchingQuery    The condition being applied.
      */
-    public void setWhereQuery(String searchingQuery) {
-        this.whereQuery = searchingQuery;
+    public void clearWhereQuery() {
+        filterQuery="";
+        searchQuery="";
+    }
+
+    /**
+     * The setter for the search query.
+     *
+     * @param searchQuery    The condition being applied.
+     */
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+    }
+
+    /**
+     * The setter for the filter query.
+     *
+     * @param filterQuery    The condition being applied.
+     */
+    public void setFilterQuery(String filterQuery) {
+        this.filterQuery = filterQuery;
     }
 
     /**

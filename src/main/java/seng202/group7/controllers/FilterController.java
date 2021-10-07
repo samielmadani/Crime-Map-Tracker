@@ -243,7 +243,7 @@ public class FilterController implements Initializable {
         String query = QueryBuilder.where(filterConditions);
 
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
-        ControllerData.getInstance().setWhereQuery(query);
+        ControllerData.getInstance().setFilterQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
