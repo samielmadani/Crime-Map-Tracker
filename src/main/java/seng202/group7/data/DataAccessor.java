@@ -100,7 +100,7 @@ public final class DataAccessor {
                 "latitude FLOAT, " +
                 "longitude FLOAT, " +
                 "location_description VARCHAR(50), " +
-                "PRIMARY KEY(id, list_id), " +
+                "PRIMARY KEY(list_id, id), " +
                 "FOREIGN KEY(list_id) REFERENCES lists(id) ON UPDATE CASCADE ON DELETE CASCADE" +
                 ")");
         stmt.execute("CREATE TABLE crimes (" + 
@@ -112,8 +112,8 @@ public final class DataAccessor {
                 "arrest BOOLEAN, " +
                 "beat INT, " +
                 "ward INT, " +
-                "FOREIGN KEY(report_id, list_id) REFERENCES reports(id, list_id) ON UPDATE CASCADE ON DELETE CASCADE, " +
-                "PRIMARY KEY(report_id, list_id)" +
+                "FOREIGN KEY(list_id, report_id) REFERENCES reports(list_id, id) ON UPDATE CASCADE ON DELETE CASCADE, " +
+                "PRIMARY KEY(list_id, report_id)" +
                 ")");
         stmt.execute("CREATE VIEW crimedb AS " +
                 "SELECT *" + 
