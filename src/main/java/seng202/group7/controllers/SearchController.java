@@ -17,6 +17,7 @@ import seng202.group7.view.MainScreen;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -45,8 +46,8 @@ public class SearchController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        fieldBox.setItems(FXCollections.observableArrayList(
-                "Case Number", "Primary Description", "Secondary Description", "Location Description", "FBI Code", "Illinois Number"));
+        fieldBox.setItems(FXCollections.observableList(Arrays.asList(
+                "Case Number", "Primary Description", "Secondary Description", "Location Description", "FBI Code", "Illinois Number")));
     }
 
     /**

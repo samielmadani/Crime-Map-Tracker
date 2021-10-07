@@ -4,6 +4,7 @@ import seng202.group7.data.Report;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.lang.Math;
 
 
@@ -21,8 +22,8 @@ public final class Comparer {
      * @param reportTwo     Data to be compared with "reportOne"
      * @return              A list of long values [Minutes, Hours, Days, Years]
      */
-    public static ArrayList<Long> timeDifference(Report reportOne, Report reportTwo) {
-        ArrayList<Long> timeDifferences = new ArrayList<>();
+    public static List<Long> timeDifference(Report reportOne, Report reportTwo) {
+        List<Long> timeDifferences = new ArrayList<>();
         Duration difference = Duration.between(reportTwo.getDate(), reportOne.getDate()); //Returns total time in seconds
         timeDifferences.add(Math.abs(TimeUnit.SECONDS.toMinutes(difference.getSeconds()) % 60));
         timeDifferences.add(Math.abs(TimeUnit.SECONDS.toHours(difference.getSeconds()) % 24));

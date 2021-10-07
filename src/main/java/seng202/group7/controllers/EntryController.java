@@ -10,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import seng202.group7.data.Report;
 import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -38,7 +39,7 @@ public class EntryController implements Initializable {
     /**
      * The current selected rows crime object.
      */
-    Crime data;
+    Report data;
 
     @FXML
     private TextField cNoText, iucrText, fbiText, blockText, beatText,
@@ -56,7 +57,7 @@ public class EntryController implements Initializable {
 
     private TextField dateText;
 
-    private ArrayList<Node> allValues, editableValues;
+    private List<Node> allInputs, editableInputs;
 
 
     /**
@@ -74,10 +75,10 @@ public class EntryController implements Initializable {
 
         prepareValidation();
     
-        allValues = new ArrayList<>(Arrays.asList(cNoText, iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
-        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
-        editableValues = new ArrayList<>(Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
-        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText));
+        allInputs = Arrays.asList(cNoText, iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
+        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText);
+        editableInputs = Arrays.asList(iucrText, fbiText, blockText, beatText, wardText, xCoordText, yCoordText, latText, longText,
+        priText, secText, locAreaText, dateText, datePicker, arrestCheck, domesticCheck, timeText);
 
         data = master.getCurrentRow();
         if (data != null) {
@@ -131,11 +132,24 @@ public class EntryController implements Initializable {
      *  This method gets all the related data from the crime object and set it as the default text in its relevant field.
      */
     private void setData() {
-        // CheckBoxes:
-        arrestCheck.setSelected(data.getArrest());
+        if (data instanceof Crime) {
+            Crime temp = (Crime) data;
+            // CheckBoxes:
+            arrestCheck.setSelected(temp.getArrest());
+            // General Information:
+            cNoText.setText(temp.getId());
+            
+            iucrText.setText(temp.getIucr());
+            fbiText.setText(temp.getFbiCD());
+            // Location Information:
+            blockText.setText(temp.getBlock());
+            beatText.setText(String.valueOf(temp.getBeat()));
+            wardText.setText(String.valueOf(temp.getWard()));
+        }
+        
+        
+        
         domesticCheck.setSelected(data.getDomestic());
-        // General Information:
-        cNoText.setText(data.getCaseNumber());
         LocalDateTime date = data.getDate();
         if (date == null) {
             datePicker.setValue(null);
@@ -144,17 +158,6 @@ public class EntryController implements Initializable {
             datePicker.setValue(date.toLocalDate());
             String time = date.getHour() + ":" + String.format("%02d", date.getMinute());
             timeText.setText(time);
-        }
-
-        iucrText.setText(data.getIucr());
-        fbiText.setText(data.getFbiCD());
-        // Location Information:
-        blockText.setText(data.getBlock());
-        if (data.getBeat() != null) {
-            beatText.setText(String.valueOf(data.getBeat()));
-        }
-        if (data.getWard() != null) {
-            wardText.setText(String.valueOf(data.getWard()));
         }
         if (data.getXCoord() != null) {
             xCoordText.setText(String.valueOf(data.getXCoord()));
@@ -174,7 +177,7 @@ public class EntryController implements Initializable {
         secText.setText(data.getSecondaryDescription());
         locAreaText.setText(data.getLocationDescription());
 
-        for (Node node : allValues) {
+        for (Node node : allInputs) {
             node.setDisable(true);
         }
 
@@ -204,7 +207,7 @@ public class EntryController implements Initializable {
         cancelButton.setVisible(true);
         cancelButton.setManaged(true);
 
-        for (Node node : editableValues) {
+        for (Node node : editableInputs) {
             node.setDisable(false);
         }
     }
@@ -235,7 +238,7 @@ public class EntryController implements Initializable {
      */
     public void saveEdit() {
         boolean valid = true;
-        for (Node node : allValues) {
+        for (Node node : allInputs) {
             if (!InputValidator.validate(node)) {
                 valid = false;
             }
@@ -273,7 +276,7 @@ public class EntryController implements Initializable {
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
-        dataAccessor.editCrime(data, ControllerData.getInstance().getCurrentList());
+        dataAccessor.editCrime((Crime) data, ControllerData.getInstance().getCurrentList());
 
         finishEdit();
     }

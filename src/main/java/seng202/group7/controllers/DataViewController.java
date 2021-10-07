@@ -14,7 +14,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;
@@ -23,7 +22,7 @@ import seng202.group7.view.MainScreen;
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -46,17 +45,17 @@ public class DataViewController implements Initializable {
      * This is the Table.
      */
     @FXML
-    private TableView<Crime> tableView;
+    private TableView<Report> tableView;
     /**
      * This is the columns of the table with the type string.
      */
     @FXML
-    private TableColumn<Crime, String> caseCol, wardCol, descCol, dateCol;
+    private TableColumn<Report, String> caseCol, wardCol, descCol, dateCol;
     /**
      * This is the columns of the table with the type boolean.
      */
     @FXML
-    private TableColumn<Crime, Boolean> arrestCol;
+    private TableColumn<Report, Boolean> arrestCol;
 
 
     /**
@@ -69,7 +68,7 @@ public class DataViewController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        caseCol.setCellValueFactory(new PropertyValueFactory<>("CaseNumber"));
+        caseCol.setCellValueFactory(new PropertyValueFactory<>("Id"));
         wardCol.setCellValueFactory(new PropertyValueFactory<>("Ward"));
         descCol.setCellValueFactory(new PropertyValueFactory<>("PrimaryDescription"));
         arrestCol.setCellValueFactory(new PropertyValueFactory<>("Arrest"));
@@ -83,10 +82,10 @@ public class DataViewController implements Initializable {
 
         // On a double click and the row isn't empty it will trigger the swap view method.
         tableView.setRowFactory( tv -> {
-            TableRow<Crime> row = new TableRow<>();
+            TableRow<Report> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    Crime rowData = row.getItem();
+                    Report rowData = row.getItem();
                     swapViews(event, rowData);
                 }
             });
@@ -103,7 +102,7 @@ public class DataViewController implements Initializable {
      * @param event         The double click mouse event trigger.
      * @param rowData       The Crime object from the selected row.
      */
-    private void swapViews(MouseEvent event, Crime rowData) {
+    private void swapViews(MouseEvent event, Report rowData) {
         // This section must come first as the rowData is need when initializing the crimeEdit FXML.
         ControllerData controllerData = ControllerData.getInstance();
         controllerData.setCurrentRow(rowData);
@@ -136,12 +135,9 @@ public class DataViewController implements Initializable {
      */
     private void setTableContent() {
         // Gets the current set of reports based on the pagination's current page.
-        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
-        ObservableList<Crime> data = FXCollections.observableArrayList();
-        // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
-        for (Report report : reports) {
-            data.add((Crime) report);
-        }
+        List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
+        ObservableList<Report> data = FXCollections.observableList(reports);
+
         tableView.setItems(data);
     }
 }

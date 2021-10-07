@@ -2,7 +2,7 @@ package seng202.group7.controllers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.css.PseudoClass;
@@ -91,7 +91,7 @@ public class CompareController implements Initializable {
         if (reportOne == null || reportTwo == null) {
             return;
         } else {
-            if (reportOne.getCaseNumber().equals(reportTwo.getCaseNumber())) {
+            if (reportOne.getId().equals(reportTwo.getId())) {
                 resultTextString += "The two crimes are the same value, please select two different values.";
             } else {
                 resultTextString += "Distance:";
@@ -129,7 +129,7 @@ public class CompareController implements Initializable {
      * @param reportTwo     The second report to be compared
      */
     private String compareTime(Report reportOne, Report reportTwo) {
-        ArrayList<Long> time = Comparer.timeDifference(reportOne, reportTwo);
+        List<Long> time = Comparer.timeDifference(reportOne, reportTwo);
         String timeString = "";
         if (time.get(3) > 0) {
             timeString += String.format("%d year(s) ", time.get(3));
@@ -199,7 +199,7 @@ public class CompareController implements Initializable {
         TableView<?> tableView = (TableView<?>) tablePane.getCenter();
         Crime crime = (Crime) tableView.getSelectionModel().getSelectedItem();
         if (crime != null) {
-            return crime.getCaseNumber();
+            return crime.getId();
         } else {
             return null;
         }

@@ -16,7 +16,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tests the features of importing and getting data using the data accessor.
@@ -93,7 +93,7 @@ public class DataAccessorTest {
             fail();
         }
         Crime crime = accessor.getCrime("JE163990", 1);
-        assertEquals(crime.getCaseNumber(), "JE163990");
+        assertEquals(crime.getId(), "JE163990");
     }
 
     /**
@@ -107,7 +107,7 @@ public class DataAccessorTest {
            fail();
         }
         Crime crime = accessor.getCrime("TestNumber", 1);
-        assertEquals(crime.getCaseNumber(), "TestNumber");
+        assertEquals(crime.getId(), "TestNumber");
     }
 
     @Test
@@ -120,8 +120,8 @@ public class DataAccessorTest {
      */
     @Test
     public void pageSetTest() {
-        ArrayList<Report> reports = accessor.getPageSet(1);
-        assertEquals(((Crime) reports.get(0)).getCaseNumber(), "TestNumber");
+        List<Report> reports = accessor.getPageSet(1);
+        assertEquals(((Crime) reports.get(0)).getId(), "TestNumber");
     }
 
 }

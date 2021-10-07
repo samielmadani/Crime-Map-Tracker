@@ -137,7 +137,7 @@ public class GeneralMenuController {
     }
 
     /**
-     * Moves the program to an empty entry view to create a new crime object.
+     * Moves the program to an empty entry view to create a new Report object.
      */
     public void toNewEntry() {
         BorderPane rootPane = (BorderPane) frame.getParent();

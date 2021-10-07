@@ -210,7 +210,7 @@ public final class DataAccessor {
             ResultSet rs = stmt.executeQuery(query);
             // Converts all results into crimes.
             while (rs.next()) {
-                Crime crime = generateCrime(rs);
+                Report crime = generateReport(rs);
                 reports.add(crime);
             }
             // Closes the statement and result set.
@@ -224,14 +224,14 @@ public final class DataAccessor {
     }
 
     /**
-     * Turns an entry in a result set into a Crime object.
-     * @param rs The result of the result set to be turned into a Crime object.
-     * @return The created Crime object.
+     * Turns an entry in a result set into a Report object.
+     * @param rs The result of the result set to be turned into a Report object.
+     * @return The created Report object.
      * @throws SQLException Thrown if a value is invalid.
      */
-    private Crime generateCrime(ResultSet rs) throws SQLException{
+    private Report generateReport(ResultSet rs) throws SQLException{
         Timestamp tt = rs.getTimestamp("date");
-        Crime crime = new Crime(
+        Report crime = new Crime(
                 rs.getString("id"),
                 tt.toLocalDateTime(),
                 rs.getString("block"),
@@ -261,20 +261,20 @@ public final class DataAccessor {
     public Crime getCrime(String entry, int listId) {
         Crime crime = null;
         try {
-            PreparedStatement psCrime = connection.prepareStatement("SELECT " + 
+            PreparedStatement psReport = connection.prepareStatement("SELECT " + 
             "id, list_id, date, primary_description, secondary_description, domestic, " +
             "x_coord, y_coord, latitude, longitude, location_description, block, iucr, fbicd, arrest, beat, ward" +
             " FROM crimedb WHERE id=? AND list_id=?;");
-            psCrime.setString(1, entry);
-            psCrime.setInt(2, listId);
-            ResultSet rs = psCrime.executeQuery();
+            psReport.setString(1, entry);
+            psReport.setInt(2, listId);
+            ResultSet rs = psReport.executeQuery();
 
             while (rs.next()) {
-                crime = generateCrime(rs);
+                crime = (Crime) generateReport(rs);
             }
             
             // Closes the statement.
-            psCrime.close();
+            psReport.close();
             rs.close();
         } catch (SQLException e) {
             MainScreen.createWarnWin(new CustomException("Error getting single crime from the database.", e.getClass().toString()));
@@ -299,7 +299,7 @@ public final class DataAccessor {
      * @param selectedFile      The Database file.
      */
     public void importInDB(File selectedFile, int listId) throws SQLException {
-        runStatement("ATTACH '" + selectedFile + "' AS " + "newCrimeDB;");
+        runStatement("ATTACH '" + selectedFile + "' AS " + "newReportDB;");
         runStatement("INSERT OR REPLACE INTO reports " +
             "SELECT " +
             "id, " + 
@@ -313,7 +313,7 @@ public final class DataAccessor {
             "latitude, " +
             "longitude, " +
             "location_description " + 
-            "FROM newCrimeDB.reports");
+            "FROM newReportDB.reports");
 
         runStatement("INSERT OR REPLACE INTO crimes SELECT " +
             "report_id, " + 
@@ -324,9 +324,9 @@ public final class DataAccessor {
             "arrest, " +
             "beat, " +
             "ward " + 
-            "FROM newCrimeDB.crimes");
+            "FROM newReportDB.crimes");
 
-        runStatement("DETACH DATABASE " + "'newCrimeDB';");
+        runStatement("DETACH DATABASE " + "'newReportDB';");
     }
 
 
@@ -380,7 +380,7 @@ public final class DataAccessor {
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
 
-            PSTypes.setPSString(psCrime, 1, crime.getCaseNumber()); // Case Number
+            PSTypes.setPSString(psCrime, 1, crime.getId()); // Case Number
             PSTypes.setPSInteger(psCrime, 2, listId); // List
             PSTypes.setPSString(psCrime, 3, crime.getBlock()); // Block
             PSTypes.setPSString(psCrime, 4, crime.getIucr()); // Iucr
@@ -389,7 +389,7 @@ public final class DataAccessor {
             PSTypes.setPSInteger(psCrime, 7, crime.getBeat()); // Beat
             PSTypes.setPSInteger(psCrime, 8, crime.getWard()); // Ward
 
-            PSTypes.setPSString(psReport, 1, crime.getCaseNumber()); // Case Number
+            PSTypes.setPSString(psReport, 1, crime.getId()); // Case Number
 
             Timestamp date = Timestamp.valueOf(crime.getDate());
             PSTypes.setPSInteger(psReport, 2, listId); // List
@@ -433,7 +433,7 @@ public final class DataAccessor {
             // Uses batches to chain all the individual insertions into a single query to the database. This is also to increase speed.
             for (int i = 0; i < rows.size(); i++) {
                 try {
-                    addCrime(rows.get(i), listId, psReport, psCrime);
+                    addReport(rows.get(i), listId, psReport, psCrime);
                 } catch (SQLException e) {
                     throw new CustomException("Value error in row " + i + ".", e.getMessage());
                 }
@@ -455,7 +455,7 @@ public final class DataAccessor {
     /**
      * Adds a crime to the report and crime statements required to add the crime to the database.
      */
-    private void addCrime(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException, DateTimeParseException {
+    private void addReport(String[] row, int listId, PreparedStatement psReport, PreparedStatement psCrime) throws SQLException, DateTimeParseException {
         psReport.setString(1, row[0]); // Case Number
         PSTypes.setPSInteger(psReport, 2, listId); // List
         if (Objects.equals(row[1], "")) {
@@ -518,7 +518,7 @@ public final class DataAccessor {
      * @return An ObservableList containing all the lists in the database.
      */
     public ObservableList<String> getLists() {
-        ArrayList<String> lists = new ArrayList<>();
+        List<String> lists = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT name FROM lists");
@@ -531,7 +531,7 @@ public final class DataAccessor {
         } catch (SQLException e) {
             MainScreen.createWarnWin(new CustomException("Error getting the list of reports.", e.getClass().toString()));
         }
-        ObservableList<String> details = FXCollections.observableArrayList(lists);
+        ObservableList<String> details = FXCollections.observableList(lists);
         return details;
     }
 
@@ -611,7 +611,8 @@ public final class DataAccessor {
     private void exportCSV(String conditions, int listId, String saveLocation) throws SQLException {
         try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ','); Statement stmt = connection.createStatement();){
         
-            writer.writeNext("CASE#,DATE  OF OCCURRENCE,BLOCK, IUCR, PRIMARY DESCRIPTION, SECONDARY DESCRIPTION, LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION".split(","));
+            writer.writeNext(("CASE#,DATE OF OCCURRENCE,BLOCK,IUCR,PRIMARY DESCRIPTION,SECONDARY DESCRIPTION," +
+            "LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION").split(","));
 
             String query = "SELECT " +
                 "id, " + 

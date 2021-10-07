@@ -14,7 +14,7 @@ import seng202.group7.analyses.Tuple;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -62,8 +62,8 @@ public class GraphViewController implements Initializable {
      * @param pseudoClassStates     Has three different States which determines what graph is loaded.
      */
     public void prepareGraph(ObservableSet<PseudoClass> pseudoClassStates) {
-        ArrayList<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
-        ArrayList<Tuple<String, Integer>> dataSet;
+        List<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
+        List<Tuple<String, Integer>> dataSet;
         if (pseudoClassStates.contains(PseudoClass.getPseudoClass("frequentCrime")) || (pseudoClassStates.size() == 0)) {
             dataSet = Rank.primaryFrequencyRank(data);
             generateGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Frequency of Crime");
@@ -79,12 +79,12 @@ public class GraphViewController implements Initializable {
     /**
      *Create the graph by inputting the values into the bar chart object.
      *
-     * @param data      The ArrayList of String integer tuples from Rank class
+     * @param data      The List of String integer tuples from Rank class
      * @param title     The String title of the graph
      * @param xLabel    The x axis label of the graph
      * @param yLabel    The y axis label of the graph
      */
-    public void generateGraph(ArrayList<Tuple<String, Integer>> data, String title, String xLabel, String yLabel) {
+    public void generateGraph(List<Tuple<String, Integer>> data, String title, String xLabel, String yLabel) {
 
         XYChart.Series<String, Integer> dataSet = new XYChart.Series<>();
         int i = 0;

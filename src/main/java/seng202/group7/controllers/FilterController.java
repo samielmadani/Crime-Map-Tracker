@@ -5,7 +5,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -59,7 +59,7 @@ public class FilterController implements Initializable {
     @FXML
     private ComboBox<String> domesticBox;
 
-    private ArrayList<Node> allValues;
+    private List<Node> allValues;
 
     /**
      * This method is run during the loading of the data view fxml file.
@@ -70,15 +70,15 @@ public class FilterController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        primaryBox.setItems(FXCollections.observableArrayList(
+        primaryBox.setItems(FXCollections.observableList(Arrays.asList(
                 null, "THEFT", "ASSAULT", "DECEPTIVE PRACTICE", "BATTERY", "HOMICIDE", "OTHER OFFENSE",
                 "CRIMINAL DAMAGE", "WEAPONS VIOLATION", "CRIMINAL TRESPASS", "ARSON", "MOTOR VEHICLE THEFT",
                 "ROBBERY", "STALKING", "BURGLARY", "OFFENSE INVOLVING CHILDREN", "SEX OFFENSE", "CRIMINAL SEXUAL ASSAULT",
                 "NARCOTICS", "PUBLIC PEACE VIOLATION", "PROSTITUTION", "INTERFERENCE WITH PUBLIC OFFICER",
                 "INTIMIDATION", "CONCEALED CARRY LICENSE VIOLATION", "KIDNAPPING", "LIQUOR LAW VIOLATION",
-                "OTHER NARCOTIC VIOLATION").sorted());
+                "OTHER NARCOTIC VIOLATION")).sorted());
 
-        locationBox.setItems(FXCollections.observableArrayList(
+        locationBox.setItems(FXCollections.observableList(Arrays.asList(
                 null, "APARTMENT", "STREET", "SIDEWALK", "PARK PROPERTY", "RESIDENCE", "DRUG STORE",
                 "DEPARTMENT STORE", "PARKING LOT / GARAGE (NON RESIDENTIAL)", "ALLEY", "RESIDENCE - PORCH / HALLWAY",
                 "SMALL RETAIL STORE", "AUTO", "RESTAURANT", "GROCERY FOOD STORE", "CTA PLATFORM", "GAS STATION",
@@ -103,7 +103,7 @@ public class FilterController implements Initializable {
                 "AIRPORT EXTERIOR - NON-SECURE AREA", "ANIMAL HOSPITAL", "PAWN SHOP",
                 "AIRPORT BUILDING NON-TERMINAL - SECURE AREA", "AIRCRAFT", "WAREHOUSE",
                 "AIRPORT TERMINAL UPPER LEVEL - NON-SECURE AREA", "BOAT / WATERCRAFT", "PORCH", "SCHOOL - PUBLIC GROUNDS",
-                "HOUSE", "DAY CARE CENTER", "AIRPORT VENDING ESTABLISHMENT", "SPORTS ARENA / STADIUM").sorted());
+                "HOUSE", "DAY CARE CENTER", "AIRPORT VENDING ESTABLISHMENT", "SPORTS ARENA / STADIUM")).sorted());
 
         arrestBox.getItems().addAll(null, "Y", "N");
 
@@ -132,8 +132,8 @@ public class FilterController implements Initializable {
             }
         });
 
-        allValues = new ArrayList<>(Arrays.asList(datePicker, dateText, primaryBox, locationBox, wardField, beatField,
-            arrestBox, domesticBox));
+        allValues = Arrays.asList(datePicker, dateText, primaryBox, locationBox, wardField, beatField,
+            arrestBox, domesticBox);
         
         datePicker.valueProperty().addListener((observable, oldDate, newDate)->{
             if(datePicker.getValue() == null){

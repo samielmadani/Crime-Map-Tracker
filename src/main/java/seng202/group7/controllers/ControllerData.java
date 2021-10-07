@@ -3,6 +3,8 @@ package seng202.group7.controllers;
 import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.data.Report;
+
 import java.io.File;
 import java.sql.SQLException;
 
@@ -30,7 +32,7 @@ public final class ControllerData {
     /**
      * This holds the current row selected when going to the edit menu screen.
      */
-    private Crime currentRow;
+    private Report currentRow;
 
     /**
      * Stores the current table state so when the back button is pushed the position is the same.
@@ -73,7 +75,7 @@ public final class ControllerData {
      *
      * @param rowData       The selected crime object.
      */
-    public void setCurrentRow(Crime rowData) {
+    public void setCurrentRow(Report rowData) {
         currentRow = rowData;
     }
 
@@ -82,7 +84,7 @@ public final class ControllerData {
      *
      * @return currentRow       The stored selected crime object.
      */
-    public Crime getCurrentRow() {
+    public Report getCurrentRow() {
         return currentRow;
     }
 

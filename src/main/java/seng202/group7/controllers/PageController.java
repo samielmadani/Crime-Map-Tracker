@@ -54,7 +54,7 @@ public class PageController implements Initializable {
             if (newParent != null) {
                 int size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
                 dataTotal.setText("Data Total: "+size); // Sets current display total.
-                pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
+                pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 reports per page.
                 pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());
             }
 
