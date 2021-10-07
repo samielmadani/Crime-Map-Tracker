@@ -36,9 +36,17 @@ import seng202.group7.view.MainScreen;
 public class CompareController implements Initializable {
 
     @FXML
-    private TextField reportOneText, reportTwoText;
+    private TextField reportOneText;
+    
     @FXML
-    private Label resultText, menuText;
+    private TextField reportTwoText;
+
+    @FXML
+    private Label resultText;
+
+    @FXML
+    private Label menuText;
+    
     @FXML
     private VBox frame;
 

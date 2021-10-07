@@ -74,7 +74,7 @@ public class DataAccessorTest {
         accessor.editCrime(crimeTwo, 1);
         try {
             accessor.deleteReport("TestToDelete", 1);
-        } catch (SQLException e) {
+        } catch (CustomException e) {
             fail();
         }
         Crime crime = accessor.getCrime("TestToDelete", 1);

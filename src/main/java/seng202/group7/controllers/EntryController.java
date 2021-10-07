@@ -3,21 +3,17 @@ package seng202.group7.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Report;
 import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
-
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -42,22 +38,54 @@ public class EntryController implements Initializable {
     Report data;
 
     @FXML
-    private TextField cNoText, iucrText, fbiText, blockText, beatText,
-                      wardText, xCoordText, yCoordText, latText, longText, priText, timeText;
+    private TextField cNoText;
     @FXML
-    private TextArea secText, locAreaText;
+    private TextField iucrText;
+    @FXML
+    private TextField fbiText;
+    @FXML
+    private TextField blockText;
+    @FXML
+    private TextField beatText;
+    @FXML
+    private TextField wardText;
+    @FXML
+    private TextField xCoordText;
+    @FXML
+    private TextField yCoordText;
+    @FXML
+    private TextField latText;
+    @FXML
+    private TextField longText;
+    @FXML
+    private TextField priText;
+    @FXML
+    private TextField timeText;
+    @FXML
+    private TextArea secText;
+    @FXML
+    private TextArea locAreaText;
     @FXML
     private DatePicker datePicker;
     @FXML
-    private CheckBox arrestCheck, domesticCheck;
+    private CheckBox arrestCheck;
     @FXML
-    private Button editButton, deleteButton, saveButton, cancelButton;
+    private CheckBox domesticCheck;
+    @FXML
+    private Node editButton;
+    @FXML
+    private Node deleteButton;
+    @FXML
+    private Node saveButton;
+    @FXML
+    private Node cancelButton;
     @FXML
     private Node frame;
 
     private TextField dateText;
 
-    private List<Node> allInputs, editableInputs;
+    private List<Node> allInputs;
+    private List<Node> editableInputs;
 
 
     /**
@@ -117,15 +145,6 @@ public class EntryController implements Initializable {
         InputValidator.addValidation(dateText, InputType.DATE);
         InputValidator.addValidation(timeText, InputType.TIME);
         InputValidator.addValidation(cNoText, InputType.ID);
-    }
-
-    /**
-     * When a key is pressed on a node with this set, send the node to validation
-     * @param event The keyboard event trigger.
-     */
-    public void activeValidate(KeyEvent event) {
-        Node inputBox = (Node) event.getSource();
-        InputValidator.validate(inputBox);
     }
 
     /**
@@ -328,8 +347,8 @@ public class EntryController implements Initializable {
         DataAccessor dataAccessor = DataAccessor.getInstance();
         try {
             dataAccessor.deleteReport(cNoText.getText(), ControllerData.getInstance().getCurrentList());
-        } catch (SQLException e) {
-            MainScreen.createWarnWin(new CustomException("Could not delete entry.", e.getClass().toString()));
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
         }
         returnView();
     }

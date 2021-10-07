@@ -52,7 +52,7 @@
          </VBox>
          <VBox fx:id="generalInformation" alignment="TOP_CENTER" prefHeight="266.0" prefWidth="201.0" GridPane.rowIndex="1">
             <Label text="Case Number" />
-            <TextField fx:id="cNoText" onKeyTyped="#activeValidate" prefHeight="25.0" prefWidth="200.0">
+            <TextField fx:id="cNoText" prefHeight="25.0" prefWidth="200.0">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -64,19 +64,19 @@
                </VBox.margin>
             </DatePicker>
             <Label text="Time of Occurrence" />
-            <TextField fx:id="timeText" onKeyTyped="#activeValidate">
+            <TextField fx:id="timeText">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </TextField>
             <Label text="Illinois Unifrom Code" />
-            <TextField fx:id="iucrText" onKeyTyped="#activeValidate">
+            <TextField fx:id="iucrText">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </TextField>
             <Label text="FBI Crime Code" />
-            <TextField fx:id="fbiText" onKeyTyped="#activeValidate">
+            <TextField fx:id="fbiText">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -85,7 +85,7 @@
          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
 
             <Label text="Block" />
-            <TextField fx:id="blockText" onKeyTyped="#activeValidate">
+            <TextField fx:id="blockText">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -94,7 +94,7 @@
             <HBox>
                <VBox>
                   <Label text="Beat" />
-                  <TextField fx:id="beatText" onKeyTyped="#activeValidate">
+                  <TextField fx:id="beatText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -103,7 +103,7 @@
 
                <VBox>
                   <Label text="Ward" />
-                  <TextField fx:id="wardText" onKeyTyped="#activeValidate">
+                  <TextField fx:id="wardText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -114,7 +114,7 @@
             <HBox>
                <VBox>
                   <Label text="X-Coordinate" />
-                  <TextField onKeyTyped="#activeValidate" fx:id="xCoordText">
+                  <TextField fx:id="xCoordText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -122,7 +122,7 @@
                </VBox>
                <VBox>
                   <Label text="Y-Coordinate" />
-                  <TextField fx:id="yCoordText" onKeyTyped="#activeValidate">
+                  <TextField fx:id="yCoordText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -133,7 +133,7 @@
             <HBox>
                <VBox>
                   <Label text="Latitude" />
-                  <TextField fx:id="latText" onKeyTyped="#activeValidate">
+                  <TextField fx:id="latText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -141,7 +141,7 @@
                </VBox>
                <VBox>
                   <Label text="Longitude" />
-                  <TextField fx:id="longText" onKeyTyped="#activeValidate">
+                  <TextField fx:id="longText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -152,19 +152,19 @@
          </VBox>
          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
             <Label text="Primary" />
-            <TextField fx:id="priText" onKeyTyped="#activeValidate">
+            <TextField fx:id="priText">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </TextField>
             <Label text="Secondary" />
-            <TextArea fx:id="secText" onKeyTyped="#activeValidate" prefHeight="96.0" prefWidth="200.0" wrapText="true">
+            <TextArea fx:id="secText" prefHeight="96.0" prefWidth="200.0" wrapText="true">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
             </TextArea>
             <Label text="Location Area" />
-            <TextArea fx:id="locAreaText" onKeyTyped="#activeValidate" prefHeight="107.0" prefWidth="200.0" wrapText="true">
+            <TextArea fx:id="locAreaText" prefHeight="107.0" prefWidth="200.0" wrapText="true">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>

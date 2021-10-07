@@ -1,6 +1,5 @@
 package seng202.group7.controllers;
 
-import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;

@@ -47,13 +47,16 @@ public class DataViewController implements Initializable {
     @FXML
     private TableView<Report> tableView;
     /**
-     * This is the columns of the table with the type string.
+     * This is the columns of the table.
      */
     @FXML
-    private TableColumn<Report, String> caseCol, wardCol, descCol, dateCol;
-    /**
-     * This is the columns of the table with the type boolean.
-     */
+    private TableColumn<Report, String> caseCol;
+    @FXML
+    private TableColumn<Report, String> wardCol;
+    @FXML
+    private TableColumn<Report, String> descCol;
+    @FXML
+    private TableColumn<Report, String> dateCol;
     @FXML
     private TableColumn<Report, Boolean> arrestCol;
 

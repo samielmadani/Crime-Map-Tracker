@@ -6,9 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
-import javafx.scene.layout.BorderPane;
 import javafx.util.Duration;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
@@ -37,7 +36,16 @@ public class StartScreenController implements Initializable {
      * Is the parent node panel to all other nodes.
      */
     @FXML
-    private BorderPane rootPane;
+    private Node rootPane;
+
+    @FXML
+    private Node newList;
+    @FXML
+    private Node delete;
+    @FXML
+    private Node rename;
+    @FXML
+    private Node load;
 
     @FXML
     private TableView<String> table;
@@ -45,8 +53,6 @@ public class StartScreenController implements Initializable {
     @FXML
     private TableColumn<String, String> listNames;
 
-    @FXML
-    private Button newList, delete, rename, load;
 
     @FXML
     private TextField newListText, renameListText;

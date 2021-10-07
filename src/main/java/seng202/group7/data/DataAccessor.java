@@ -288,9 +288,13 @@ public final class DataAccessor {
      *
      * @param entryId       The case number of the crime object.
      */
-    public void deleteReport(String entryId, int listId) throws SQLException{
+    public void deleteReport(String entryId, int listId) throws CustomException{
         String reportQuery = "DELETE FROM reports WHERE id = '" + entryId + "' AND list_id=" + listId;
-        runStatement(reportQuery);
+        try {
+            runStatement(reportQuery);
+        } catch (SQLException e) {
+            throw new CustomException("Could not delete entry.", e.getClass().toString());
+        }
     }
 
     /**
