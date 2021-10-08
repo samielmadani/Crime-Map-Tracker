@@ -73,7 +73,7 @@ public class BarGraphViewController  {
     /**
      *Create the graph by inputting the values into the bar chart object.
      *
-     * @param data      The arraylist of String integer tuples from Rank class
+     * @param data      The ArrayList of String integer tuples from Rank class
      * @param title     The String title of the graph
      * @param xLabel    The x axis label of the graph
      * @param yLabel    The y axis label of the graph

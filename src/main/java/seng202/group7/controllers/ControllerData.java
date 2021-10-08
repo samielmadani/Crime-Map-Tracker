@@ -1,24 +1,17 @@
 package seng202.group7.controllers;
 
-
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.sql.SQLException;
 
-import javafx.collections.ObservableSet;
-import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import seng202.group7.view.MainScreen;
 
 /**
  * This class acts as a connection between the controllers passing data through here so that only the controller's
@@ -40,19 +33,24 @@ public final class ControllerData {
     private Crime currentRow;
 
     /**
-     * Stores the current table state so when the back button is pushed the position is the same.
-     */
-    private Node tableState;
-
-    /**
      * Stores the current page of the paginator.
      */
     private int currentPage = 0;
 
     /**
+     * Stores the list that is currently in use.
+     */
+    private int currentList = 1;
+
+    /**
      * This is a condition that is used by the data accessor when searching the database.
      */
-    private String whereQuery = "";
+    private String searchQuery = "";
+
+    /**
+     * This is a condition that is used by the data accessor when filteringing the database.
+     */
+    private String filterQuery = "";
 
 
     /**
@@ -88,22 +86,12 @@ public final class ControllerData {
         return currentRow;
     }
 
-    /**
-     * Setter for storing the current state of the table.
-     *
-     * @param tableView       The table state.
-     */
-    public void setTableState(Node tableView) {
-        tableState = tableView;
+    public int getCurrentList() {
+        return currentList;
     }
 
-    /**
-     * Getter for retrieving the current state of the table.
-     *
-     * @return tableState       The current state of the table.
-     */
-    public Node getTableState() {
-        return tableState;
+    public void setCurrentList(int listId) {
+        currentList = listId;
     }
 
 
@@ -113,7 +101,7 @@ public final class ControllerData {
      *
      * @param event     The event action that was triggered.
      */
-    public boolean getFile(ActionEvent event) {
+    public void getFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("./"));
         fileChooser.setTitle("Select file");
@@ -126,18 +114,20 @@ public final class ControllerData {
         if (selectedFile != null) {
             String fileName = selectedFile.getName();
             DataAccessor accessor = DataAccessor.getInstance();
-            if (fileName.endsWith(".csv")) {
-                // Reads a CSV into the database.
-                accessor.readToDB(selectedFile);
-            } else {
-                // Reads a outside database into the main database.
-                accessor.importInDB(selectedFile);
+            try {
+                if (fileName.endsWith(".csv")) {
+                    // Reads a CSV into the database.
+                    accessor.readToDB(selectedFile, currentList);
+                } else {
+                    // Reads a outside database into the main database.
+                    accessor.importInDB(selectedFile, currentList);
+                }
+            } catch (SQLException e) {
+                MainScreen.createWarnWin(new CustomException("Invalid data", e.getClass().toString()));
             }
-            return true;
-        } else {
-            return false;
         }
     }
+
 
     /**
      * Gets the current page of the paginator.
@@ -163,15 +153,36 @@ public final class ControllerData {
      * @return whereQuery       The condition being applied.
      */
     public String getWhereQuery() {
-        return whereQuery;
+        if (searchQuery.isEmpty() || filterQuery.isEmpty()) {
+            return "" + filterQuery + searchQuery;
+        }
+        return "" + filterQuery + " AND " + searchQuery;
     }
 
     /**
-     * The setter for the where query.
+     * The clears the where query.
      *
-     * @param searchingQuery    The condition being applied.
      */
-    public void setWhereQuery(String searchingQuery) {
-        this.whereQuery = searchingQuery;
+    public void clearWhereQuery() {
+        filterQuery="";
+        searchQuery="";
+    }
+
+    /**
+     * The setter for the search query.
+     *
+     * @param searchQuery    The condition being applied.
+     */
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+    }
+
+    /**
+     * The setter for the filter query.
+     *
+     * @param filterQuery    The condition being applied.
+     */
+    public void setFilterQuery(String filterQuery) {
+        this.filterQuery = filterQuery;
     }
 }

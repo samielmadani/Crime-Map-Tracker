@@ -11,7 +11,8 @@ public enum InputType {
     REQUIRED (PseudoClass.getPseudoClass("required")), 
     ID (PseudoClass.getPseudoClass("id")), 
     DATE (PseudoClass.getPseudoClass("dateEditor")), 
-    TIME (PseudoClass.getPseudoClass("time"));
+    TIME (PseudoClass.getPseudoClass("time")),
+    LISTNAME (PseudoClass.getPseudoClass("list_name"));
 
     private PseudoClass validationType;
 

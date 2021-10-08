@@ -1,6 +1,8 @@
 package seng202.group7;
 
 import org.junit.jupiter.api.Test;
+
+import seng202.group7.data.FilterConditions;
 import seng202.group7.data.QueryBuilder;
 
 import java.sql.Timestamp;
@@ -21,10 +23,11 @@ public class QueryBuilderTest {
     @Test
     public void whereQueryTest() {
         LocalDate testDate = LocalDate.now();
-        String query = QueryBuilder.where(testDate, "test", null, 30, null, true, null);
-        assertEquals(query, "WHERE date >= "+ Timestamp.valueOf(testDate.atStartOfDay()).getTime() +
+        FilterConditions conditions = new FilterConditions(testDate, testDate, "test", null, 30, null, true, null);
+        String query = QueryBuilder.where(conditions);
+        assertEquals("date >= "+ Timestamp.valueOf(testDate.atStartOfDay()).getTime() +
                 " AND date < "+ Timestamp.valueOf(testDate.plusDays(1).atStartOfDay()).getTime() +
-                " AND primary_description='test' AND ward=30 AND arrest=1");
+                " AND primary_description='test' AND ward=30 AND arrest=1", query);
     }
 
     /**
@@ -32,7 +35,8 @@ public class QueryBuilderTest {
      */
     @Test
     public void whereQueryEmptyTest() {
-        String query = QueryBuilder.where(null, null, null, null, null, null, null);
-        assertEquals(query, "");
+        FilterConditions conditions = new FilterConditions(null, null, null, null, null, null, null, null);
+        String query = QueryBuilder.where(conditions);
+        assertEquals("", query);
     }
 }

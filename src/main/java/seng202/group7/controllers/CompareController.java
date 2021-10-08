@@ -11,21 +11,28 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
+import seng202.group7.view.MainScreen;
 
 /**
  * The controller, used by / linked to, the compares FXML file.
  * Handles the comparisons of two crime objects.
  *
- * @author Jack McCorkindale John Elliot Sam McMillan
+ * @author Jack McCorkindale
+ * @author Shaylin Simadari
  */
 public class CompareController implements Initializable {
 
@@ -35,6 +42,9 @@ public class CompareController implements Initializable {
     private Label resultText, menuText;
     @FXML
     private VBox frame;
+
+    private static String report1;
+    private static String report2;
 
     /**
      * A style class that can be added to a node to add error formatting.
@@ -51,19 +61,32 @@ public class CompareController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         errorClass = PseudoClass.getPseudoClass("error");
+
+        // frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+
+        //     if (newParent != null) {
+        //         setType(frame.getPseudoClassStates());
+        //     }
+
+        // });
+        loadGUIFields();
     }
 
 
     /**
      * Gets the current side panel and replaces it with the general menu panel.
-     *
-     * @throws IOException      An error that occurs when loading the FXML file.
      */
     public void toMenu() throws IOException {
+        saveGUIFields();
         BorderPane pane = (BorderPane) frame.getParent();
-        VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
-        // Changes side menu to the filter menu.
-        pane.setLeft(menuItems);
+        try {
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
+            // Changes side menu to the filter menu.
+            pane.setLeft(menuItems);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the General Menu screens FXML file.", e.getClass().toString()));
+        }
+
     }
 
     /**
@@ -72,10 +95,11 @@ public class CompareController implements Initializable {
     public void compareReports() {
         DataAccessor data = DataAccessor.getInstance();
         resultText.setText("");
+        int list = ControllerData.getInstance().getCurrentList();
         String resultTextString = "";
 
-        Crime reportOne = data.getCrime(reportOneText.getText());
-        Crime reportTwo = data.getCrime(reportTwoText.getText());
+        Crime reportOne = data.getCrime(reportOneText.getText(), list);
+        Crime reportTwo = data.getCrime(reportTwoText.getText(), list);
         reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);
         reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);
         if (reportOne == null || reportTwo == null) {
@@ -210,6 +234,25 @@ public class CompareController implements Initializable {
             return null;
         } else {
             return selectedCrime;
+        }
+    }
+
+    private void saveGUIFields(){
+        if(!reportOneText.getText().equals("")) {
+            report1 = reportOneText.getText();
+        }
+        if(!reportTwoText.getText().equals("")) {
+            report2 = reportTwoText.getText();
+        }
+    }
+
+
+    private void loadGUIFields(){
+        if(report1 != null) {
+            reportOneText.setText(report1);
+        }
+        if(report2 != null) {
+            reportTwoText.setText(report2);
         }
     }
 }

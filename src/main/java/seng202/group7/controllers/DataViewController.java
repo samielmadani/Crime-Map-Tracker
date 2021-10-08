@@ -1,4 +1,5 @@
 package seng202.group7.controllers;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -14,14 +14,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Crime;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.view.MainScreen;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 
@@ -89,6 +90,20 @@ public class DataViewController implements Initializable {
             });
             return row;
         });
+
+        // Refreshes the table data when the table view is returned to.
+        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+            if (newParent != null) {
+                newParent.parentProperty().addListener((obs1, oldParent1, pagination) -> {
+                    pagination.getParent().parentProperty().addListener((obs2, oldParent2, newParent2) -> {
+                        if (newParent2 != null) {
+                            setTableContent();
+                        }
+                    });
+
+                });
+            }
+        });
         setTableContent();
     }
 
@@ -100,30 +115,22 @@ public class DataViewController implements Initializable {
      * @param event         The double click mouse event trigger.
      * @param rowData       The Crime object from the selected row.
      */
-    private void swapViews(MouseEvent event, Crime rowData) {
+    private void swapViews(MouseEvent event, Crime rowData){
         // This section must come first as the rowData is need when initializing the crimeEdit FXML.
         ControllerData controllerData = ControllerData.getInstance();
         controllerData.setCurrentRow(rowData);
         
-        Pagination page = (Pagination) frame.getParent().getParent();
+        BorderPane rootPane = (BorderPane) frame.getParent().getParent().getParent().getParent();
 
-        int currentPage = controllerData.getCurrentPage();
-        if (currentPage == 0) {
-            page.setCurrentPageIndex(currentPage + 1);
-        } else {
-            page.setCurrentPageIndex(currentPage - 1);
-        }
-        controllerData.setCurrentPage(currentPage);
-
-        Node table = page.getParent();
         try {
-            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
-            // Changes center screen to the crime edit.
-            ((BorderPane) table.getParent()).setCenter(detailView);
-            controllerData.setTableState(table);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+            Node newFrame = loader.load();
+
+            ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
+
+            rootPane.setCenter(newFrame);
+        } catch (IOException | NullPointerException e) {
+            MainScreen.createErrorWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));
         }
     }
 
@@ -133,7 +140,7 @@ public class DataViewController implements Initializable {
      */
     private void setTableContent() {
         // Gets the current set of reports based on the pagination's current page.
-        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet();
+        ArrayList<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
         ObservableList<Crime> data = FXCollections.observableArrayList();
         // As the reports can be either a crime or an incident we must check the object type and cast them appropriately.
         for (Report report : reports) {
