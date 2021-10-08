@@ -5,7 +5,7 @@ import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
@@ -56,7 +56,7 @@ public final class ControllerData {
     /**
      * What columns are currently visible in the data table
      */
-    private ArrayList<String> visibleColumns;
+    private List<String> visibleColumns;
 
     /**
      * The constructor which is made private so that it can not be initialized from other classes.
@@ -189,11 +189,11 @@ public final class ControllerData {
         this.whereQuery = searchingQuery;
     }
 
-    public ArrayList<String> getVisibleColumns() {
+    public List<String> getVisibleColumns() {
         return visibleColumns;
     }
 
-    public void setVisibleColumns(ArrayList<String> columns) {
+    public void setVisibleColumns(List<String> columns) {
         visibleColumns = columns;
     }
 }

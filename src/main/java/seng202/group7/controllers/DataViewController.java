@@ -3,6 +3,7 @@ package seng202.group7.controllers;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -61,61 +63,17 @@ public class DataViewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO recreating will reset columns to default
-        ArrayList<String> possibleColumns = new ArrayList<>(Arrays.asList("Case Number,CaseNumber", "Date,date",
+        List<String> possibleColumns = Arrays.asList("Case Number,CaseNumber", "Date,date",
             "Primary Description,PrimaryDescription","Secondary Description,SecondaryDescription", "Domestic,Domestic",
-            "X Coordinate,XCoord", "Y Coordinate,YCoord", " Latitude,Latitude","Longitude,Longitude",
+            "X Coordinate,XCoord", "Y Coordinate,YCoord", "Latitude,Latitude","Longitude,Longitude",
             "Location Description,LocationDescription", "Block,Block", "Iucr,Iucr", "FBI CD,FbiCD", "Arrest,arrest", 
-            "Beat,Beat", "Ward,Ward"));
+            "Beat,Beat", "Ward,Ward");
 
         ContextMenu contextMenu = new ContextMenu();
-        String[] columnData; 
-        TableColumn<Crime, String> newColumn;
-
+        
         for (String columnName : possibleColumns) {
-            columnData = columnName.split(",");
-            newColumn = new TableColumn<>(columnData[0]);
-            newColumn.setCellValueFactory(new PropertyValueFactory<>(columnData[1]));
-            
-            MenuItem columnMenu = new MenuItem(columnData[0]);
-            // Make it so when clicked will hide/show the column
-            columnMenu.setOnAction(event -> {
-                // TODO find position when rearranged
-                for (TableColumn<Crime, ?> col : tableView.getColumns())
-                    if (col.getText().equals(((MenuItem) event.getSource()).getText())) {
-                        col.setVisible(!col.visibleProperty().get());
-                        ArrayList<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
-                        if (visibleColumns.contains(col.getText())){
-                            visibleColumns.remove(col.getText());
-                        } else {
-                            visibleColumns.add(col.getText());
-                        }
-                        break;
-                    }
-                });
-                tableView.getColumns().add(newColumn);
-                
-                if (columnData[0].equals("Date")) {
-                    newColumn.setCellValueFactory(setup -> {
-                        SimpleStringProperty property = new SimpleStringProperty();
-                        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                        property.setValue(dateFormat.format(setup.getValue().getDate()));
-                        return property;
-                });
-            }
-
-            contextMenu.getItems().add(columnMenu);
-
-            if (ControllerData.getInstance().getVisibleColumns() == null) {
-                ControllerData.getInstance().setVisibleColumns(
-                    new ArrayList<>(Arrays.asList("Case Number", "Date", "Primary Description","Arrest", "Ward"))
-                    );
-            }
-            ArrayList<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
-            // Only show default columns
-            if (!visibleColumns.contains(columnData[0])) {
-                newColumn.setVisible(false);
-            }
+            TableColumn<Crime, ?> newColumn = createColumn(columnName, contextMenu);
+            tableView.getColumns().add(newColumn);
         }
          
         tableView.setContextMenu(contextMenu);
@@ -132,6 +90,66 @@ public class DataViewController implements Initializable {
             return row;
         });
         setTableContent();
+    }
+
+    /**
+     * Creates a new column with the given name and adds it to the tables context menu.
+     * @param columnName The name of the column
+     * @param contextMenu The tables context menu
+     * @return The new column
+     */
+    private TableColumn<Crime, ?> createColumn(String columnName, ContextMenu contextMenu) {
+        
+        String[] columnData = columnName.split(",");
+        TableColumn<Crime, String> newColumn = new TableColumn<>(columnData[0]);
+        newColumn.setCellValueFactory(new PropertyValueFactory<>(columnData[1]));
+        
+        if (columnData[0].equals("Date")) {
+            newColumn.setCellValueFactory(setup -> {
+                SimpleStringProperty property = new SimpleStringProperty();
+                DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                property.setValue(dateFormat.format(setup.getValue().getDate()));
+                return property;
+            });
+        }
+        MenuItem columnMenu = new MenuItem(columnData[0]);
+        // Make it so when clicked will hide/show the column
+        columnMenu.setOnAction(event -> {
+            visibilityToggleInit(event);
+        });
+
+        contextMenu.getItems().add(columnMenu);
+        
+        if (ControllerData.getInstance().getVisibleColumns() == null) {
+            ControllerData.getInstance().setVisibleColumns(
+                Arrays.asList("Case Number", "Date", "Primary Description","Arrest", "Ward")
+                );
+        }
+        List<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
+        // Only show default columns
+        if (!visibleColumns.contains(columnData[0])) {
+            newColumn.setVisible(false);
+        }
+        return newColumn;
+    }
+
+    /**
+     * Makes the menuItem toggle the visibility of the relevant column.
+     * @param event The event that triggers this method.
+     */
+    private void visibilityToggleInit(ActionEvent event) {
+        for (TableColumn<Crime, ?> col : tableView.getColumns()) {
+            if (col.getText().equals(((MenuItem) event.getSource()).getText())) {
+                col.setVisible(!col.visibleProperty().get());
+                List<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
+                if (visibleColumns.contains(col.getText())){
+                    visibleColumns.remove(col.getText());
+                } else {
+                    visibleColumns.add(col.getText());
+                }
+                return;
+            }
+        }
     }
 
 
