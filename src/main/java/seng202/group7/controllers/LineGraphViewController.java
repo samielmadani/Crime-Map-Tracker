@@ -59,7 +59,7 @@ public class LineGraphViewController  {
     public String getTitle(ArrayList<String> choices) {
         String title = "";
         if (choices.get(0) != null)  {
-            title += (choices.get(0).substring(0,1).toUpperCase()) + (choices.get(0).substring(1).toUpperCase());
+            title += (choices.get(0).substring(0, 1).toUpperCase()) + (choices.get(0).substring(1).toLowerCase());
             title += " Over Time";
         } else {
             title += "Crime Over Time";

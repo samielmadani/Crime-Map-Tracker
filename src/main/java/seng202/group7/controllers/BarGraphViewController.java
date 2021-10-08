@@ -40,7 +40,7 @@ public class BarGraphViewController  {
      */
 
     public void prepareBarGraph(String option) {
-        ArrayList<Report> data = DataAccessor.getInstance().getAll();
+        ArrayList<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
         ArrayList<Tuple<String, Integer>> dataSet;
         if (option.equals("Most Frequent Crime Types")) {
             dataSet = Rank.primaryFrequencyRank(data);

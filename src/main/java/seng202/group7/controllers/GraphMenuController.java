@@ -9,6 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 
 import seng202.group7.data.DataAccessor;
+import seng202.group7.data.FilterConditions;
 import seng202.group7.data.QueryBuilder;
 
 import java.io.IOException;
@@ -144,11 +145,18 @@ public class GraphMenuController implements Initializable {
      * @return query, a string value query
      */
     private String constructQuery() {
+
+        FilterConditions conditions = new FilterConditions(null, null, crimeType.getValue(), null,
+                getIntegerFromString(wardField.getValue()), getIntegerFromString(beatField.getValue()), null, null);
+
+
         String query = "SELECT * FROM crimedb ";
-        query += QueryBuilder.where(null, crimeType.getValue(), null,
-                getIntegerFromString(wardField.getValue()),getIntegerFromString(beatField.getValue()), null, null);
-        query += " ORDER BY date ASC";
-        System.out.println(query);
+        query += " WHERE list_id=" + ControllerData.getInstance().getCurrentList();
+        if (conditions.getPrimaryDescription() != null || conditions.getWard() != null || conditions.getBeat() != null) {
+            query += " AND ";
+        }
+        query += QueryBuilder.where(conditions);
+        query += " ORDER BY date ASC ";
         return query;
     }
 
@@ -171,7 +179,6 @@ public class GraphMenuController implements Initializable {
      * @return value    The integer result.
      */
     private Integer getIntegerFromString(String str) {
-        System.out.println(str);
         if("".equals(str) || str == null){
             return null;
         }
