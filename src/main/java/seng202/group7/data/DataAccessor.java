@@ -154,7 +154,6 @@ public final class DataAccessor {
     public ArrayList<Report> getPageSet() {
         ControllerData connData = ControllerData.getInstance();
         String condition = connData.getWhereQuery();
-        System.out.println(condition);
         int page = connData.getCurrentPage();
         // This only get 1000 reports per page of the paginator.
         int start = page * 1000;
