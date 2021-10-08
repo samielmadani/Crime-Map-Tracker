@@ -10,7 +10,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -29,10 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.ResourceBundle;
-
-
 /**
  * The controller, used by / linked to, the Data View FXML file.
  * Handles the generation of the table on initialization.
@@ -89,6 +85,20 @@ public class DataViewController implements Initializable {
             });
             return row;
         });
+
+        // Refreshes the table data when the table view is returned to.
+        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+            if (newParent != null) {
+                newParent.parentProperty().addListener((obs1, oldParent1, pagination) -> {
+                    pagination.getParent().parentProperty().addListener((obs2, oldParent2, newParent2) -> {
+                        if (newParent2 != null) {
+                            setTableContent();
+                        }
+                    });
+
+                });
+            }
+        });
         setTableContent();
     }
 
@@ -142,11 +152,16 @@ public class DataViewController implements Initializable {
             if (col.getText().equals(((MenuItem) event.getSource()).getText())) {
                 col.setVisible(!col.visibleProperty().get());
                 List<String> visibleColumns = ControllerData.getInstance().getVisibleColumns();
-                if (visibleColumns.contains(col.getText())){
-                    visibleColumns.remove(col.getText());
-                } else {
-                    visibleColumns.add(col.getText());
+                List<String> visibleUpdate = new ArrayList<String>();
+                for (String column : visibleColumns) {
+                    if (column != col.getText()){
+                        visibleUpdate.add(column);
+                    }
                 }
+                if (!visibleColumns.contains(col.getText())) {
+                    visibleUpdate.add(col.getText());
+                }
+                ControllerData.getInstance().setVisibleColumns(visibleUpdate);
                 return;
             }
         }
@@ -160,29 +175,20 @@ public class DataViewController implements Initializable {
      * @param event         The double click mouse event trigger.
      * @param rowData       The Crime object from the selected row.
      */
-    private void swapViews(MouseEvent event, Crime rowData) {
+    private void swapViews(MouseEvent event, Crime rowData){
         // This section must come first as the rowData is need when initializing the crimeEdit FXML.
         ControllerData controllerData = ControllerData.getInstance();
         controllerData.setCurrentRow(rowData);
         
-        Pagination page = (Pagination) frame.getParent().getParent();
+        BorderPane rootPane = (BorderPane) frame.getParent().getParent().getParent().getParent();
 
-        // Changes page to force a refresh of the data in the table
-        int currentPage = controllerData.getCurrentPage();
-        if (currentPage == 0) {
-            page.setCurrentPageIndex(currentPage + 1);
-        } else {
-            page.setCurrentPageIndex(currentPage - 1);
-        }
-        controllerData.setCurrentPage(currentPage);
-
-        Node table = page.getParent();
         try {
-            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/entryView.fxml")));
-            // Changes center screen to the crime edit.
-            ((BorderPane) table.getParent()).setCenter(detailView);
-            controllerData.setTableState(table);
-            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+            Node newFrame = loader.load();
+
+            ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
+
+            rootPane.setCenter(newFrame);
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));
         }

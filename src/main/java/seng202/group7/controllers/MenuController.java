@@ -110,7 +110,7 @@ public class MenuController implements Initializable {
      */
     public void toData() {
         // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().setWhereQuery("");
+        ControllerData.getInstance().clearWhereQuery();
         // Loads the paginator which generates the raw data tables.
         try {
             BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
@@ -166,7 +166,7 @@ public class MenuController implements Initializable {
     public void toGraph(){
         //Loads graph screen
         try {
-            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/barGraphView.fxml")));
             //Adds the graph view to the center of the screen.
             menuFrame.setCenter(graphView);
         } catch (IOException | NullPointerException e) {

@@ -1,10 +1,7 @@
 package seng202.group7.controllers;
 
-import javafx.collections.ObservableSet;
-import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
+
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -13,17 +10,17 @@ import seng202.group7.analyses.Rank;
 import seng202.group7.analyses.Tuple;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.Collections;
 
 /**
- * Graph View Controller controls displays three different bar graphs based on user input from Graph Menu Controller.
+ * Graph View Controller controls displays 7 different bar graphs based on user input from Graph Menu Controller.
  *
  * @author Jack McCorkindale
  * @author Sam McMillan
  */
-public class GraphViewController implements Initializable {
+public class BarGraphViewController  {
 
     @FXML
     private BarChart<String, Integer> crimeChart;
@@ -34,45 +31,42 @@ public class GraphViewController implements Initializable {
     @FXML
     private NumberAxis yAxis;
 
-    @FXML
-    private Node frame;
 
-    /**
-     * This method is run during the loading of the graph menu fxml file.
-     *
-     * @param location      A URL object.
-     * @param resources     A ResourceBundle object.
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
-
-            if (newParent != null) {
-                prepareGraph(frame.getPseudoClassStates());
-            }
-
-        });
-    }
 
     /**
      * Called from the Graph View controller when the scene is initialized, checks what input is currently
      * in the combo box from graph menu class with pseudo classes and loads the correct graph accordingly.
      *
-     * @param pseudoClassStates     Has three different States which determines what graph is loaded.
      */
-    public void prepareGraph(ObservableSet<PseudoClass> pseudoClassStates) {
+
+    public void prepareBarGraph(String option) {
         ArrayList<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
         ArrayList<Tuple<String, Integer>> dataSet;
-        if (pseudoClassStates.contains(PseudoClass.getPseudoClass("frequentCrime")) || (pseudoClassStates.size() == 0)) {
+        if (option.equals("Most Frequent Crime Types")) {
             dataSet = Rank.primaryFrequencyRank(data);
-            generateGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Frequency of Crime");
-        } else if (pseudoClassStates.contains(PseudoClass.getPseudoClass("wardDanger"))) {
+            Collections.reverse(dataSet);
+            generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Number of Crime");
+        } else if (option.equals("Most Dangerous Wards")) {
             dataSet = Rank.wardFrequencyRank(data);
-            generateGraph(dataSet, "Most Dangerous Wards", "Ward", "Frequency of Crime");
-        } else if (pseudoClassStates.contains(PseudoClass.getPseudoClass("streetDanger"))) {
+            Collections.reverse(dataSet);
+            generateBarGraph(dataSet, "Most Dangerous Wards", "Wards", "Number of Crime");
+        } else if (option.equals("Most Dangerous Streets")) {
             dataSet = Rank.streetRank(data);
-            generateGraph(dataSet, "Most Dangerous Streets", "Street", "Frequency of Crime");
+            Collections.reverse(dataSet);
+            generateBarGraph(dataSet, "Most Dangerous Streets", "Streets", "Number of Crime");
+        } else if (option.equals("Most Dangerous Beats")) {
+            dataSet = Rank.beatFrequencyRank(data);
+            Collections.reverse(dataSet);
+            generateBarGraph(dataSet, option, "Beats", "Number of Crime");
+        } else if (option.equals("Less Frequent Crime Types")) {
+            dataSet = Rank.primaryFrequencyRank(data);
+            generateBarGraph(dataSet, option, "Crime Types", "Number of Crime");
+        } else if (option.equals("Safest Wards")) {
+            dataSet = Rank.wardFrequencyRank(data);
+            generateBarGraph(dataSet, option, "Wards", "Number of Crime");
+        } else if (option.equals("Safest Beats")) {
+            dataSet = Rank.beatFrequencyRank(data);
+            generateBarGraph(dataSet, option, "Beats", "Number of Crimes");
         }
     }
 
@@ -84,16 +78,16 @@ public class GraphViewController implements Initializable {
      * @param xLabel    The x axis label of the graph
      * @param yLabel    The y axis label of the graph
      */
-    public void generateGraph(ArrayList<Tuple<String, Integer>> data, String title, String xLabel, String yLabel) {
 
+    public void generateBarGraph(ArrayList<Tuple<String, Integer>> data, String title, String xLabel, String yLabel) {
         XYChart.Series<String, Integer> dataSet = new XYChart.Series<>();
         int i = 0;
         for (Tuple<String, Integer> tuple: data) {
             i++;
-            if (i == 21) {
+            if (i == 20) {
                 break;
             }
-            dataSet.getData().add(new XYChart.Data<> (tuple.x, tuple.y));
+            dataSet.getData().add(new XYChart.Data<> (String.valueOf(tuple.x), tuple.y));
         }
         this.crimeChart.setLegendVisible(false);
         this.crimeChart.getData().addAll(dataSet);

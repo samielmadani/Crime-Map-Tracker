@@ -31,7 +31,8 @@ import seng202.group7.view.MainScreen;
  * The controller, used by / linked to, the compares FXML file.
  * Handles the comparisons of two crime objects.
  *
- * @author Jack McCorkindale John Elliot Sam McMillan
+ * @author Jack McCorkindale
+ * @author Shaylin Simadari
  */
 public class CompareController implements Initializable {
 
@@ -41,6 +42,9 @@ public class CompareController implements Initializable {
     private Label resultText, menuText;
     @FXML
     private VBox frame;
+
+    private static String report1;
+    private static String report2;
 
     /**
      * A style class that can be added to a node to add error formatting.
@@ -57,13 +61,23 @@ public class CompareController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         errorClass = PseudoClass.getPseudoClass("error");
+
+        // frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+
+        //     if (newParent != null) {
+        //         setType(frame.getPseudoClassStates());
+        //     }
+
+        // });
+        loadGUIFields();
     }
 
 
     /**
      * Gets the current side panel and replaces it with the general menu panel.
      */
-    public void toMenu() {
+    public void toMenu() throws IOException {
+        saveGUIFields();
         BorderPane pane = (BorderPane) frame.getParent();
         try {
             VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/generalMenu.fxml")));
@@ -220,6 +234,25 @@ public class CompareController implements Initializable {
             return null;
         } else {
             return selectedCrime;
+        }
+    }
+
+    private void saveGUIFields(){
+        if(!reportOneText.getText().equals("")) {
+            report1 = reportOneText.getText();
+        }
+        if(!reportTwoText.getText().equals("")) {
+            report2 = reportTwoText.getText();
+        }
+    }
+
+
+    private void loadGUIFields(){
+        if(report1 != null) {
+            reportOneText.setText(report1);
+        }
+        if(report2 != null) {
+            reportTwoText.setText(report2);
         }
     }
 }

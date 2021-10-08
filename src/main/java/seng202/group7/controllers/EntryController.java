@@ -58,6 +58,8 @@ public class EntryController implements Initializable {
 
     private ArrayList<Node> allValues, editableValues;
 
+    private Node lastFrame;
+
 
     /**
      * This method is run during the loading of the crime edit fxml file.
@@ -185,9 +187,11 @@ public class EntryController implements Initializable {
      */
     public void returnView() {
         BorderPane pane = (BorderPane) frame.getParent();
-        ControllerData controllerData = ControllerData.getInstance();
-        Node table = controllerData.getTableState();
-        pane.setCenter(table);
+
+        pane.setCenter(lastFrame);
+
+        // ControllerData controllerData = ControllerData.getInstance();
+        // Node table = controllerData.getTableState();
     }
 
     /**
@@ -329,6 +333,14 @@ public class EntryController implements Initializable {
             MainScreen.createWarnWin(new CustomException("Could not delete entry.", e.getClass().toString()));
         }
         returnView();
+    }
+
+    /**
+     * Sets the last frame the application was on.
+     * @param lastFrame
+     */
+    public void setLastFrame(Node lastFrame) {
+        this.lastFrame = lastFrame;
     }
 
 }
