@@ -92,8 +92,8 @@ public class GeneralMenuController {
         }
         try {
             DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
-        } catch (SQLException e) {
-            MainScreen.createWarnWin(new CustomException("Could not export data.", e.toString()));
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
         }
     }
 
@@ -107,8 +107,8 @@ public class GeneralMenuController {
         }
         try {
             DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
-        } catch (SQLException e) {
-            MainScreen.createWarnWin(new CustomException("Could not export data.", e.toString()));
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
         }
     }
 
