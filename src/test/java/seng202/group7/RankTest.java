@@ -45,7 +45,7 @@ public class RankTest {
     @Test
     public void primaryFrequencyRank() {
         ArrayList<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data);
-        assertEquals("THEFT", list.get(0).x);
+        assertEquals("THEFT", list.get(list.size() - 1).x);
     }
 
 
@@ -55,7 +55,7 @@ public class RankTest {
     @Test
     public void wardFrequencyRank() {
         ArrayList<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
-        assertEquals("1", list.get(0).x);
+        assertEquals("1", list.get(list.size() - 1).x);
     }
 
     /**
@@ -65,6 +65,6 @@ public class RankTest {
     @Test
     public void streetRankTest() {
         ArrayList<Tuple<String, Integer>> list = Rank.streetRank(data);
-        assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(0).x);
+        assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(list.size() - 1).x);
     }
 }
