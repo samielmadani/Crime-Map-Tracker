@@ -92,8 +92,8 @@ public class GeneralMenuController {
         }
         try {
             DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
-        } catch (SQLException e) {
-            MainScreen.createWarnWin(new CustomException("Could not export data.", e.toString()));
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
         }
     }
 
@@ -107,8 +107,8 @@ public class GeneralMenuController {
         }
         try {
             DataAccessor.getInstance().export("", ControllerData.getInstance().getCurrentList(), saveLocation.toString());
-        } catch (SQLException e) {
-            MainScreen.createWarnWin(new CustomException("Could not export data.", e.toString()));
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
         }
     }
 
@@ -143,10 +143,13 @@ public class GeneralMenuController {
         BorderPane rootPane = (BorderPane) frame.getParent();
 
         try {
-            Node newFrame = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/entryView.fxml")));
             ControllerData.getInstance().setCurrentRow(null);
-            Node dataView = rootPane.getCenter();
-            ControllerData.getInstance().setTableState(dataView);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+
+            Node newFrame = loader.load();
+
+            ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
+
             rootPane.setCenter(newFrame);
         } catch (IOException | NullPointerException e) {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));

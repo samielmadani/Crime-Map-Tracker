@@ -54,10 +54,11 @@ public class PageController implements Initializable {
             if (newParent != null) {
                 int size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
                 dataTotal.setText("Data Total: "+size); // Sets current display total.
-                pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 reports per page.
-                pages.setCurrentPageIndex(ControllerData.getInstance().getCurrentPage());
+                int currentPage = ControllerData.getInstance().getCurrentPage();
+                pages.setPageCount(1);
+                pages.setPageCount((int) Math.ceil(size/1000.0)); // Sets the number of pages with 1000 crimes per page.
+                pages.setCurrentPageIndex(currentPage);
             }
-
         });
 
         pages.setPageFactory(this::createPage); // When ever a page is swapped it calls this method.
@@ -68,7 +69,7 @@ public class PageController implements Initializable {
      * This method is called when creating a new table for the paginator to display to the user.
      *
      * @param pageIndex     The current page.
-     * @return table         The table node that will be displayed.
+     * @return table        The table node that will be displayed.
      */
     private Node createPage(int pageIndex) {
         // Stores the current page number so when the table is initialized it can get the correct set of data.

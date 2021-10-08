@@ -46,17 +46,9 @@ public class RankTest {
     @Test
     public void primaryFrequencyRank() {
         List<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data);
-        assertEquals("THEFT", list.get(0).x);
+        assertEquals("THEFT", list.get(list.size() - 1).x);
     }
 
-    /**
-     * Tests to see the correct crime type (theft) is returned when specifying a ward in frequency ranker
-     */
-    @Test
-    public void primaryFrequencyRank_ward1() {
-        List<Tuple<String, Integer>> list = Rank.primaryFrequencyRank(data, 1);
-        assertEquals("THEFT", list.get(0).x);
-    }
 
     /**
      * Tests to see the correct ward (1) is returned as it has the highest amount of crimes in the data set
@@ -64,16 +56,7 @@ public class RankTest {
     @Test
     public void wardFrequencyRank() {
         List<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data);
-        assertEquals("1", list.get(0).x);
-    }
-
-    /**
-     * Tests to see the correct ward (20) is returned as it has the highest amount of Sex offenses in the data set
-     */
-    @Test
-    public void wardFrequencyRank_sexOffense() {
-        List<Tuple<String, Integer>> list = Rank.wardFrequencyRank(data, "SEX OFFENSE");
-        assertEquals("20", list.get(0).x);
+        assertEquals("1", list.get(list.size() - 1).x);
     }
 
     /**
@@ -83,6 +66,6 @@ public class RankTest {
     @Test
     public void streetRankTest() {
         List<Tuple<String, Integer>> list = Rank.streetRank(data);
-        assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(0).x);
+        assertEquals("S DR MARTIN LUTHER KING JR DR", list.get(list.size() - 1).x);
     }
 }

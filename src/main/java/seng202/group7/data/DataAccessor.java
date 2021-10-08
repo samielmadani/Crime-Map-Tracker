@@ -34,6 +34,7 @@ import java.util.Objects;
  * @author Jack McCorkindale
  * @author John Elliott
  * @author Shaylin Simadari
+ * @author Sam McMillan
  */
 public final class DataAccessor {
     /**
@@ -195,6 +196,60 @@ public final class DataAccessor {
     public List<Report> getAll(int listId) {
         String query = "SELECT * FROM crimedb WHERE list_id=" + listId;
         return selectReports(query);
+    }
+
+    /**
+     * Generic method for passing any query to the dataBase
+     * @param query The string query used to query the database
+     * @return ArrayList of reports
+     */
+    public List<Report> getData(String query) {
+        return selectReports(query);
+    }
+
+     public ArrayList<String> getColumnString(String column, String conditons) throws SQLException {
+        ArrayList<String> crimeTypeList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+         try (Statement stmt = connection.createStatement()) {
+             ResultSet rs = stmt.executeQuery(query);
+             // Converts all results into crimes.
+             while (rs.next()) {
+                 String columnString = rs.getString(column);
+                 crimeTypeList.add(columnString);
+             }
+             // Closes the statement and result set.
+             rs.close();
+         } catch (SQLException e) {
+             System.out.println(e.getMessage());
+             return null;
+         }
+         return crimeTypeList;
+     }
+
+    /**
+     * Method which returns all unique integers from a column of a database
+     * @param column the value from the database where all values will be returned
+     * @param conditons
+     * @return
+     * @throws SQLException
+     */
+    public ArrayList<Integer> getColumnInteger(String column, String conditons) throws SQLException {
+        ArrayList<Integer> crimeTypeList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            // Converts all results into crimes.
+            while (rs.next()) {
+                Integer columnInteger = rs.getInt(column);
+                crimeTypeList.add(columnInteger);
+            }
+            // Closes the statement and result set.
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return crimeTypeList;
     }
 
     /**
@@ -597,9 +652,13 @@ public final class DataAccessor {
      * @param saveLocation The location tof the new file.
      * @throws SQLException
      */
-    public void export(String conditions, int listId, String saveLocation) throws SQLException{
+    public void export(String conditions, int listId, String saveLocation) throws CustomException{
         if (saveLocation.endsWith(".db")) {
-            exportDB(conditions, listId, saveLocation);
+            try {
+                exportDB(conditions, listId, saveLocation);
+            } catch (SQLException e) {
+                throw new CustomException("Database failed to sync correctly.", e.getMessage());
+            }
         } else if (saveLocation.endsWith("csv")) {
             exportCSV(conditions, listId, saveLocation);
         }
@@ -612,8 +671,9 @@ public final class DataAccessor {
      * @param saveLocation The location of the new file.
      * @throws SQLException
      */
-    private void exportCSV(String conditions, int listId, String saveLocation) throws SQLException {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ','); Statement stmt = connection.createStatement();){
+    private void exportCSV(String conditions, int listId, String saveLocation) throws CustomException {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(saveLocation), ',');
+            Statement stmt = connection.createStatement()){
         
             writer.writeNext(("CASE#,DATE OF OCCURRENCE,BLOCK,IUCR,PRIMARY DESCRIPTION,SECONDARY DESCRIPTION," +
             "LOCATION DESCRIPTION,ARREST,DOMESTIC,BEAT,WARD,FBI CD,X COORDINATE,Y COORDINATE,LATITUDE,LONGITUDE,LOCATION").split(","));
@@ -637,10 +697,11 @@ public final class DataAccessor {
                 "longitude " +
                 "FROM crimedb WHERE ";
             query = addConditions(query, conditions, listId);
+
             ResultSet rs = stmt.executeQuery(query);
             writer.writeAll(rs, false);
             rs.close();
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             MainScreen.createErrorWin(new CustomException("Error exporting CSV from the database.", e.getClass().toString()));
         }   
     }
@@ -651,37 +712,43 @@ public final class DataAccessor {
      * @param listId The list the data is being exported from.
      * @param saveLocation The location of the new file.
      * @throws SQLException
+     * @throws CustomException
      */
-    private void exportDB(String conditions, int listId, String saveLocation) throws SQLException {
+    private void exportDB(String conditions, int listId, String saveLocation) throws SQLException, CustomException {
         createExportDatabase(saveLocation);
         runStatement("ATTACH DATABASE '" + saveLocation + "' AS other;");
+        try {
+            String query = "INSERT INTO other.reports SELECT " +
+            "id, " + 
+            "date, " +
+            "primary_description, " +
+            "secondary_description, " + 
+            "domestic, " +
+            "x_coord, " +
+            "y_coord, " +
+            "latitude, " +
+            "longitude, " +
+            "location_description " + 
+            "FROM crimedb WHERE ";
+            query = addConditions(query, conditions, listId);
+            runStatement(query);
 
-        String query = "INSERT INTO other.reports SELECT " +
-        "id, " + 
-        "date, " +
-        "primary_description, " +
-        "secondary_description, " + 
-        "domestic, " +
-        "x_coord, " +
-        "y_coord, " +
-        "latitude, " +
-        "longitude, " +
-        "location_description " + 
-        "FROM crimedb WHERE ";
-        query = addConditions(query, conditions, listId);
-        runStatement(query);
-
-        query = "INSERT INTO other.crimes SELECT " +
-        "report_id, " + 
-        "block, " +
-        "iucr, " +
-        "fbicd, " + 
-        "arrest, " +
-        "beat, " +
-        "ward " + 
-        "FROM crimedb WHERE ";
-        query = addConditions(query, conditions, listId);
-        runStatement(query);
+            query = "INSERT INTO other.crimes SELECT " +
+            "report_id, " + 
+            "block, " +
+            "iucr, " +
+            "fbicd, " + 
+            "arrest, " +
+            "beat, " +
+            "ward " + 
+            "FROM crimedb WHERE ";
+            query = addConditions(query, conditions, listId);
+            runStatement(query);
+        } catch (SQLException e) {
+            throw new CustomException("Could not export entries into database", e.getMessage());
+        } finally {
+            runStatement("DETACH DATABASE other;");
+        }
     }
 
     /**
@@ -703,8 +770,9 @@ public final class DataAccessor {
     /**
      * Creates a database for the data to be exported into at the given location.
      * @param location The location to create the database.
+     * @throws CustomException
      */
-    private void createExportDatabase(String location) {
+    private void createExportDatabase(String location) throws CustomException {
         try (Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location); Statement stmt = newdb.createStatement()) {
             
             stmt.execute("PRAGMA foreign_keys = ON;");
@@ -734,7 +802,7 @@ public final class DataAccessor {
                     "PRIMARY KEY(report_id)" +
                     ")");
         } catch (SQLException e) {
-            MainScreen.createErrorWin(new CustomException("Error exporting a new database from the database.", e.getClass().toString()));
+            throw new CustomException("Error while creating new database.", e.getClass().toString());
         }
     }
 

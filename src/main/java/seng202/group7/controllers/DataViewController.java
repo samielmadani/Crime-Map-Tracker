@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -24,6 +23,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -94,6 +94,20 @@ public class DataViewController implements Initializable {
             });
             return row;
         });
+
+        // Refreshes the table data when the table view is returned to.
+        frame.parentProperty().addListener((obs, oldParent, newParent) -> {
+            if (newParent != null) {
+                newParent.parentProperty().addListener((obs1, oldParent1, pagination) -> {
+                    pagination.getParent().parentProperty().addListener((obs2, oldParent2, newParent2) -> {
+                        if (newParent2 != null) {
+                            setTableContent();
+                        }
+                    });
+
+                });
+            }
+        });
         setTableContent();
     }
 
@@ -110,23 +124,15 @@ public class DataViewController implements Initializable {
         ControllerData controllerData = ControllerData.getInstance();
         controllerData.setCurrentRow(rowData);
         
-        Pagination page = (Pagination) frame.getParent().getParent();
+        BorderPane rootPane = (BorderPane) frame.getParent().getParent().getParent().getParent();
 
-        int currentPage = controllerData.getCurrentPage();
-        if (currentPage == 0) {
-            page.setCurrentPageIndex(currentPage + 1);
-        } else {
-            page.setCurrentPageIndex(currentPage - 1);
-        }
-        controllerData.setCurrentPage(currentPage);
-
-        Node table = page.getParent();
         try {
-            BorderPane detailView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/entryView.fxml")));
-            // Changes center screen to the crime edit.
-            ((BorderPane) table.getParent()).setCenter(detailView);
-            controllerData.setTableState(table);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+            Node newFrame = loader.load();
             
+            ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
+
+            rootPane.setCenter(newFrame);
         } catch (IOException | NullPointerException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));
         }

@@ -11,51 +11,56 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.FilterController" >
+<VBox prefWidth="175.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.FilterController" >
    <children>
-      <ScrollPane prefHeight="508.0" prefWidth="190.0" VBox.vgrow="ALWAYS">
-         <content>
-            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="175.0" spacing="20.0">
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
+      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="160.0" spacing="12.0">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <HBox alignment="CENTER_RIGHT">
                <children>
-                  <HBox alignment="CENTER_RIGHT">
-                     <children>
-                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#toMenu" prefHeight="25.0" prefWidth="37.0" text="&lt;">
-                           <HBox.margin>
-                              <Insets right="40.0" />
-                           </HBox.margin>
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font></Button>
-                        <Label alignment="CENTER_RIGHT" prefHeight="25.0" text="Filter Menu" underline="true">
-                           <font>
-                              <Font name="System Italic" size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="25.0" prefWidth="155.0">
-                     <children>
-                        <DatePicker fx:id="datePicker" promptText="Date" />
-                        <Button fx:id="clearDateButton" mnemonicParsing="false" onAction="#clearDate" text="X" />
-                     </children>
-                  </HBox>
-                  <ComboBox fx:id="primaryBox" prefWidth="150.0" promptText="Primary Description" />
-                  <ComboBox fx:id="locationBox" prefWidth="150.0" promptText="Location Description" />
-                  <TextField fx:id="wardField" promptText="Ward" onKeyTyped="#activeValidate"/>
-                  <TextField fx:id="beatField" promptText="Beat" onKeyTyped="#activeValidate" />
-                  <ComboBox fx:id="arrestBox" prefWidth="150.0" promptText="Arrest Made" />
-                  <ComboBox fx:id="domesticBox" prefWidth="150.0" promptText="Domestic Incident" />
-                  <Button mnemonicParsing="false" onAction="#viewFilteredResults" prefWidth="120.0" text="View Results">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </Button>
+                  <Button mnemonicParsing="false" onAction="#toMenu" prefHeight="25.0" prefWidth="37.0" text="&lt;">
+                     <HBox.margin>
+                        <Insets right="40.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
+                  <Label alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="80.0" text="Filter Menu" underline="true" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Italic" size="16.0" />
+                     </font>
+                  </Label>
                </children>
-            </VBox>
-         </content>
-      </ScrollPane>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="140.0">
+               <children>
+                  <Button alignment="TOP_LEFT" contentDisplay="RIGHT" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearFilter" text="Clear" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#saveFilter" text="Save" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#loadFilter" text="Load" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#applyFilter" text="Apply" />
+               </children>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="155.0">
+               <children>
+                  <DatePicker fx:id="datePicker" promptText="Date" />
+                  <Button mnemonicParsing="false" onAction="#clearDate" text="X" />
+               </children>
+            </HBox>
+            <HBox layoutX="20.0" layoutY="120.0" prefHeight="25.0" prefWidth="155.0">
+               <children>
+                  <DatePicker fx:id="datePicker2" promptText="Date" />
+                  <Button mnemonicParsing="false" onAction="#clearDate2" text="X" />
+               </children>
+            </HBox>
+            <ComboBox fx:id="primaryBox" prefWidth="150.0" promptText="Primary Description" />
+            <ComboBox fx:id="locationBox" prefWidth="150.0" promptText="Location Description" />
+            <TextField fx:id="wardField" onKeyTyped="#activeValidate" promptText="Ward" />
+            <TextField fx:id="beatField" onKeyTyped="#activeValidate" promptText="Beat" />
+            <ComboBox fx:id="arrestBox" prefWidth="150.0" promptText="Arrest Made" />
+            <ComboBox fx:id="domesticBox" prefWidth="150.0" promptText="Domestic Incident" />
+         </children>
+      </VBox>
    </children>
 </VBox>

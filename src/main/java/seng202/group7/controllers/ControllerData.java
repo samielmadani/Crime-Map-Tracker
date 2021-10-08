@@ -34,11 +34,6 @@ public final class ControllerData {
     private Report currentRow;
 
     /**
-     * Stores the current table state so when the back button is pushed the position is the same.
-     */
-    private Node tableState;
-
-    /**
      * Stores the current page of the paginator.
      */
     private int currentPage = 0;
@@ -51,7 +46,12 @@ public final class ControllerData {
     /**
      * This is a condition that is used by the data accessor when searching the database.
      */
-    private String whereQuery = "";
+    private String searchQuery = "";
+
+    /**
+     * This is a condition that is used by the data accessor when filteringing the database.
+     */
+    private String filterQuery = "";
 
 
     /**
@@ -85,24 +85,6 @@ public final class ControllerData {
      */
     public Report getCurrentRow() {
         return currentRow;
-    }
-
-    /**
-     * Setter for storing the current state of the table.
-     *
-     * @param tableView       The table state.
-     */
-    public void setTableState(Node tableView) {
-        tableState = tableView;
-    }
-
-    /**
-     * Getter for retrieving the current state of the table.
-     *
-     * @return tableState       The current state of the table.
-     */
-    public Node getTableState() {
-        return tableState;
     }
 
     public int getCurrentList() {
@@ -174,15 +156,36 @@ public final class ControllerData {
      * @return whereQuery       The condition being applied.
      */
     public String getWhereQuery() {
-        return whereQuery;
+        if (searchQuery.isEmpty() || filterQuery.isEmpty()) {
+            return "" + filterQuery + searchQuery;
+        }
+        return "" + filterQuery + " AND " + searchQuery;
     }
 
     /**
-     * The setter for the where query.
+     * The clears the where query.
      *
-     * @param searchingQuery    The condition being applied.
      */
-    public void setWhereQuery(String searchingQuery) {
-        this.whereQuery = searchingQuery;
+    public void clearWhereQuery() {
+        filterQuery="";
+        searchQuery="";
+    }
+
+    /**
+     * The setter for the search query.
+     *
+     * @param searchQuery    The condition being applied.
+     */
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+    }
+
+    /**
+     * The setter for the filter query.
+     *
+     * @param filterQuery    The condition being applied.
+     */
+    public void setFilterQuery(String filterQuery) {
+        this.filterQuery = filterQuery;
     }
 }

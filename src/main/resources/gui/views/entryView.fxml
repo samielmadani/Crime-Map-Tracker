@@ -7,7 +7,7 @@
 
 <BorderPane fx:id="frame" stylesheets="@../style.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController">
    <center>
-      <GridPane prefHeight="348.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <GridPane maxWidth="1.7976931348623157E308" prefHeight="348.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -91,19 +91,19 @@
                </VBox.margin>
             </TextField>
 
-            <HBox>
-               <VBox>
-                  <Label text="Beat" />
-                  <TextField fx:id="beatText">
+            <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308">
+               <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Beat" />
+                  <TextField fx:id="beatText" maxWidth="1.7976931348623157E308" onKeyTyped="#activeValidate">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
                </VBox>
 
-               <VBox>
-                  <Label text="Ward" />
-                  <TextField fx:id="wardText">
+               <VBox maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Ward" />
+                  <TextField fx:id="wardText" maxWidth="1.7976931348623157E308" onKeyTyped="#activeValidate">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -111,18 +111,18 @@
                </VBox>
             </HBox>
 
-            <HBox>
-               <VBox>
-                  <Label text="X-Coordinate" />
-                  <TextField fx:id="xCoordText">
+            <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308">
+               <VBox HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="X-Coordinate" />
+                  <TextField maxWidth="1.7976931348623157E308" onKeyTyped="#activeValidate" fx:id="xCoordText">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
                </VBox>
-               <VBox>
-                  <Label text="Y-Coordinate" />
-                  <TextField fx:id="yCoordText">
+               <VBox HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Y-Coordinate" />
+                  <TextField fx:id="yCoordText" maxWidth="1.7976931348623157E308" onKeyTyped="#activeValidate">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -130,18 +130,18 @@
                </VBox>
             </HBox>
 
-            <HBox>
-               <VBox>
-                  <Label text="Latitude" />
-                  <TextField fx:id="latText">
+            <HBox alignment="CENTER" maxWidth="1.7976931348623157E308">
+               <VBox HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Latitude" />
+                  <TextField fx:id="latText" maxWidth="1.7976931348623157E308" onKeyTyped="#activeValidate">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </TextField>
                </VBox>
-               <VBox>
-                  <Label text="Longitude" />
-                  <TextField fx:id="longText">
+               <VBox HBox.hgrow="ALWAYS">
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Longitude" />
+                  <TextField fx:id="longText" maxWidth="1.7976931348623157E308" onKeyTyped="#activeValidate">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
@@ -187,13 +187,21 @@
             <RowConstraints />
          </rowConstraints>
          <Button mnemonicParsing="false" onAction="#returnView" text="Back" GridPane.columnIndex="0">
-         </Button>
+            <GridPane.margin>
+               <Insets left="5.0" />
+            </GridPane.margin></Button>
          <HBox spacing="5" GridPane.columnIndex="1">
             <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteEntry" text="Delete" />
             <Button fx:id="editButton" mnemonicParsing="false" onAction="#editEntry" text="Edit" />
             <Button fx:id="cancelButton" managed="false" mnemonicParsing="false" onAction="#finishEdit" text="Cancel" visible="false" />
             <Button fx:id="saveButton" managed="false" mnemonicParsing="false" onAction="#saveEdit" text="Save" visible="false" />
+            <GridPane.margin>
+               <Insets right="5.0" />
+            </GridPane.margin>
          </HBox>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </GridPane>
    </bottom>
 </BorderPane>
