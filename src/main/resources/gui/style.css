@@ -1,8 +1,11 @@
 .text-input:error, .date-picker:error {
     -fx-border-insets: -1px;
     -fx-border-width: 1px;
+    border-width: 1px;
     -fx-border-color: red;
+    border-color: red;
     -fx-border-radius: 3px;
+    border-radius: 3px;
 }
 
 VBox {
@@ -11,30 +14,35 @@ VBox {
 
 .general {
     -fx-font-family: "Bahnschrift";
+    font-family: "Bahnschrift";
 }
 
 .start_screen {
     -fx-font-family: "Gill Sans MT";
-    -fx-background-color: #3b6aa2;
+    font-family: "Gill Sans MT";
 }
 
 
 .side_menu {
     -fx-font-family: "Gill Sans MT";
+    font-family: "Gill Sans MT";
     -fx-font-size: 14;
-    -fx-background-color: #4f7eb2;
+    font-size: 14;
 }
 
 .label {
     -fx-font-family: "Century Gothic";
+    font-family: "Century Gothic";
 }
 
 .tool-bar {
-    -fx-background-color: #3b6aa2;
     -fx-font-family: "Berlin Sans FB Demi";
+    font-family: "Berlin Sans FB Demi";
     -fx-font-size: 14;
+    font-size: 14;
 }
 
 .reduced_size {
     -fx-font-size: 12;
+    font-size: 12;
 }
