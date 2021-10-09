@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 
+import javafx.scene.image.Image;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class MainScreen extends Application {
     public void start(Stage windowStage) {
         window = windowStage;
         windowStage.setTitle("LookOut");
+        windowStage.getIcons().add(new Image("/gui/logo.png"));
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
         try {
             Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/startScreen.fxml")));
