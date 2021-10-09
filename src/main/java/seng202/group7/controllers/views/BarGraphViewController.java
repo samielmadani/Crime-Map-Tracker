@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import javafx.fxml.FXML;
 
@@ -8,6 +8,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import seng202.group7.analyses.Rank;
 import seng202.group7.analyses.Tuple;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;

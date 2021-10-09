@@ -55,7 +55,7 @@ public class PSTypeTest {
     public void setString() {
 
         try {
-            // Uses the int pstype method
+            // Uses the int psType method
             PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id) " +
                     "VALUES (?, 1);");
             PSTypes.setPSString(ps, 1, "TestNumber"); // Case Number
@@ -81,7 +81,7 @@ public class PSTypeTest {
 
         try {
             long time = Timestamp.valueOf(LocalDate.now().atStartOfDay()).getTime();
-            // Uses the int pstype method
+            // Uses the int psType method
             PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, latitude) " +
                     "VALUES ('TestNumber', 1, "+time+", 'test', 'test', ?);");
             PSTypes.setPSDouble(ps, 1, 0.0); // Case Number
@@ -106,7 +106,7 @@ public class PSTypeTest {
     public void setNegativeInt() {
 
         try {
-            // Uses the int pstype method
+            // Uses the int psType method
             PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, beat) " +
                     "VALUES ('TestNumber', 1, ?);");
             PSTypes.setPSInteger(ps, 1, -10); // Case Number
@@ -130,7 +130,7 @@ public class PSTypeTest {
     public void setBoolean() {
 
         try {
-            // Uses the int pstype method
+            // Uses the int psType method
             PreparedStatement ps = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, arrest) " +
                     "VALUES ('TestNumber', 1, ?);");
             PSTypes.setPSBoolean(ps, 1, true); // Case Number

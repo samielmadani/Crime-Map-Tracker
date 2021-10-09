@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.menus;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import seng202.group7.controllers.data.ControllerData;
+import seng202.group7.controllers.views.EntryController;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
@@ -141,17 +143,23 @@ public class GeneralMenuController {
     /**
      * Gets the conditions the user has active and the location to save a new file before sending it to the DataAccessor to export
      */
-    public void exportWithFilter() {
+    public void exportWithFilter(ActionEvent event) {
         String conditions = ControllerData.getInstance().getWhereQuery();
         File saveLocation = getLocation();
         if (saveLocation == null) {
             return;
         }
-        try {
-            DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
-        } catch (CustomException e) {
-            MainScreen.createWarnWin(e);
-        }
+        new Thread(() -> {
+            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.WAIT));
+
+            try {
+                DataAccessor.getInstance().export(conditions, ControllerData.getInstance().getCurrentList(), saveLocation.toString());
+            } catch (CustomException e) {
+                Platform.runLater(()->MainScreen.createWarnWin(e));
+            }
+            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.DEFAULT));
+            
+        }).start();
     }
 
     /**

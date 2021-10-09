@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,6 +25,8 @@ import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import seng202.group7.analyses.Comparer;
+import seng202.group7.controllers.data.ControllerData;
+import seng202.group7.controllers.menus.MenuController;
 import seng202.group7.view.MainScreen;
 
 /**

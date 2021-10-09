@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +20,9 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
+import seng202.group7.controllers.data.ControllerData;
+import seng202.group7.controllers.data.InputType;
+import seng202.group7.controllers.data.InputValidator;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;

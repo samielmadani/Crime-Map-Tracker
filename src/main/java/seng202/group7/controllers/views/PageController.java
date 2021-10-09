@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +7,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.TextField;
+import seng202.group7.controllers.data.ControllerData;
+import seng202.group7.controllers.data.InputType;
+import seng202.group7.controllers.data.InputValidator;
+import seng202.group7.controllers.menus.MenuController;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;

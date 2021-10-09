@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.menus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.view.MainScreen;
 
@@ -158,7 +159,8 @@ public class MenuController implements Initializable {
             //Adds the graph view to the center of the screen.
             menuFrame.setCenter(graphView);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", e.getClass().toString()));
+            return;
         }
 
         try {
@@ -166,7 +168,7 @@ public class MenuController implements Initializable {
             // Changes side menu to the filter menu.
             menuFrame.setLeft(graphMenu);
         } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Graph Menu screens FXML file.", e.getClass().toString()));
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph Menu screens FXML file.", e.getClass().toString()));
         }
 
     }

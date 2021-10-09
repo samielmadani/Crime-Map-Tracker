@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="frame" stylesheets="@../style.css" styleClass="label" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.EntryController">
+<BorderPane fx:id="frame" stylesheets="@../style.css" styleClass="label" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.views.EntryController">
    <center>
       <GridPane maxWidth="1.7976931348623157E308" prefHeight="348.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <columnConstraints>

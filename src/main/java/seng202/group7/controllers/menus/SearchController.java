@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.menus;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.view.MainScreen;
 import seng202.group7.data.QueryBuilder;

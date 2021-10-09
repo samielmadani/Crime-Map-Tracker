@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -32,7 +32,7 @@ public class LineGraphViewController  {
     private LineChart<String, Integer> overTimeChart;
 
     /**
-     * Called from the Graph View Controller when the scene is initialised, gets data from the Data Accessor using the
+     * Called from the Graph View Controller when the scene is initialized, gets data from the Data Accessor using the
      * provided query, gets the appropriate title and displays the crime over time graph.
      * @param query the string query provided by user input in Graph Menu Controller
      * @param choices ArrayList of strings provided by user input in Graph Menu Controller

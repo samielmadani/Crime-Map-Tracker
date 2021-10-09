@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.menus;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,15 +7,18 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
+import seng202.group7.controllers.views.BarGraphViewController;
+import seng202.group7.controllers.views.LineGraphViewController;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.data.FilterConditions;
+import seng202.group7.data.QueryBuilder;
 import seng202.group7.view.MainScreen;
-
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -58,7 +61,7 @@ public class GraphMenuController implements Initializable {
         try {
             crimeType = DataAccessor.getInstance().getColumnString("primary_description", "");
             wards = DataAccessor.getInstance().getColumnInteger("ward", "");
-        } catch (SQLException e) {
+        } catch (CustomException e) {
             e.printStackTrace();
         }
 
@@ -85,12 +88,17 @@ public class GraphMenuController implements Initializable {
     }
 
     /**
-     * This method monitors everytime a ward combo box is changed and then updates the beat combobox so only values are encapsulated by the
+     * This method monitors every time a ward combo box is changed and then updates the beat ComboBox so only values are encapsulated by the
      * corresponding ward is available to be selected by the user.
-     * @throws SQLException
      */
-    public void changeBeat() throws SQLException {
-        ArrayList<Integer> beats = DataAccessor.getInstance().getColumnInteger("beat", "WHERE WARD=" + wardField.getValue());
+    public void changeBeat() {
+        List<Integer> beats;
+        try {
+            beats = DataAccessor.getInstance().getColumnInteger("beat", "WHERE WARD=" + wardField.getValue());
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+            return;
+        }
         beatField.setValue(null);
         if (wardField.getValue() == null) {
             beatField.setDisable(true);
@@ -114,18 +122,53 @@ public class GraphMenuController implements Initializable {
      * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
      */
     public void selectBarGraph() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/barGraphView.fxml"));
-        root = loader.load();
-        BarGraphViewController graphView = loader.getController();
         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/barGraphView.fxml"));
+            root = loader.load();
+            BarGraphViewController graphView = loader.getController();
             graphView.prepareBarGraph(graphType.getValue());
-        } catch (CustomException e) {
-            MainScreen.createWarnWin(e);
-        }
 
-        ((BorderPane) frame.getParent()).setCenter(root);
+            ((BorderPane) frame.getParent()).setCenter(root);
+        } catch (IllegalStateException e) {
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", 
+            e.getMessage()));
+        }
     }
+
+        /**
+     * Method triggered when the user clicks on the display graph button, Checks what selections have been made by the user
+     * in the crime type, ward and beat combo box's and displays the appropriate crime over time graph\
+     *
+     * @throws IOException The exception that is thrown when the FXML Loader can't load the fxml file
+     */
+    public void selectLineGraph() throws IOException {
+        try {
+            ArrayList<String> choices = getChoices();
+            String query = constructQuery();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/lineGraph.fxml"));
+            root = loader.load();
+            LineGraphViewController graphView = loader.getController();
+            graphView.prepareLineGraph(query, choices);
+            ((BorderPane) frame.getParent()).setCenter(root);
+        } catch (IllegalStateException e) {
+            MainScreen.createWarnWin(new CustomException("Error caused when loading the Graph View screens FXML file.", 
+             e.getMessage()));
+        }
+    }
+
+    /**
+     * Uses the selected combo values and the query builder to create the correct query
+     * @return query, a string value query
+     */
+    private String constructQuery() {
+        String query = "SELECT * FROM crimedb ";
+        
+        query += QueryBuilder.where(new FilterConditions(null, null, crimeType.getValue(), null,
+            getIntegerFromString(wardField.getValue()), getIntegerFromString(beatField.getValue()), null, null));
+        query += " ORDER BY date ASC";
+        return query;
+    }
+
 
     /**
      * Gets the values from crime type, ward, and beat combo box's and creates a string list of the values
@@ -137,6 +180,19 @@ public class GraphMenuController implements Initializable {
         choices.add(wardField.getValue());
         choices.add(beatField.getValue());
         return choices;
+    }
+
+    /**
+     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
+     *
+     * @param str       The choice selected.
+     * @return value    The integer result.
+     */
+    private Integer getIntegerFromString(String str) {
+        if("".equals(str) || str == null){
+            return null;
+        }
+        return Integer.parseInt(str);
     }
 }
 

@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.data;
 
 import javafx.css.PseudoClass;
 

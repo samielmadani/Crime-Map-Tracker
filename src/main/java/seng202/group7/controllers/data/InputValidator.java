@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

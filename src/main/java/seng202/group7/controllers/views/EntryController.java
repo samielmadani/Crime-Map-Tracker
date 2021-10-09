@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.views;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +9,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import seng202.group7.data.Report;
+import seng202.group7.controllers.data.ControllerData;
+import seng202.group7.controllers.data.InputType;
+import seng202.group7.controllers.data.InputValidator;
 import seng202.group7.data.Crime;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;

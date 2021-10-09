@@ -4,9 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="menuFrame" stylesheets="@../style.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.MenuController">
+<BorderPane fx:id="menuFrame" stylesheets="@../style.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="775.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng202.group7.controllers.menus.MenuController">
    <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" styleClass="tool-bar" stylesheets="@style.css">
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER" styleClass="tool-bar">
         <items>
           <Button fx:id="menuButton" mnemonicParsing="false" onAction="#menuAnimation" text="≡">
                <font>

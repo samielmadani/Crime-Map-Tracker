@@ -4,7 +4,8 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng202.group7.controllers.ControllerData;
+import seng202.group7.controllers.data.ControllerData;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -212,35 +213,34 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
-     public ArrayList<String> getColumnString(String column, String conditons) throws SQLException {
+    public ArrayList<String> getColumnString(String column, String conditions) throws CustomException {
         ArrayList<String> crimeTypeList = new ArrayList<>();
-        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
-         try (Statement stmt = connection.createStatement()) {
-             ResultSet rs = stmt.executeQuery(query);
-             // Converts all results into crimes.
-             while (rs.next()) {
-                 String columnString = rs.getString(column);
-                 crimeTypeList.add(columnString);
-             }
-             // Closes the statement and result set.
-             rs.close();
-         } catch (SQLException e) {
-             System.out.println(e.getMessage());
-             return null;
-         }
-         return crimeTypeList;
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            // Converts all results into crimes.
+            while (rs.next()) {
+                String columnString = rs.getString(column);
+                crimeTypeList.add(columnString);
+            }
+            // Closes the statement and result set.
+            rs.close();
+        } catch (SQLException e) {
+            throw new CustomException("Could not find column " + column + " in active database.", e.getMessage());
+        }
+        return crimeTypeList;
      }
 
     /**
      * Method which returns all unique integers from a column of a database
      * @param column the value from the database where all values will be returned
-     * @param conditons
+     * @param conditions
      * @return
      * @throws SQLException
      */
-    public ArrayList<Integer> getColumnInteger(String column, String conditons) throws SQLException {
+    public ArrayList<Integer> getColumnInteger(String column, String conditions) throws CustomException {
         ArrayList<Integer> crimeTypeList = new ArrayList<>();
-        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             // Converts all results into crimes.
@@ -251,8 +251,7 @@ public final class DataAccessor {
             // Closes the statement and result set.
             rs.close();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            throw new CustomException("Could not find column " + column + " in active database.", e.getMessage());
         }
         return crimeTypeList;
     }

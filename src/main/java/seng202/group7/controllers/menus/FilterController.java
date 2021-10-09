@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.menus;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import seng202.group7.controllers.data.ControllerData;
+import seng202.group7.controllers.data.InputType;
+import seng202.group7.controllers.data.InputValidator;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.QueryBuilder;
 import seng202.group7.view.MainScreen;
@@ -126,7 +129,8 @@ public class FilterController implements Initializable {
 
     /**
      * Sets the types of validation required on each input node
-     */ // TODO add validation for datepicker2
+     */ 
+    // TODO add validation for datePicker2
     private void prepareValidation() {
         TextField dateText = datePicker.getEditor();
         dateText.setOnKeyTyped(new EventHandler<KeyEvent>() {
@@ -314,7 +318,7 @@ public class FilterController implements Initializable {
     }
 
     /**
-     * Determines if a value in the combobox corresponds to a true or false value.
+     * Determines if a value in the ComboBox corresponds to a true or false value.
      */
     private Boolean getBooleanFromString(String str) {
         return str == null ? null : str.equals("Y");

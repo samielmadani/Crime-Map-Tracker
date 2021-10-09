@@ -1,4 +1,4 @@
-package seng202.group7.controllers;
+package seng202.group7.controllers.data;
 
 import seng202.group7.data.Report;
 import java.io.File;
@@ -43,7 +43,7 @@ public final class ControllerData {
     private String searchQuery = "";
 
     /**
-     * This is a condition that is used by the data accessor when filteringing the database.
+     * This is a condition that is used by the data accessor when filtering the database.
      */
     private String filterQuery = "";
 
