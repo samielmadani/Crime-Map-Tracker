@@ -183,8 +183,12 @@ public class FilterController implements Initializable {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if(file != null) {
-            filterConditions = Serializer.deserialize(file);
-            loadGUIFields();
+            try {
+                filterConditions = Serializer.deserialize(file);
+                loadGUIFields();
+            } catch (CustomException e) {
+                MainScreen.createWarnWin(e);
+            }
         }
     }
 
@@ -216,8 +220,12 @@ public class FilterController implements Initializable {
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
-            saveGUIFields();
-            Serializer.serialize(file, filterConditions);
+            try {
+                saveGUIFields();
+                Serializer.serialize(file, filterConditions);
+            } catch (CustomException e) {
+                MainScreen.createWarnWin(e);
+            }
         }
     }
 
