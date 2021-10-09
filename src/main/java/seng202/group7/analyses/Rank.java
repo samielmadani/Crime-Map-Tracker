@@ -109,7 +109,7 @@ public class Rank {
             crimeMatch = true;
             while (crimeMatch) {
                 LocalDateTime date = data.get(index).getDate();
-                String dateString = String.valueOf(date.getMonthValue()) + " " + date.getYear();
+                String dateString = date.getMonthValue() + " " + date.getYear();
                 if(dateString.equals(freq.getDate())) {
                     freq.setFrequency(freq.getFrequency() + 1);
                     index += 1;
@@ -131,7 +131,7 @@ public class Rank {
      */
     public static ArrayList<CrimeFrequency> getDateList(ArrayList<Report> data) {
         ArrayList<CrimeFrequency>  crimeOverTime = new ArrayList<>();
-        if (data.size() == 0) {
+        if (data.size() == 0) { //Checks if the query returned an empty list of data
             return crimeOverTime;
         }
         int yearValue = data.get(0).getDate().getYear();

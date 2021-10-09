@@ -64,16 +64,9 @@ public final class Comparer {
                 checkNull = -3;
             }
         }
-        if (checkNull != 0) {
-            return checkNull;
-        }
 
-        if (lat1 == 0 && lat2 == 0) {
-            return -3;
-        } else if (lat1 == 0) {
-            return -1;
-        } else if (lat2 == 0) {
-            return -2;
+        if (checkNull != 0) {
+            return checkNull; //
         }
 
         double theta = lon1 - lon2;

@@ -33,6 +33,7 @@ import seng202.group7.view.MainScreen;
  *
  * @author Jack McCorkindale
  * @author Shaylin Simadari
+ * @author Sam McMillan
  */
 public class CompareController implements Initializable {
 
@@ -105,7 +106,7 @@ public class CompareController implements Initializable {
         if (reportOne == null || reportTwo == null) {
             return;
         } else {
-            if (reportOne.getCaseNumber().equals(reportTwo.getCaseNumber())) {
+            if (reportOne.getCaseNumber().equals(reportTwo.getCaseNumber())) { //Checks if the user has selected the same values
                 resultTextString += "The two crimes are the same value, please select two different values.";
             } else {
                 resultTextString += "Distance:";
