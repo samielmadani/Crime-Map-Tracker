@@ -9,7 +9,7 @@
    <top>
       <VBox alignment="CENTER" prefHeight="88.0" prefWidth="775.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="Welcome to LookOut" styleClass="title">
+            <Label alignment="CENTER" text="Welcome to LookOut" styleClass="label">
                <font>
                   <Font name="System Bold" size="45.0" />
                </font>
