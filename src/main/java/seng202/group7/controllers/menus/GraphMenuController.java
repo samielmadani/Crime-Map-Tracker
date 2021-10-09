@@ -62,7 +62,7 @@ public class GraphMenuController implements Initializable {
             crimeType = DataAccessor.getInstance().getColumnString("primary_description", "");
             wards = DataAccessor.getInstance().getColumnInteger("ward", "");
         } catch (CustomException e) {
-            e.printStackTrace();
+            MainScreen.createWarnWin(e);
         }
 
         assert wards != null;

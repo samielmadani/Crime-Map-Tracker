@@ -391,11 +391,11 @@ public final class DataAccessor {
                 "ward " + 
                 "FROM newReportDB.crimes");
 
-            } catch (SQLException e) {
-                if (e.getMessage().contains("(UNIQUE constraint failed: reports.list_id, reports.id)")) {
-                    throw new CustomException("Duplicate data detected.", e.getMessage());
-                }
-                throw new CustomException("Invalid data in database", e.getMessage());
+        } catch (SQLException e) {
+            if (e.getMessage().contains("(UNIQUE constraint failed: reports.list_id, reports.id)")) {
+                throw new CustomException("Duplicate data detected.", e.getMessage());
+            }
+            throw new CustomException("Invalid data in database", e.getMessage());
         } finally {
             try {
                 runStatement("COMMIT;");

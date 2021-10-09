@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
@@ -140,8 +139,6 @@ public class FilterController implements Initializable {
                     DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
                     LocalDate date = LocalDate.parse(dateText.getText(), dateTimeFormat);
                     datePicker.setValue(date);
-                } catch (DateTimeParseException e) {
-                    return;
                 } finally {
                     activeValidate(event);
                 }

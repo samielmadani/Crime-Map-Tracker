@@ -192,6 +192,7 @@ public class CompareController implements Initializable {
                 selectedCrime = getFromEntry(centreNode);
             }
         } catch (Exception ignore) {
+            // TODO Try to remove
             selectedCrime = null; // No correct data loaded so no value can be selected.
         }
 

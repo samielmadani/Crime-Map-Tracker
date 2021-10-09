@@ -56,7 +56,7 @@ public class MainScreen extends Application {
         try {
             DataAccessor.getInstance().getConnection().close();
         } catch (SQLException error) {
-            error.printStackTrace();
+            System.err.println(error);
         }
     }
 
