@@ -2,9 +2,10 @@ package seng202.group7;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.PSTypes;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +32,11 @@ public class PSTypeTest {
      */
     @BeforeAll
     public static void connectDatabase() {
-        DataAccessor.getInstance().changeConnection("src/test/files/TestDatabase.db");
+        try {
+            DataAccessor.getInstance().changeConnection("src/test/files/TestDatabase.db");
+        } catch (CustomException e) {
+            System.err.println("Connect to database: " + e.getMessage());
+        }
         connection = DataAccessor.getInstance().getConnection();
         try {
             Statement stmt = DataAccessor.getInstance().getConnection().createStatement();

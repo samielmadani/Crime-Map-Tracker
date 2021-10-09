@@ -13,7 +13,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
+import seng202.group7.view.MainScreen;
 
 /**
  * Used to prepare and validate input nodes.
@@ -41,7 +43,11 @@ public class InputValidator {
             valid &= validateRequired(input);
         }
         if (valid && !"".equals(input)) {
-            valid &= validateInput(input, inputNode.getPseudoClassStates());
+            try {
+                valid &= validateInput(input, inputNode.getPseudoClassStates());
+            } catch (CustomException e) {
+                MainScreen.createWarnWin(e);
+            }
         }
         inputNode.pseudoClassStateChanged(errorClass, !valid);
         return valid;
@@ -82,7 +88,7 @@ public class InputValidator {
      * @param classes           The pseudo classes.
      * @return                  If the input is valid
      */
-    private static boolean validateInput(String input, ObservableSet<PseudoClass> classes) {
+    private static boolean validateInput(String input, ObservableSet<PseudoClass> classes)  throws CustomException{
         boolean valid = true;
         if (classes.contains(InputType.INTEGER.getValidationType())) {
             try {

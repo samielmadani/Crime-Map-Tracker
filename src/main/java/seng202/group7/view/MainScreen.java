@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import seng202.group7.data.CustomException;
@@ -13,6 +14,7 @@ import seng202.group7.data.DataAccessor;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Initializes the GUI stage and loads the first FXML scene.
@@ -84,6 +86,7 @@ public class MainScreen extends Application {
         alert.setTitle(cause.getInfo());
         alert.show();
     }
+
 
     /**
      * Launches the application with the provided arguments passed through.

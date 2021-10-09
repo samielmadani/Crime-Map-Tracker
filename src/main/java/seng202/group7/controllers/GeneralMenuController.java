@@ -1,9 +1,13 @@
 package seng202.group7.controllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -11,11 +15,10 @@ import javafx.stage.Stage;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
-
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * The controller, used by / linked to, the General Menu FXML file.
@@ -67,18 +70,72 @@ public class GeneralMenuController {
      */
     public void newImport(ActionEvent event) {
 
-        ControllerData.getInstance().getFile(event);
-        BorderPane rootPane = (BorderPane) frame.getParent();
-        // Loads the paginator screen.
-        try {
-            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
-            // Adds the data view to the center of the screen.
-            rootPane.setCenter(dataView);
-        } catch (IOException | NullPointerException e) {
-            MainScreen.createErrorWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString()));
+        File file = ControllerData.getInstance().getFile(event);
+        if (file == null) {
+            return;
         }
+        String behavior = duplicateSelection();
+        boolean skipBadValue = badValueSelection();
+        new Thread(() -> {
+            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.WAIT));
 
+            try {
+                DataAccessor.getInstance().importFile(file, ControllerData.getInstance().getCurrentList(), behavior, skipBadValue);
+            } catch (CustomException e) {
+                Platform.runLater(()->MainScreen.createWarnWin(e));
+            }
 
+            BorderPane rootPane = (BorderPane) frame.getParent();
+            // Loads the paginator screen.
+            try {
+                BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
+                // Adds the data view to the center of the screen.
+                Platform.runLater(()->rootPane.setCenter(dataView));
+            } catch (IOException | NullPointerException e) {
+                Platform.runLater(()->MainScreen.createWarnWin(new CustomException("Error caused when loading the Pagination screens FXML file.", e.getClass().toString())));
+            }
+            Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.DEFAULT));
+            
+        }).start();
+    }
+
+    private static boolean badValueSelection() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Bad value response");
+        alert.setHeaderText("How do you want to deal with invalid data?");
+
+        ButtonType skip = new ButtonType("Skip");
+		ButtonType cancel = new ButtonType("Cancel");
+
+        alert.getButtonTypes().clear();
+		alert.getButtonTypes().addAll(skip, cancel);
+
+        Optional<ButtonType> option = alert.showAndWait();
+
+        return option.get() != null && option.get() == skip;
+            
+    }
+
+    private static String duplicateSelection() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Duplicate data detected");
+		alert.setHeaderText("Select a handling method for duplicate data.");
+
+        ButtonType overwrite = new ButtonType("Overwrite");
+		ButtonType skip = new ButtonType("Skip");
+		ButtonType cancel = new ButtonType("Undo");
+
+        alert.getButtonTypes().clear();
+		alert.getButtonTypes().addAll(overwrite, skip, cancel);
+
+        Optional<ButtonType> option = alert.showAndWait();
+        String behavior = "ABORT";
+        if (option.get() == overwrite) {
+            behavior = "REPLACE";
+        } else if (option.get() == skip) {
+            behavior = "IGNORE";
+        }
+        return behavior;
     }
 
     /**
@@ -144,14 +201,14 @@ public class GeneralMenuController {
 
         try {
             ControllerData.getInstance().setCurrentRow(null);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/entryView.fxml"));
 
             Node newFrame = loader.load();
 
             ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
 
             rootPane.setCenter(newFrame);
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException | IllegalStateException e) {
             MainScreen.createWarnWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));
         }
     }

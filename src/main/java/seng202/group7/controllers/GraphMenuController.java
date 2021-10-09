@@ -7,10 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
-
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
-import seng202.group7.data.FilterConditions;
-import seng202.group7.data.QueryBuilder;
 import seng202.group7.view.MainScreen;
 
 import java.io.IOException;
@@ -18,7 +16,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
@@ -121,7 +118,11 @@ public class GraphMenuController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/barGraphView.fxml"));
         root = loader.load();
         BarGraphViewController graphView = loader.getController();
-        graphView.prepareBarGraph(graphType.getValue());
+        try {
+            graphView.prepareBarGraph(graphType.getValue());
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+        }
 
         ((BorderPane) frame.getParent()).setCenter(root);
     }
@@ -136,19 +137,6 @@ public class GraphMenuController implements Initializable {
         choices.add(wardField.getValue());
         choices.add(beatField.getValue());
         return choices;
-    }
-
-    /**
-     * Gets the integer value from the string and ensures if the string is empty it returns a null value.
-     *
-     * @param str       The choice selected.
-     * @return value    The integer result.
-     */
-    private Integer getIntegerFromString(String str) {
-        if("".equals(str) || str == null){
-            return null;
-        }
-        return Integer.parseInt(str);
     }
 }
 

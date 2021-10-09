@@ -70,13 +70,6 @@ public class CompareController implements Initializable {
 
         errorClass = PseudoClass.getPseudoClass("error");
 
-        // frame.parentProperty().addListener((obs, oldParent, newParent) -> {
-
-        //     if (newParent != null) {
-        //         setType(frame.getPseudoClassStates());
-        //     }
-
-        // });
         loadGUIFields();
     }
 
@@ -105,9 +98,14 @@ public class CompareController implements Initializable {
         resultText.setText("");
         int list = ControllerData.getInstance().getCurrentList();
         String resultTextString = "";
-
-        Crime reportOne = data.getCrime(reportOneText.getText(), list);
-        Crime reportTwo = data.getCrime(reportTwoText.getText(), list);
+        Crime reportOne = null;
+        Crime reportTwo = null;
+        try {
+            reportOne = data.getCrime(reportOneText.getText(), list);
+            reportTwo = data.getCrime(reportTwoText.getText(), list);
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+        }
         reportOneText.pseudoClassStateChanged(errorClass, reportOne == null);
         reportTwoText.pseudoClassStateChanged(errorClass, reportTwo == null);
         if (reportOne == null || reportTwo == null) {

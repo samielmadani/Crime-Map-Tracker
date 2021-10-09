@@ -52,7 +52,13 @@ public class PageController implements Initializable {
 
         pageFrame.parentProperty().addListener((obs, oldParent, newParent) -> {
             if (newParent != null) {
-                int size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
+                int size;
+                try {
+                    size = DataAccessor.getInstance().getSize(ControllerData.getInstance().getCurrentList());
+                } catch (CustomException e) {
+                    MainScreen.createErrorWin(e);
+                    return;
+                }
                 dataTotal.setText("Data Total: "+size); // Sets current display total.
                 int currentPage = ControllerData.getInstance().getCurrentPage();
                 pages.setPageCount(1);

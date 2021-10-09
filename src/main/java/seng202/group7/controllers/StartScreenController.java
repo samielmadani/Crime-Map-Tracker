@@ -91,9 +91,16 @@ public class StartScreenController implements Initializable {
 
     /**
      * Adds all lists in the database to the list table
+     * @throws CustomException
      */
     private void setListNames() {
-        ObservableList<String> lists = DataAccessor.getInstance().getLists();
+        ObservableList<String> lists;
+        try {
+            lists = DataAccessor.getInstance().getLists();
+        } catch (CustomException e) {
+            MainScreen.createErrorWin(e);
+            return;
+        }
         table.setItems(lists);
     }
 
@@ -111,8 +118,13 @@ public class StartScreenController implements Initializable {
      * Deletes the selected list.
      */
     public void deleteList() {
-        DataAccessor.getInstance().deleteList(table.getSelectionModel().getSelectedItem());
-        setListNames();
+        try {
+            DataAccessor.getInstance().deleteList(table.getSelectionModel().getSelectedItem());
+            setListNames();
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+            return;
+        }
         listSelected(false);
     }
 
@@ -120,7 +132,13 @@ public class StartScreenController implements Initializable {
      * Loads the selected list and moves to the table view.
      */
     public void loadList() {
-        int listId = DataAccessor.getInstance().getListId(selectedList);
+        int listId;
+        try {
+            listId = DataAccessor.getInstance().getListId(selectedList);
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+            return;
+        }
         ControllerData.getInstance().setCurrentList(listId);
         fadeOutScene();
     }
@@ -130,8 +148,13 @@ public class StartScreenController implements Initializable {
      */
     public void createList() {
         if (InputValidator.validate(newListText)) {
-            DataAccessor.getInstance().createList(newListText.getText());
-            setListNames();
+            try {
+                DataAccessor.getInstance().createList(newListText.getText());
+                setListNames();
+            } catch (CustomException e) {
+                MainScreen.createWarnWin(e);
+                return;
+            }
             newListText.clear();
         }
     }
@@ -143,8 +166,13 @@ public class StartScreenController implements Initializable {
         if (InputValidator.validate(renameListText)) {
             String list = table.getSelectionModel().getSelectedItem();
             String newName = renameListText.getText();
-            DataAccessor.getInstance().renameList(list, newName);
-            setListNames();
+            try {
+                DataAccessor.getInstance().renameList(list, newName);
+                setListNames();
+            } catch (CustomException e) {
+                MainScreen.createWarnWin(e);
+                return;
+            }
             table.getSelectionModel().select(newName);
             renameListText.clear();
         }

@@ -5,13 +5,13 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-
 import seng202.group7.analyses.CrimeFrequency;
 import seng202.group7.analyses.Rank;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
+import seng202.group7.view.MainScreen;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -38,7 +38,13 @@ public class LineGraphViewController  {
      * @param choices ArrayList of strings provided by user input in Graph Menu Controller
      */
     public void prepareLineGraph(String query, List<String> choices) {
-        List<Report> sortedData = DataAccessor.getInstance().getData(query);
+        List<Report> sortedData;
+        try {
+            sortedData = DataAccessor.getInstance().getData(query);
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+            return;
+        }
         List<CrimeFrequency> crimeOverTime = Rank.crimeOverTime(sortedData);
         String title = getTitle(choices);
         XYChart.Series<String, Integer> dataSet = new XYChart.Series<>();

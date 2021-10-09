@@ -299,7 +299,12 @@ public class EntryController implements Initializable {
         DataAccessor dataAccessor = DataAccessor.getInstance();
 
         data = new Crime(caseNumber, date, block, iucr, primaryDescription, secondaryDescription, locationDescription, arrest, domestic, beat, ward, fbiCD, xCoord, yCoord, latitude, longitude);
-        dataAccessor.editCrime((Crime) data, ControllerData.getInstance().getCurrentList());
+        
+        try {
+            dataAccessor.editCrime((Crime) data, ControllerData.getInstance().getCurrentList());
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+        }
 
         finishEdit();
     }

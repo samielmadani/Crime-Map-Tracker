@@ -33,7 +33,11 @@ public class DataAccessorTest {
     @BeforeAll
     public static void changeConnection() {
         // Changes the connection to the testDatabase.db
-        accessor.changeConnection("src/test/files/TestDatabase.db");
+        try {
+            accessor.changeConnection("src/test/files/TestDatabase.db");
+        } catch (CustomException e) {
+            System.err.println("Change connection: " + e.getMessage());
+        }
     }
 
     /**
@@ -50,8 +54,11 @@ public class DataAccessorTest {
             stmt.close();
 
             Crime crimeOne = new Crime("TestNumber", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
+            
             accessor.editCrime(crimeOne, 1);
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (CustomException e) {
             e.printStackTrace();
         }
 
@@ -62,7 +69,11 @@ public class DataAccessorTest {
      */
     @Test
     public void checkSize() {
-        assertEquals(accessor.getSize(1), 1);
+        try {
+            assertEquals(accessor.getSize(1), 1);
+        } catch (CustomException e) {
+            fail();
+        }
     }
 
     /**
@@ -70,15 +81,15 @@ public class DataAccessorTest {
      */
     @Test
     public void deleteTest() {
-        Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
-        accessor.editCrime(crimeTwo, 1);
         try {
+            Crime crimeTwo = new Crime("TestToDelete", LocalDateTime.now(), null, null, "test", "test", null, null, null, null, null, null, null, null, null, null);
+            accessor.editCrime(crimeTwo, 1);
             accessor.deleteReport("TestToDelete", 1);
+            Crime crime = accessor.getCrime("TestToDelete", 1);
+            assertNull(crime);
         } catch (CustomException e) {
             fail();
         }
-        Crime crime = accessor.getCrime("TestToDelete", 1);
-        assertNull(crime);
     }
 
     /**
@@ -87,13 +98,12 @@ public class DataAccessorTest {
     @Test
     public void readToDBTest() {
         try {
-            accessor.readToDB(new File("src/test/files/testCSV.csv"), 1);
-        } catch (SQLException|CustomException e) {
-            // TODO Auto-generated catch block
+            accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+            Crime crime = accessor.getCrime("JE163990", 1);
+            assertEquals(crime.getId(), "JE163990");
+        } catch (CustomException e) {
             fail();
         }
-        Crime crime = accessor.getCrime("JE163990", 1);
-        assertEquals(crime.getId(), "JE163990");
     }
 
     /**
@@ -102,17 +112,21 @@ public class DataAccessorTest {
     @Test
     public void importDBTest() {
         try {
-            accessor.importInDB(new File("src/test/files/TestImporting.db"), 1);
-        } catch (SQLException e) {
+            accessor.importFile(new File("src/test/files/TestImporting.db"), 1, "REPLACE", true);
+            Crime crime = accessor.getCrime("TestNumber", 1);
+            assertEquals(crime.getId(), "TestNumber");
+        } catch (CustomException e) {
            fail();
         }
-        Crime crime = accessor.getCrime("TestNumber", 1);
-        assertEquals(crime.getId(), "TestNumber");
     }
 
     @Test
     public void getListIdTest() {
-        assertEquals(1, accessor.getListId("testList"));
+        try {
+            assertEquals(1, accessor.getListId("testList"));
+        } catch (CustomException e) {
+            fail();
+        }
     }
 
     /**
@@ -120,8 +134,12 @@ public class DataAccessorTest {
      */
     @Test
     public void pageSetTest() {
-        List<Report> reports = accessor.getPageSet(1);
-        assertEquals(((Crime) reports.get(0)).getId(), "TestNumber");
+        try {
+            List<Report> reports = accessor.getPageSet(1);
+            assertEquals(((Crime) reports.get(0)).getId(), "TestNumber");
+        } catch (CustomException e) {
+            fail();
+        }
     }
 
 }

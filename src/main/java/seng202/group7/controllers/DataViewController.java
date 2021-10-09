@@ -17,13 +17,10 @@ import seng202.group7.data.CustomException;
 import seng202.group7.data.Report;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 
@@ -127,13 +124,13 @@ public class DataViewController implements Initializable {
         BorderPane rootPane = (BorderPane) frame.getParent().getParent().getParent().getParent();
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/entryView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/entryView.fxml"));
             Node newFrame = loader.load();
             
             ((EntryController) loader.getController()).setLastFrame(rootPane.getCenter());
 
             rootPane.setCenter(newFrame);
-        } catch (IOException | NullPointerException e) {
+        } catch (IOException | IllegalStateException e) {
             MainScreen.createErrorWin(new CustomException("Error caused when loading the Entry View screens FXML file.", e.getClass().toString()));
         }
     }
@@ -144,9 +141,13 @@ public class DataViewController implements Initializable {
      */
     private void setTableContent() {
         // Gets the current set of reports based on the pagination's current page.
-        List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
-        ObservableList<Report> data = FXCollections.observableList(reports);
+        try {
+            List<Report> reports = DataAccessor.getInstance().getPageSet(ControllerData.getInstance().getCurrentList());
+            ObservableList<Report> data = FXCollections.observableList(reports);
+            tableView.setItems(data);
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+        }
 
-        tableView.setItems(data);
     }
 }

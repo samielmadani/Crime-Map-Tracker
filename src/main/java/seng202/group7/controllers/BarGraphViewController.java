@@ -8,6 +8,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import seng202.group7.analyses.Rank;
 import seng202.group7.analyses.Tuple;
+import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
 import java.util.List;
@@ -38,7 +39,7 @@ public class BarGraphViewController  {
      *
      */
 
-    public void prepareBarGraph(String option) {
+    public void prepareBarGraph(String option) throws CustomException{
         List<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
         List<Tuple<String, Integer>> dataSet;
         if (option.equals("Most Frequent Crime Types")) {
