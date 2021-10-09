@@ -33,6 +33,7 @@ import seng202.group7.view.MainScreen;
  *
  * @author Jack McCorkindale
  * @author Shaylin Simadari
+ * @author Sam McMillan
  */
 public class CompareController implements Initializable {
 

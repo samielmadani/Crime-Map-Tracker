@@ -11,12 +11,13 @@ import seng202.group7.analyses.Tuple;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.data.Report;
+import seng202.group7.view.MainScreen;
+
 import java.util.List;
 import java.util.Collections;
 
 /**
  * Graph View Controller controls displays 7 different bar graphs based on user input from Graph Menu Controller.
- *
  * @author Jack McCorkindale
  * @author Sam McMillan
  */
@@ -39,34 +40,48 @@ public class BarGraphViewController  {
      *
      */
 
-    public void prepareBarGraph(String option) throws CustomException{
-        List<Report> data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
+    public void prepareBarGraph(String option) {
+        List<Report> data;
+        try {
+            data = DataAccessor.getInstance().getAll(ControllerData.getInstance().getCurrentList());
+        } catch (CustomException e) {
+            MainScreen.createWarnWin(e);
+            return;
+        }
         List<Tuple<String, Integer>> dataSet;
-        if (option.equals("Most Frequent Crime Types")) {
-            dataSet = Rank.primaryFrequencyRank(data);
-            Collections.reverse(dataSet);
-            generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Number of Crime");
-        } else if (option.equals("Most Dangerous Wards")) {
-            dataSet = Rank.wardFrequencyRank(data);
-            Collections.reverse(dataSet);
-            generateBarGraph(dataSet, "Most Dangerous Wards", "Wards", "Number of Crime");
-        } else if (option.equals("Most Dangerous Streets")) {
-            dataSet = Rank.streetRank(data);
-            Collections.reverse(dataSet);
-            generateBarGraph(dataSet, "Most Dangerous Streets", "Streets", "Number of Crime");
-        } else if (option.equals("Most Dangerous Beats")) {
-            dataSet = Rank.beatFrequencyRank(data);
-            Collections.reverse(dataSet);
-            generateBarGraph(dataSet, option, "Beats", "Number of Crime");
-        } else if (option.equals("Less Frequent Crime Types")) {
-            dataSet = Rank.primaryFrequencyRank(data);
-            generateBarGraph(dataSet, option, "Crime Types", "Number of Crime");
-        } else if (option.equals("Safest Wards")) {
-            dataSet = Rank.wardFrequencyRank(data);
-            generateBarGraph(dataSet, option, "Wards", "Number of Crime");
-        } else if (option.equals("Safest Beats")) {
-            dataSet = Rank.beatFrequencyRank(data);
-            generateBarGraph(dataSet, option, "Beats", "Number of Crimes");
+        switch (option) {
+            case "Most Frequent Crime Types" -> {
+                dataSet = Rank.primaryFrequencyRank(data);
+                Collections.reverse(dataSet);
+                generateBarGraph(dataSet, "Most Frequent Types of Crime", "Crime Types", "Number of Crime");
+            }
+            case "Most Dangerous Wards" -> {
+                dataSet = Rank.wardFrequencyRank(data);
+                Collections.reverse(dataSet);
+                generateBarGraph(dataSet, "Most Dangerous Wards", "Wards", "Number of Crime");
+            }
+            case "Most Dangerous Streets" -> {
+                dataSet = Rank.streetRank(data);
+                Collections.reverse(dataSet);
+                generateBarGraph(dataSet, "Most Dangerous Streets", "Streets", "Number of Crime");
+            }
+            case "Most Dangerous Beats" -> {
+                dataSet = Rank.beatFrequencyRank(data);
+                Collections.reverse(dataSet);
+                generateBarGraph(dataSet, option, "Beats", "Number of Crime");
+            }
+            case "Less Frequent Crime Types" -> {
+                dataSet = Rank.primaryFrequencyRank(data);
+                generateBarGraph(dataSet, option, "Crime Types", "Number of Crime");
+            }
+            case "Safest Wards" -> {
+                dataSet = Rank.wardFrequencyRank(data);
+                generateBarGraph(dataSet, option, "Wards", "Number of Crime");
+            }
+            case "Safest Beats" -> {
+                dataSet = Rank.beatFrequencyRank(data);
+                generateBarGraph(dataSet, option, "Beats", "Number of Crimes");
+            }
         }
     }
 
