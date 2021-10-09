@@ -8,3 +8,29 @@
 VBox {
     -fx-alignment: top-center;
 }
+
+.general {
+    -fx-font-family: "Bahnschrift";
+}
+
+.start_screen {
+    -fx-font-family: "Gill Sans MT";
+    -fx-background-color: #3b6aa2;
+}
+
+
+.side_menu {
+    -fx-font-family: "Gill Sans MT";
+    -fx-font-size: 14;
+    -fx-background-color: #4f7eb2;
+}
+
+.label {
+    -fx-font-family: "Century Gothic";
+}
+
+.tool-bar {
+    -fx-background-color: #3b6aa2;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 14;
+}
