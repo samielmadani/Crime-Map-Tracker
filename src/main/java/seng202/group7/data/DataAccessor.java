@@ -34,6 +34,7 @@ import java.util.Objects;
  * @author Jack McCorkindale
  * @author John Elliott
  * @author Shaylin Simadari
+ * @author Sam McMillan
  */
 public final class DataAccessor {
     /**
@@ -199,6 +200,60 @@ public final class DataAccessor {
     public ArrayList<Report> getAll(int listId) {
         String query = "SELECT * FROM crimedb WHERE list_id=" + listId;
         return selectReports(query);
+    }
+
+    /**
+     * Generic method for passing any query to the dataBase
+     * @param query The string query used to query the database
+     * @return ArrayList of reports
+     */
+    public ArrayList<Report> getData(String query) {
+        return selectReports(query);
+    }
+
+     public ArrayList<String> getColumnString(String column, String conditons) throws SQLException {
+        ArrayList<String> crimeTypeList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+         try (Statement stmt = connection.createStatement()) {
+             ResultSet rs = stmt.executeQuery(query);
+             // Converts all results into crimes.
+             while (rs.next()) {
+                 String columnString = rs.getString(column);
+                 crimeTypeList.add(columnString);
+             }
+             // Closes the statement and result set.
+             rs.close();
+         } catch (SQLException e) {
+             System.out.println(e.getMessage());
+             return null;
+         }
+         return crimeTypeList;
+     }
+
+    /**
+     * Method which returns all unique integers from a column of a database
+     * @param column the value from the database where all values will be returned
+     * @param conditons
+     * @return
+     * @throws SQLException
+     */
+    public ArrayList<Integer> getColumnInteger(String column, String conditons) throws SQLException {
+        ArrayList<Integer> crimeTypeList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            // Converts all results into crimes.
+            while (rs.next()) {
+                Integer columnInteger = rs.getInt(column);
+                crimeTypeList.add(columnInteger);
+            }
+            // Closes the statement and result set.
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return crimeTypeList;
     }
 
     /**

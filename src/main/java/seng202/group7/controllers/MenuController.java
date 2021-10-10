@@ -166,7 +166,7 @@ public class MenuController implements Initializable {
     public void toGraph(){
         //Loads graph screen
         try {
-            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/graphView.fxml")));
+            GridPane graphView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/barGraphView.fxml")));
             //Adds the graph view to the center of the screen.
             menuFrame.setCenter(graphView);
         } catch (IOException | NullPointerException e) {
