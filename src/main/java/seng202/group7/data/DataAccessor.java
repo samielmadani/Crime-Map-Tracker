@@ -77,7 +77,6 @@ public final class DataAccessor {
 
     /**
      * Creates a new database if one doesn't exist
-     * @throws SQLException
      */
     private void createDatabase(String location) throws SQLException {
         Connection newdb = DriverManager.getConnection("jdbc:sqlite:" + location);
@@ -211,9 +210,16 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
-     public ArrayList<String> getColumnString(String column, String conditons) throws SQLException {
+    /**
+     * Method which returns all unique strings from a column of a database
+     * @param column the column of values from the database
+     * @param conditions The string that holds the query for what data list is being accessed
+     * @return columnIntegerList a list of strings from the database representing all unique values from a column
+     * @throws SQLException
+     */
+     public ArrayList<String> getColumnString(String column, String conditions) throws SQLException {
         ArrayList<String> crimeTypeList = new ArrayList<>();
-        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
          try (Statement stmt = connection.createStatement()) {
              ResultSet rs = stmt.executeQuery(query);
              // Converts all results into crimes.
@@ -233,19 +239,18 @@ public final class DataAccessor {
     /**
      * Method which returns all unique integers from a column of a database
      * @param column the value from the database where all values will be returned
-     * @param conditons
-     * @return
-     * @throws SQLException
+     * @param conditions The string that holds the query for what data list is being accessed
+     * @return columnIntegerList a list of integers from the database representing all unique values from a column
      */
-    public ArrayList<Integer> getColumnInteger(String column, String conditons) throws SQLException {
-        ArrayList<Integer> crimeTypeList = new ArrayList<>();
-        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditons;
+    public ArrayList<Integer> getColumnInteger(String column, String conditions) throws SQLException {
+        ArrayList<Integer> columnIntegerList = new ArrayList<>();
+        String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             // Converts all results into crimes.
             while (rs.next()) {
                 Integer columnInteger = rs.getInt(column);
-                crimeTypeList.add(columnInteger);
+                columnIntegerList.add(columnInteger);
             }
             // Closes the statement and result set.
             rs.close();
@@ -253,7 +258,7 @@ public final class DataAccessor {
             System.out.println(e.getMessage());
             return null;
         }
-        return crimeTypeList;
+        return columnIntegerList;
     }
 
     /**
