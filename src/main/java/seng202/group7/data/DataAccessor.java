@@ -79,7 +79,7 @@ public final class DataAccessor {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:"+path);
         } catch (SQLException e) {
-            throw new CustomException("Error connecting to database.", e.getClass().toString());
+            throw new CustomException("Error connecting to database.", e.getMessage());
         }
     }
 
@@ -164,7 +164,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            throw new CustomException("Error getting size of the database.", e.getClass().toString());
+            throw new CustomException("Error getting size of the database.", e.getMessage());
         }
         return size;
     }
@@ -213,6 +213,7 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
+    // TODO add javadoc
     public List<String> getColumnString(String column, String conditions) throws CustomException {
         List<String> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
@@ -277,7 +278,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            throw new CustomException("Error getting set of reports from the database.", e.getClass().toString());
+            throw new CustomException("Error getting set of reports from the database.", e.getMessage());
         }
         return reports;
     }
@@ -337,7 +338,7 @@ public final class DataAccessor {
             psReport.close();
             rs.close();
         } catch (SQLException e) {
-            throw new CustomException("Error getting single crime from the database.", e.getClass().toString());
+            throw new CustomException("Error getting single crime from the database.", e.getMessage());
         }
         return crime;
     }
@@ -357,7 +358,7 @@ public final class DataAccessor {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
                 throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
             }
-            throw new CustomException("Could not delete entry.", e.getClass().toString());
+            throw new CustomException("Could not delete entry.", e.getMessage());
         }
     }
 
@@ -449,7 +450,7 @@ public final class DataAccessor {
             write(rows, listId, behavior, skipBadValue);
 
         } catch (IOException e) {
-            new CustomException("Error reading to database.", e.getClass().toString());
+            new CustomException("Error reading to database.", e.getMessage());
         } catch (SQLException e) {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
                 throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
@@ -502,7 +503,7 @@ public final class DataAccessor {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
                 throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
             }
-            throw new CustomException("Error updating crime in the database.", e.getClass().toString());
+            throw new CustomException("Error updating crime in the database.", e.getMessage());
         }
     }
 
@@ -550,7 +551,7 @@ public final class DataAccessor {
                     throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
                 }
                 runStatement("ROLLBACK;");
-                throw new CustomException("Error writing to the database.", e.getClass().toString());
+                throw new CustomException("Error writing to the database.", e.getMessage());
             }
         }
         runStatement("COMMIT");
@@ -627,7 +628,7 @@ public final class DataAccessor {
             if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
                 throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
             }
-            throw new CustomException("Please enter a name into the text field.", e.getClass().toString());
+            throw new CustomException("Unable to create a new list.", e.getMessage());
         }
     }
 
@@ -648,7 +649,7 @@ public final class DataAccessor {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            throw new CustomException("Error getting the list of reports.", e.getClass().toString());
+            throw new CustomException("Error getting the list of reports.", e.getMessage());
         }
         ObservableList<String> details = FXCollections.observableList(lists);
         return details;
@@ -668,7 +669,7 @@ public final class DataAccessor {
             psList.execute();
             psList.close();
         } catch (SQLException e) {
-            throw new CustomException("List name already being used.", e.getClass().toString());
+            throw new CustomException("List name already being used.", e.getMessage());
         }  
     }
 
@@ -689,7 +690,7 @@ public final class DataAccessor {
             // Closes the statement and result set.
             lists.close();
         } catch (SQLException e) {
-            throw new CustomException("Error getting the list ID.", e.getClass().toString());
+            throw new CustomException("Error getting the list ID.", e.getMessage());
         }
         return listId;
     }
@@ -704,7 +705,7 @@ public final class DataAccessor {
             psList.setString(1, selectedList);
             psList.execute();
         } catch (SQLException e) {
-            throw new CustomException("Error deleting list from the database.", e.getClass().toString());
+            throw new CustomException("Error deleting list from the database.", e.getMessage());
         }
     }
 
@@ -765,7 +766,7 @@ public final class DataAccessor {
             writer.writeAll(rs, false);
             rs.close();
         } catch (SQLException | IOException e) {
-            throw new CustomException("Error exporting CSV from the database.", e.getClass().toString());
+            throw new CustomException("Error exporting CSV from the database.", e.getMessage());
         }   
     }
 
@@ -865,10 +866,13 @@ public final class DataAccessor {
                     "PRIMARY KEY(report_id)" +
                     ")");
         } catch (SQLException e) {
-            throw new CustomException("Error while creating new database.", e.getClass().toString());
+            throw new CustomException("Error while creating new database.", e.getMessage());
         }
     }
 
+    /**
+     * Checks what type of file is being imported and sends it to the appropriate method
+     */
     public void importFile(File fileLocation, int currentList, String behavior, boolean skipBadValue) throws CustomException {
         // If the file chooser is exited before a file is selected it will be a NULL value and should not continue.
         if (fileLocation != null) {

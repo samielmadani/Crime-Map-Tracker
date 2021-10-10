@@ -90,6 +90,7 @@ public class InputValidator {
      */
     private static boolean validateInput(String input, ObservableSet<PseudoClass> classes)  throws CustomException{
         boolean valid = true;
+        // Checks input is an Integer
         if (classes.contains(InputType.INTEGER.getValidationType())) {
             try {
                 Integer.parseInt(input);
@@ -98,6 +99,7 @@ public class InputValidator {
             }
         }
 
+        // Checks input is a Double
         if (classes.contains(InputType.DOUBLE.getValidationType())) {
             try {
                 Double.parseDouble(input);
@@ -106,6 +108,7 @@ public class InputValidator {
             }
         }
 
+        // Checks input is a valid time string
         if (classes.contains(InputType.TIME.getValidationType())) {
             try {
                 DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("H:mm");
@@ -115,6 +118,7 @@ public class InputValidator {
             }
         }
 
+        // Checks input is a valid date string
         if (classes.contains(InputType.DATE.getValidationType())){
             try {
                 DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("d/M/yyyy");
@@ -124,10 +128,12 @@ public class InputValidator {
             }
         }
 
+        // Checks input is unique name in the list database
         if (classes.contains(InputType.LISTNAME.getValidationType()) && DataAccessor.getInstance().getListId(input) != null) {
             valid = false;
         }
 
+        // Checks input is a unique Id in the report database
         if (classes.contains(InputType.ID.getValidationType()) && 
             DataAccessor.getInstance().getCrime(input, ControllerData.getInstance().getCurrentList()) != null) {
             valid = false;

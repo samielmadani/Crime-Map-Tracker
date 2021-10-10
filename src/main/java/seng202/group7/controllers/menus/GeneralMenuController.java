@@ -112,13 +112,17 @@ public class GeneralMenuController {
         }).start();
     }
 
+    /**
+     * Gets user input on how to handle invalid data in the imported data.
+     * @return If invalid data is skipped or reverts changes.
+     */
     private static boolean badValueSelection() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Bad value response");
+        alert.setTitle("Invalid data response");
         alert.setHeaderText("How do you want to deal with invalid data?");
 
-        ButtonType skip = new ButtonType("Skip");
-		ButtonType cancel = new ButtonType("Cancel");
+        ButtonType skip = new ButtonType("Skip invalid data");
+		ButtonType cancel = new ButtonType("Don't import data");
 
         alert.getButtonTypes().clear();
 		alert.getButtonTypes().addAll(skip, cancel);
@@ -129,10 +133,14 @@ public class GeneralMenuController {
             
     }
 
+    /**
+     * Gets user input on how to handle duplicate ID in the imported data.
+     * @return the SQL query string for handling duplicate ids
+     */
     private static String duplicateSelection() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Duplicate data detected");
-		alert.setHeaderText("Select a handling method for duplicate data.");
+		alert.setHeaderText("Select a handling method for duplicate IDs.");
 
         ButtonType overwrite = new ButtonType("Overwrite");
 		ButtonType skip = new ButtonType("Skip");

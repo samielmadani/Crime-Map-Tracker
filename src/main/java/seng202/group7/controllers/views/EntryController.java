@@ -134,28 +134,38 @@ public class EntryController implements Initializable {
         });
 
         InputValidator.addValidation(cNoText, InputType.REQUIRED);
+        InputValidator.addValidation(cNoText, InputType.ID);
+        
         InputValidator.addValidation(dateText, InputType.REQUIRED);
-        InputValidator.addValidation(timeText, InputType.REQUIRED);
-        InputValidator.addValidation(priText, InputType.REQUIRED);
-        InputValidator.addValidation(secText, InputType.REQUIRED);
-        InputValidator.addValidation(locAreaText, InputType.REQUIRED);
-        InputValidator.addValidation(beatText, InputType.REQUIRED);
-        InputValidator.addValidation(wardText, InputType.REQUIRED);
-        InputValidator.addValidation(iucrText, InputType.REQUIRED);
-        InputValidator.addValidation(fbiText, InputType.REQUIRED);
-        InputValidator.addValidation(blockText, InputType.REQUIRED);
+        InputValidator.addValidation(dateText, InputType.DATE);
 
+        InputValidator.addValidation(timeText, InputType.REQUIRED);
+        InputValidator.addValidation(timeText, InputType.TIME);
+
+        InputValidator.addValidation(priText, InputType.REQUIRED);
+
+        InputValidator.addValidation(secText, InputType.REQUIRED);
+
+        InputValidator.addValidation(locAreaText, InputType.REQUIRED);
+
+        InputValidator.addValidation(beatText, InputType.REQUIRED);
         InputValidator.addValidation(beatText, InputType.INTEGER);
+
+        InputValidator.addValidation(wardText, InputType.REQUIRED);
         InputValidator.addValidation(wardText, InputType.INTEGER);
+
+        InputValidator.addValidation(iucrText, InputType.REQUIRED);
+        
+        InputValidator.addValidation(fbiText, InputType.REQUIRED);
+        
+        InputValidator.addValidation(blockText, InputType.REQUIRED);
+        
         InputValidator.addValidation(xCoordText, InputType.INTEGER);
         InputValidator.addValidation(yCoordText, InputType.INTEGER);
 
         InputValidator.addValidation(latText, InputType.DOUBLE);
         InputValidator.addValidation(longText, InputType.DOUBLE);
 
-        InputValidator.addValidation(dateText, InputType.DATE);
-        InputValidator.addValidation(timeText, InputType.TIME);
-        InputValidator.addValidation(cNoText, InputType.ID);
     }
 
     /**
@@ -168,7 +178,6 @@ public class EntryController implements Initializable {
             arrestCheck.setSelected(temp.getArrest());
             // General Information:
             cNoText.setText(temp.getId());
-            
             iucrText.setText(temp.getIucr());
             fbiText.setText(temp.getFbiCD());
             // Location Information:
@@ -176,8 +185,6 @@ public class EntryController implements Initializable {
             beatText.setText(String.valueOf(temp.getBeat()));
             wardText.setText(String.valueOf(temp.getWard()));
         }
-        
-        
         
         domesticCheck.setSelected(data.getDomestic());
         LocalDateTime date = data.getDate();

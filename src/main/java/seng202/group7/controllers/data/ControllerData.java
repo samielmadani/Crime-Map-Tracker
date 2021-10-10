@@ -81,10 +81,17 @@ public final class ControllerData {
         return currentRow;
     }
 
+    /**
+     * 
+     * @return The list that is currently loaded in the database.
+     */
     public int getCurrentList() {
         return currentList;
     }
 
+    /**
+     * Changes what list is recorded as being loaded in the database.
+     */
     public void setCurrentList(int listId) {
         currentList = listId;
     }

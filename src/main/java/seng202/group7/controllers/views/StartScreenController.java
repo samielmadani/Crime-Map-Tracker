@@ -72,7 +72,9 @@ public class StartScreenController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        InputValidator.addValidation(newListText, InputType.REQUIRED);
         InputValidator.addValidation(newListText, InputType.LISTNAME);
+        InputValidator.addValidation(renameListText, InputType.REQUIRED);
         InputValidator.addValidation(renameListText, InputType.LISTNAME);
 
         listNames.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));

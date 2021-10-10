@@ -65,6 +65,7 @@ public class FilterMenuController implements Initializable {
     private ComboBox<String> domesticBox;
 
     private List<Node> allValues;
+    
     private static FilterConditions filterConditions;
 
 
