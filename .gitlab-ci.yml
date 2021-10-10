@@ -3,7 +3,9 @@ junit:
     - xvfb
   stage: test
   script:
-    - xvfb -run mvn -B package --file pom.xml
+    - install Xvfb
+    - run Xvfb :99
+    - export DISPLAY=:99
     - mvn -B clean test
 
 generate_artifacts:
