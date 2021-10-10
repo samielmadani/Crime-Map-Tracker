@@ -147,15 +147,6 @@ public final class ControllerData {
     }
 
     /**
-     * The clears the where query.
-     *
-     */
-    public void clearWhereQuery() {
-        filterQuery="";
-        searchQuery="";
-    }
-
-    /**
      * The setter for the search query.
      *
      * @param searchQuery    The condition being applied.

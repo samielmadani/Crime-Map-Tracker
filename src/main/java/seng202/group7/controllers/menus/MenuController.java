@@ -13,7 +13,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
-import seng202.group7.controllers.data.ControllerData;
 import seng202.group7.data.CustomException;
 import seng202.group7.view.MainScreen;
 
@@ -110,8 +109,6 @@ public class MenuController implements Initializable {
      * This is done this way so that the raw data button can call this method.
      */
     public void toData() {
-        // This removes the current search effect being applied to the table when the paginator is initialized.
-        ControllerData.getInstance().clearWhereQuery();
         // Loads the paginator which generates the raw data tables.
         try {
             BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
