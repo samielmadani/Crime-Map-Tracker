@@ -2,12 +2,15 @@ package seng202.group7.controllers;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import seng202.group7.controllers.menus.FilterMenuController;
 import seng202.group7.data.FilterConditions;
 import java.lang.reflect.Field;
@@ -23,10 +26,24 @@ public class FilterMenuControllerTest {
 
     private static Field[] fields;
     private static Method[] methods;
+
+    public static class AsNonApp extends Application {
+        @Override
+        public void start(Stage primaryStage) throws Exception {
+            // noop
+        }
+    }
     
     @BeforeAll
     public static void makeReports() {
-        Platform.startup(() -> { });
+        // Platform.startup(() -> { });
+        Thread t = new Thread("JavaFX Init Thread") {
+            public void run() {
+                Application.launch(AsNonApp.class, new String[0]);
+            }
+        };
+        t.setDaemon(true);
+        t.start();
         FXMLLoader loader = new FXMLLoader(FilterMenuController.class.getResource("/gui/menus/filterMenu.fxml"));
         
         try {
