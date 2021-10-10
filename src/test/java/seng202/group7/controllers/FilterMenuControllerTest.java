@@ -2,14 +2,12 @@ package seng202.group7.controllers;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import seng202.group7.controllers.menus.FilterMenuController;
 import seng202.group7.data.FilterConditions;
 import java.lang.reflect.Field;
@@ -19,7 +17,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class FilterMenuControllerTest extends Application {
+public class FilterMenuControllerTest {
 
     private static FilterMenuController filter;
 
@@ -28,10 +26,7 @@ public class FilterMenuControllerTest extends Application {
     
     @BeforeAll
     public static void makeReports() {
-        Thread thread = new Thread(() -> {
-            Application.launch();
-        });
-        thread.start();
+        Platform.startup(() -> { });
         FXMLLoader loader = new FXMLLoader(FilterMenuController.class.getResource("/gui/menus/filterMenu.fxml"));
         
         try {
@@ -50,7 +45,6 @@ public class FilterMenuControllerTest extends Application {
         for (Method method : methods) {
             method.setAccessible(true);
         }
-        System.out.println(thread.isAlive());
     }
 
     private Method getMethod(String methodName) {
@@ -172,17 +166,5 @@ public class FilterMenuControllerTest extends Application {
             IllegalArgumentException | InvocationTargetException e) {
             fail(e.getMessage());
         }
-    }
-
-    /**
-     * Used to initialize the javafx toolbox required to load fxml files
-     * @param arg0
-     * @throws Exception
-     */
-    @Override
-    public void start(Stage arg0) throws Exception {
-        stop();
-        Platform.exit();
-    }
-    
+    }    
 }
