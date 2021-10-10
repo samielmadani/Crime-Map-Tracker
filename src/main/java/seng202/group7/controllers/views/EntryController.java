@@ -138,6 +138,12 @@ public class EntryController implements Initializable {
         InputValidator.addValidation(timeText, InputType.REQUIRED);
         InputValidator.addValidation(priText, InputType.REQUIRED);
         InputValidator.addValidation(secText, InputType.REQUIRED);
+        InputValidator.addValidation(locAreaText, InputType.REQUIRED);
+        InputValidator.addValidation(beatText, InputType.REQUIRED);
+        InputValidator.addValidation(wardText, InputType.REQUIRED);
+        InputValidator.addValidation(iucrText, InputType.REQUIRED);
+        InputValidator.addValidation(fbiText, InputType.REQUIRED);
+        InputValidator.addValidation(blockText, InputType.REQUIRED);
 
         InputValidator.addValidation(beatText, InputType.INTEGER);
         InputValidator.addValidation(wardText, InputType.INTEGER);

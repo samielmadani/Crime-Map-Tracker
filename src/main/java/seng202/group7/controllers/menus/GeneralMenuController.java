@@ -40,7 +40,7 @@ public class GeneralMenuController {
     public void toFilter() {
         BorderPane pane = (BorderPane) frame.getParent();
         try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/filterMenu.fxml")));
+            Node menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/filterMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {

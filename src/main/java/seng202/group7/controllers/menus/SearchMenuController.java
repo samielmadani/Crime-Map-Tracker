@@ -23,7 +23,7 @@ import java.util.Objects;
  * @author John Elliott
  * @author Shaylin Simadari
  */
-public class SearchController {
+public class SearchMenuController {
     @FXML
     private TextField inputField;
     @FXML
@@ -38,7 +38,7 @@ public class SearchController {
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         try {
-            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menu/generalMenu.fxml")));
+            VBox menuItems = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/menus/generalMenu.fxml")));
             // Changes side menu to the filter menu.
             pane.setLeft(menuItems);
         } catch (IOException | NullPointerException e) {
@@ -58,37 +58,21 @@ public class SearchController {
     }
 
     /**
-     * This method ensures that the user has typed in something before the search is allowed.
-     */
-    public boolean validateText() {
-        if (inputField.getText() == null) {
-            errorLabel.setText("No Input Given");
-            return false;
-        } else {
-            errorLabel.setText("");
-            return true;
-        }
-    }
-
-    /**
      * This method is used to determine the condition that should be applied to when the paginator is initialized
      * and therefore allow a user to search based on the text entered.
      *
      * @param event             The event action that was triggered.
      */
     public void search(KeyEvent event) throws IOException {
-        if(!validateText()){
-            return;
-        }
         // Determines the condition that will be used.
         String query = QueryBuilder.search(inputField.getText());
         // By setting this where query when the paginator is generated the data accessor will apply it to the search.
-//        ControllerData.getInstance().getWhereQuery().startsWith("WHERE")
+        // ControllerData.getInstance().getWhereQuery().startsWith("WHERE")
         ControllerData.getInstance().setSearchQuery(query);
         // As the side panels root is the main border panel we use .getRoot().
         BorderPane pane = (BorderPane) (((Node) event.getSource()).getScene()).getRoot();
         try {
-            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/pages.fxml")));
+            BorderPane tableView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/pageView.fxml")));
             // Changes side menu to the filter menu.
             pane.setCenter(tableView);
         } catch (IOException | NullPointerException e) {

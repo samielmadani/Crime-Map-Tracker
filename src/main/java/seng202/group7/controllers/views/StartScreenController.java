@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -85,11 +86,13 @@ public class StartScreenController implements Initializable {
                     listSelected(selectedList != null);
                 }
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-                    loadList();                   
+                    Node node = ((Node) event.getTarget()).getParent();
+                    if (node instanceof TableRow && ((TableRow<?>) node).getItem() != null ){
+                        loadList();                   
+                    }
                 }
             }
         });
-
     }
 
     /**

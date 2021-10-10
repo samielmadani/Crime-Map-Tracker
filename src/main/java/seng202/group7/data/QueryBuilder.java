@@ -1,5 +1,6 @@
 package seng202.group7.data;
 
+import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -93,6 +94,8 @@ public final class QueryBuilder {
      * @return      A String representation of an SQL where statement
      */
     public static String search(String keyword){
+        // keyword = keyword.replace("/", "//");
+        keyword = keyword.replace("'", "''");
         return "(primary_description LIKE '%" + keyword + "%' OR "
         + "secondary_description LIKE '%" + keyword + "%' OR "
         + "location_description LIKE '%" + keyword + "%' OR "

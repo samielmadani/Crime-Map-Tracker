@@ -55,8 +55,8 @@ public class GraphMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ArrayList<String> crimeType = new ArrayList<>();
-        ArrayList<Integer> wards = new ArrayList<>();
+        List<String> crimeType = new ArrayList<>();
+        List<Integer> wards = new ArrayList<>();
 
         try {
             crimeType = DataAccessor.getInstance().getColumnString("primary_description", "");
@@ -145,7 +145,7 @@ public class GraphMenuController implements Initializable {
         try {
             ArrayList<String> choices = getChoices();
             String query = constructQuery();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/lineGraph.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/views/lineGraphView.fxml"));
             root = loader.load();
             LineGraphViewController graphView = loader.getController();
             graphView.prepareLineGraph(query, choices);

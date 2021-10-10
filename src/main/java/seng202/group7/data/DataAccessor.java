@@ -213,8 +213,8 @@ public final class DataAccessor {
         return selectReports(query);
     }
 
-    public ArrayList<String> getColumnString(String column, String conditions) throws CustomException {
-        ArrayList<String> crimeTypeList = new ArrayList<>();
+    public List<String> getColumnString(String column, String conditions) throws CustomException {
+        List<String> crimeTypeList = new ArrayList<>();
         String query = "SELECT DISTINCT " +column+ " from crimedb " + conditions;
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);

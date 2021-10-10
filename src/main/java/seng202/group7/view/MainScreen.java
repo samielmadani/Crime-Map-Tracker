@@ -38,7 +38,7 @@ public class MainScreen extends Application {
         windowStage.getIcons().add(new Image("/gui/logo.png"));
         // Loads first FXML scene. Checks to ensure that the file is not NULL.
         try {
-            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/screens/mainScreen.fxml")));
+            Parent view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/gui/mainScreen.fxml")));
             Scene scene = new Scene(view);
             windowStage.setScene(scene);
             windowStage.show();

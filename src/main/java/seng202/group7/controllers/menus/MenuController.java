@@ -140,7 +140,7 @@ public class MenuController implements Initializable {
 
         // Loads the help screen.
         try {
-            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/screens/helpScreen.fxml")));
+            BorderPane dataView = FXMLLoader.load(Objects.requireNonNull(MenuController.class.getResource("/gui/views/helpView.fxml")));
             // Adds the help screen to the center of the screen.
             menuFrame.setCenter(dataView);
         } catch (IOException | NullPointerException e) {
