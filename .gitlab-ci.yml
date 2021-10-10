@@ -1,9 +1,7 @@
 junit:
-  services:
-    - xvfb
   stage: test
   script:
-    - xvfb-run mvn -B clean test
+    - mvn -B clean test
 
 generate_artifacts:
   stage: deploy
