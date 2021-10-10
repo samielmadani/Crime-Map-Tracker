@@ -4,6 +4,7 @@ import javafx.css.PseudoClass;
 
 /**
  * The types of input validators that can be applied to a Node.
+ * @author Jack McCorkindale
  */
 public enum InputType {
     DOUBLE (PseudoClass.getPseudoClass("double")),

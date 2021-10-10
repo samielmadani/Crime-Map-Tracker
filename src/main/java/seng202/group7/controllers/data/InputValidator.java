@@ -19,6 +19,7 @@ import seng202.group7.view.MainScreen;
 
 /**
  * Used to prepare and validate input nodes.
+ * @author Jack McCorkindale
  */
 public class InputValidator {
 

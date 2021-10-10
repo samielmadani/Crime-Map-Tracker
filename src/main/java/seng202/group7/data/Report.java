@@ -40,7 +40,7 @@ public abstract class Report {
      * @param latitude              An optional field which is has the latitude of where the crime occurred
      * @param longitude             An optional field which is has the longitude of where the crime occurred
      */
-    public Report(String id, LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
+    protected Report(String id, LocalDateTime date, String primaryDescription, String secondaryDescription, String locationDescription,
             Boolean domestic, Integer xCoord, Integer yCoord, Double latitude, Double longitude) {
         this.id.setValue(id);
         this.date = date;
