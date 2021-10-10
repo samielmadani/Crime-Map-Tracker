@@ -3,9 +3,7 @@ junit:
     - xvfb
   stage: test
   script:
-    - run Xvfb :99
-    - export DISPLAY=:99
-    - mvn -B clean test
+    - xvfb-run mvn -B clean test
 
 generate_artifacts:
   stage: deploy
