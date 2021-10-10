@@ -3,7 +3,6 @@ junit:
     - xvfb
   stage: test
   script:
-    - install Xvfb
     - run Xvfb :99
     - export DISPLAY=:99
     - mvn -B clean test
