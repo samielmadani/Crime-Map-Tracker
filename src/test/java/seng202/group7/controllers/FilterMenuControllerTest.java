@@ -2,7 +2,6 @@ package seng202.group7.controllers;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -20,30 +19,17 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+
 public class FilterMenuControllerTest {
 
     private static FilterMenuController filter;
 
     private static Field[] fields;
     private static Method[] methods;
-
-    public static class AsNonApp extends Application {
-        @Override
-        public void start(Stage primaryStage) throws Exception {
-            // noop
-        }
-    }
     
     @BeforeAll
     public static void makeReports() {
-        // Platform.startup(() -> { });
-        Thread t = new Thread("JavaFX Init Thread") {
-            public void run() {
-                Application.launch(AsNonApp.class, new String[0]);
-            }
-        };
-        t.setDaemon(true);
-        t.start();
+        Platform.startup(()->{});
         FXMLLoader loader = new FXMLLoader(FilterMenuController.class.getResource("/gui/menus/filterMenu.fxml"));
         
         try {
