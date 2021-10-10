@@ -14,11 +14,11 @@ import seng202.group7.controllers.menus.MenuController;
 import seng202.group7.data.CustomException;
 import seng202.group7.data.DataAccessor;
 import seng202.group7.view.MainScreen;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
 /**
  * This class creates the paginator that then itself generates the tables,
  * that are used to store selections of the database's information.

@@ -3,6 +3,7 @@ package seng202.group7.controllers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
@@ -27,10 +28,10 @@ public class FilterMenuControllerTest extends Application {
     
     @BeforeAll
     public static void makeReports() {
-        new Thread(() -> {
+        Thread thread = new Thread(() -> {
             Application.launch();
-        }).start();
-
+        });
+        thread.start();
         FXMLLoader loader = new FXMLLoader(FilterMenuController.class.getResource("/gui/menus/filterMenu.fxml"));
         
         try {
@@ -39,16 +40,17 @@ public class FilterMenuControllerTest extends Application {
             System.err.println(e);
         }
         filter = loader.getController();
-
+        
         fields = filter.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
         }
-
+        
         methods = filter.getClass().getDeclaredMethods();
         for (Method method : methods) {
             method.setAccessible(true);
         }
+        System.out.println(thread.isAlive());
     }
 
     private Method getMethod(String methodName) {
@@ -180,6 +182,7 @@ public class FilterMenuControllerTest extends Application {
     @Override
     public void start(Stage arg0) throws Exception {
         stop();
+        Platform.exit();
     }
     
 }

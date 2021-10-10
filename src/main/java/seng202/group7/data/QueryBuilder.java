@@ -1,6 +1,5 @@
 package seng202.group7.data;
 
-import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
