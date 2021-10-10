@@ -15,6 +15,8 @@ import java.lang.Math;
  */
 public final class Comparer {
 
+    private Comparer(){}
+
     /**
      * Compares two reports and returns the time difference.
      *

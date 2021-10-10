@@ -22,6 +22,8 @@ import seng202.group7.view.MainScreen;
  */
 public class InputValidator {
 
+    private InputValidator(){}
+
     /**
      * Sets the error PseudoClass which gives a Node a red border.
      */

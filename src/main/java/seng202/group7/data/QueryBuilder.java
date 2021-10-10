@@ -4,10 +4,12 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 
 /**
- * builds queries based on parameters and returns them as Strings
+ * Builds queries based on parameters and returns them as Strings
  * @author Shaylin Simadari
  */
 public final class QueryBuilder {
+
+    private QueryBuilder(){}
 
     /**
      * builds an SQL where statement for data that meets the conditions of the supplied parameters.

@@ -12,6 +12,9 @@ import java.io.ObjectInputStream;
  * @author Shaylin Simadari
  */
 public final class Serializer {
+
+    private Serializer(){}
+    
     /**
      * Serializes a FilterConditions object into a file
      * @param file The file to write the FilterConditions object to

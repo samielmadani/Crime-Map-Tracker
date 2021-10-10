@@ -16,7 +16,9 @@ import seng202.group7.data.Crime;
  * @author Sam McMillan
  * @author Shaylin
  */
-public class Rank {
+public final class Rank {
+
+    private Rank() {}
 
     /**
      * Parses the data and finds the highest to the lowest frequency of Report type (primary) in the whole data set.

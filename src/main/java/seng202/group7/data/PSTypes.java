@@ -13,6 +13,7 @@ import java.sql.Types;
  * @author Shaylin Simadari
  */
 public final class PSTypes {
+    private PSTypes(){}
 
     /**
      * Checks if an "integer" is "" or null and sets the PreparedStatement to null-Types.INTEGER instead.
