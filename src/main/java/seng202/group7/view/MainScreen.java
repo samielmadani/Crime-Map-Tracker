@@ -86,6 +86,12 @@ public class MainScreen extends Application {
         alert.show();
     }
 
+    public static void createSuccessWin(CustomException cause) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Message: " + cause.getMessage());
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.setTitle(cause.getInfo());
+        alert.show();
+    }
 
     /**
      * Launches the application with the provided arguments passed through.
@@ -96,4 +102,5 @@ public class MainScreen extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }

@@ -77,14 +77,25 @@ public class GeneralMenuController {
             return;
         }
         String behavior = duplicateSelection();
-        boolean skipBadValue = badValueSelection();
+        boolean skipBadValue;
+        if (file.getName().endsWith(".csv")) {
+            skipBadValue = badValueSelection();
+        } else {
+            skipBadValue = false;
+        }
         new Thread(() -> {
             Platform.runLater(()->((Node) event.getTarget()).getScene().setCursor(Cursor.WAIT));
 
             try {
                 DataAccessor.getInstance().importFile(file, ControllerData.getInstance().getCurrentList(), behavior, skipBadValue);
             } catch (CustomException e) {
-                Platform.runLater(()->MainScreen.createWarnWin(e));
+                if (e.getMessage().contains("busy")) {
+                    return;
+                } else if (e.getMessage().contains("complete")) {
+                    Platform.runLater(()->MainScreen.createSuccessWin(e));
+                } else {
+                    Platform.runLater(()->MainScreen.createWarnWin(e));
+                }
             }
 
             BorderPane rootPane = (BorderPane) frame.getParent();

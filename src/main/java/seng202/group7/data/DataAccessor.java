@@ -350,8 +350,13 @@ public final class DataAccessor {
     public void deleteReport(String entryId, int listId) throws CustomException{
         String reportQuery = "DELETE FROM reports WHERE id = '" + entryId + "' AND list_id=" + listId;
         try {
+            runStatement("BEGIN;");
             runStatement(reportQuery);
+            runStatement("COMMIT;");
         } catch (SQLException e) {
+            if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+            }
             throw new CustomException("Could not delete entry.", e.getClass().toString());
         }
     }
@@ -392,6 +397,9 @@ public final class DataAccessor {
                 "FROM newReportDB.crimes");
 
         } catch (SQLException e) {
+            if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+            }
             if (e.getMessage().contains("(UNIQUE constraint failed: reports.list_id, reports.id)")) {
                 throw new CustomException("Duplicate data detected.", e.getMessage());
             }
@@ -443,7 +451,10 @@ public final class DataAccessor {
         } catch (IOException e) {
             new CustomException("Error reading to database.", e.getClass().toString());
         } catch (SQLException e) {
-            throw new CustomException("Error writing to database.", e.getClass().toString());
+            if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+            }
+            throw new CustomException("Error writing to database.", e.getMessage());
         }
     }
 
@@ -454,11 +465,11 @@ public final class DataAccessor {
      * @throws CustomException
      */
     public void editCrime(Crime crime, int listId) throws CustomException {
-        try {
-            PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+        try (PreparedStatement psReport = connection.prepareStatement("INSERT OR REPLACE INTO reports(id, list_id, date, primary_description, secondary_description, domestic, x_coord, y_coord, latitude, longitude, location_description) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
             PreparedStatement psCrime = connection.prepareStatement("INSERT OR REPLACE INTO crimes(report_id, list_id, block, iucr, fbicd, arrest, beat, ward) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");){
+            runStatement("BEGIN;");
 
             PSTypes.setPSString(psCrime, 1, crime.getId()); // Case Number
             PSTypes.setPSInteger(psCrime, 2, listId); // List
@@ -469,9 +480,8 @@ public final class DataAccessor {
             PSTypes.setPSInteger(psCrime, 7, crime.getBeat()); // Beat
             PSTypes.setPSInteger(psCrime, 8, crime.getWard()); // Ward
 
-            PSTypes.setPSString(psReport, 1, crime.getId()); // Case Number
-
             Timestamp date = Timestamp.valueOf(crime.getDate());
+            PSTypes.setPSString(psReport, 1, crime.getId()); // Case Number
             PSTypes.setPSInteger(psReport, 2, listId); // List
             psReport.setTimestamp(3, date); // Date
             PSTypes.setPSString(psReport, 4, crime.getPrimaryDescription()); // Primary Description
@@ -483,13 +493,15 @@ public final class DataAccessor {
             PSTypes.setPSDouble(psReport, 10, crime.getLongitude()); // Longitude
             PSTypes.setPSString(psReport, 11, crime.getLocationDescription()); // Location Description
 
-            psReport.execute();
-            psReport.close();
 
+            psReport.execute();
             psCrime.execute();
-            psCrime.close();
+            runStatement("COMMIT;");
 
         } catch (SQLException e) {
+            if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+            }
             throw new CustomException("Error updating crime in the database.", e.getClass().toString());
         }
     }
@@ -501,7 +513,7 @@ public final class DataAccessor {
      * @param rows                  All rows from the CSV file.
      * @throws SQLException         An error during the insertion.
      */
-    private List<Integer> write(List<String[]> rows, int listId, String behavior, boolean skipBadValue) throws SQLException, CustomException {
+    private void write(List<String[]> rows, int listId, String behavior, boolean skipBadValue) throws SQLException, CustomException {
         // Turn off autocommit to increase speed.
         List<Integer> errorRows = new ArrayList<>();
         runStatement("BEGIN;");
@@ -518,8 +530,7 @@ public final class DataAccessor {
                     // Row i+2 as indexing starts at 0 and row 1 is removed as the schema
                     errorRows.add(i+2);
                     if (!skipBadValue) {
-                        runStatement("ROLLBACK;");
-                        return null;
+                        throw new CustomException("Invalid data was detected. No changes have been made.", e.getMessage());
                     } 
                     continue;
                 }
@@ -528,22 +539,23 @@ public final class DataAccessor {
                     psCrime.execute();
                 } catch (SQLException e) {
                     if (e.getMessage().contains("(UNIQUE constraint failed: reports.list_id, reports.id)")) {
-                        if (behavior == "ABORT") {
-                            runStatement("ROLLBACK;");
-                            return null;
-                        } 
+                        throw new CustomException("Duplicate data was detected. No changes have been made.", e.getMessage());
                     } else {
                         throw e;
                     }
                 }
                 // Commits the changes and re-enables the auto commit.
             } catch (SQLException e) {
+                if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                    throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+                }
                 runStatement("ROLLBACK;");
                 throw new CustomException("Error writing to the database.", e.getClass().toString());
             }
         }
         runStatement("COMMIT");
-        return errorRows;
+        throw new CustomException("Import complete. " + (rows.size() - errorRows.size()) + "/" + rows.size() +
+            " entries were imported", "Import complete");
     }
 
     /**
@@ -606,10 +618,15 @@ public final class DataAccessor {
      * @throws CustomException
      */
     public void createList(String name) throws CustomException {
-        try (PreparedStatement psList = connection.prepareStatement("INSERT INTO lists(name) VALUES (?);")) {
+        try (PreparedStatement psList = connection.prepareStatement("INSERT or ABORT INTO lists(name) VALUES (?);")) {
+            runStatement("BEGIN;");
             PSTypes.setPSString(psList, 1, name);
             psList.execute();
+            runStatement("COMMIT;");
         } catch (SQLException e) {
+            if (e.getMessage().contains("(cannot start a transaction within a transaction)")) {
+                throw new CustomException("Database is busy. Please wait until the current action is completed.", e.getMessage());
+            }
             throw new CustomException("Please enter a name into the text field.", e.getClass().toString());
         }
     }

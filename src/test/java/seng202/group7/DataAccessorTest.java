@@ -99,10 +99,16 @@ public class DataAccessorTest {
     public void readToDBTest() {
         try {
             accessor.importFile(new File("src/test/files/testCSV.csv"), 1, "REPLACE", true);
+        } catch (CustomException e) {
+            if (!e.getMessage().contains("complete")) {
+                fail("Database failed to read csv file");
+            }
+        }
+        try {
             Crime crime = accessor.getCrime("JE163990", 1);
             assertEquals(crime.getId(), "JE163990");
         } catch (CustomException e) {
-            fail();
+            fail("CSV file read incorrectly.");
         }
     }
 
